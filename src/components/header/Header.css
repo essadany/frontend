@@ -1,0 +1,36 @@
+/*header*/
+
+.header{
+    width:1400px;
+	height: 60px;
+	background-color: #b9baa3;
+	text-align: center;
+    position: fixed;
+    margin-left: 100px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 2;
+    
+	
+}
+.notif{
+    display: flex;
+}
+
+
+.header .logo{
+	display: flex;
+  justify-content: start;
+  align-items: center;
+	width: 80%;
+	margin-top: 5px;
+	
+}
+.header .logo img{
+	margin: auto 20px;
+	
+	width: 50px;
+	height: 50px;
+}
+
+

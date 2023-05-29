@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  display:flex;
+  background-color: #f8f9fa;
+  width: max-content;
+  height: 2000px;
+  
 }
 
 .App-logo {
