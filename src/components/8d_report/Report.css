@@ -1,0 +1,12 @@
+.main{
+    position: absolute;
+    width: 1300px;
+    height: max-content;
+    margin: 100px 150px;
+    background-color: white;
+    
+  }
+.border{
+    border:double;
+    border-bottom: 1px solid black;
+}

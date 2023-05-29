@@ -1,7 +1,4 @@
 .tab{
-    position: fixed;
-    margin: 100px 150px;
-    display: inline;
     height: 50px;
     width: 1360px;
     z-index: 2;

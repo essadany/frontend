@@ -22,30 +22,37 @@ const SideNavBar = () => {
 		{
 			text: "Dashboard",
 			icon: "icons/dashboard (1).png",
+			path: '/Dashboard'
 		},
 		{
 			text: "List of Claims",
 			icon: "icons/delivery-box.png",
+			path: '/Claims'
 		},
 		{
 			text: "My Actions",
 			icon: "icons/to-do-list.png",
+			path: '/MyActions'
 		},
 		{
 			text: "Claims Tracking",
 			icon: "icons/list.png",
+			path: '/Claim_track'
 		},
 		{
 			text: "Customer",
 			icon: "icons/customer.png",
+			path: '/Customer'
 		},
 		{
 			text: "Product",
 			icon: "icons/product.png",
+			path: '/Product'
 		},
 		{
 			text: "Users",
 			icon: "icons/followers.png",
+			path: '/Users'
 		},
 	];
 	return (
@@ -76,10 +83,10 @@ const SideNavBar = () => {
 					</button>
 				</div>
 				<div className="nav-menu">
-					{menuItems.map(({ text, icon }) => (
+					{menuItems.map(({ text, icon, path }) => (
 						<a
 							className={isExpanded ? "menu-item" : "menu-item menu-item-NX"}
-							href="#"
+							href={path}
 						>
 							<img className={isExpanded ? "menu-item-icon" : "menu-item-icon-NX"} src={icon} alt="" srcset=""/>
 							{isExpanded && <p>{text}</p>}

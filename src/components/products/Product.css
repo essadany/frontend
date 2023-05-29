@@ -1,13 +1,4 @@
-.product{
-    position: absolute;
-    width: 1300px;
-    height: max-content;
-    margin-top: 200px;
-    margin-left: 150px;
-    border:double;
-    border-bottom: 1px solid black;
-    background-color: white;
-}
+
 form{
     padding: 50px 50px;
 }

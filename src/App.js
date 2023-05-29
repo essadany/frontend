@@ -1,23 +1,21 @@
+import React from 'react'
 import logo from './logo.svg';
 import './App.css';
+import Interface from './Interface';
 import SideNavBar from './components/sidebar/SideNavBar';
-import Tab from './components/tabs/Tab';
-import Header from './components/header/Header';
-import Product from './components/products/Product';
+import { BrowserRouter } from 'react-router-dom';
+import Login from './components/authenification/Login';
+
+
 
 
 function App() {
   return (
-    <div className="App container-s">
-     <SideNavBar />
-   
-      <Header />
-      <Tab />
-      <Product />
-
+    <div className="App">
+      <BrowserRouter>
+        <Interface />
+      </BrowserRouter>
       
-   
-     
     </div>
   );
 }

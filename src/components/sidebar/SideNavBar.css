@@ -35,12 +35,14 @@
 	height: 75px;
 }
 
-.nav-brand {
+.nav-brand{
 	display: flex;
 	color: var(--light);
 	margin: auto;
 	color: #184e77;
-	
+}
+.nav-brand h1{
+	color: #184e77;
 }
 .nav-brand img {
 	margin-top: 10px;
