@@ -1,23 +1,36 @@
 import React from 'react';
 import './Product.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Table from '../filter/Table';
 
 export default function Product() {
-      const data = [{
-        "ref_interne" : "154264",
-        "ref_customer" : "d555f8d6",
-        "name" : "gicleur45",
-        "zone" : "gicleur",
-        "uap" : "Mohamed"
-        },
-        {
-        "ref_interne" : "513263",
-        "ref_customer" : "j84s5r8f",
-        "name" : "clapet45",
-        "zone" : "clapet",
-        "uap" : "Amine"
-        }];
+        const [error, setError] = useState(null);
+        const [isLoaded, setIsLoaded] = useState(false);
+        const [products, setProducts] = useState([]);
+      
+        // Note: the empty deps array [] means
+        // this useEffect will run once
+        // similar to componentDidMount()
+        useEffect(() => {
+          fetch("http://127.0.0.1:8000/api/products")
+            .then(res => res.json())
+            .then(
+              (result) => {
+                setIsLoaded(true);
+                setProducts(result);
+              },
+              // Note: it's important to handle errors here
+              // instead of a catch() block so that we don't swallow
+              // exceptions from actual bugs in components.
+              (error) => {
+                setIsLoaded(true);
+                setError(error);
+              }
+            )
+        }, [])
+
+
+
   return (
     <div className='main product'>
         <h2>Products</h2>
@@ -93,19 +106,19 @@ export default function Product() {
                             <th >Name</th>
                             <th>Zone</th>
                             <th>UAP Engineer</th>
-                        </tr>
+                        </tr>                   
                     </thead>
                     <tbody>
-                    {data.map((item, i) => (
+                    {products.map((item, i) => (
                             <tr key={i}>
-                                <td>{item.ref_interne}</td>
-                                <td>{item.ref_customer}</td>
+                                <td>{item.product_ref}</td>
+                                <td>{item.customer_ref}</td>
                                 <td>{item.name}</td>
                                 <td>{item.zone}</td>
                                 <td>{item.uap}</td>
                                 
                                 {/* onClick={modifierS} */}<td><button className='btn btn-outline-primary'>Edit<i class="fa-solid fa-pen-to-square"></i></button></td>
-                                {/* onClick={licencier} */}<td><button className='btn btn-outline-danger' ><i class="fa-solid fa-user-xmark"></i></button></td>
+                                {/* onClick={licencier} */}<td><button className='btn btn-outline-danger' >Delete<i class="fa-solid fa-user-xmark"></i></button></td>
                     </tr>
                     ))}
                     </tbody>
