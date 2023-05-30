@@ -9,4 +9,6 @@
 .border{
     border:double;
     border-bottom: 1px solid black;
+    padding-top: 20px;
+    padding-bottom: 30px;
 }

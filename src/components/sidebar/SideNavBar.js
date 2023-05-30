@@ -21,7 +21,7 @@ const SideNavBar = () => {
 	const menuItems = [
 		{
 			text: "Dashboard",
-			icon: "icons/dashboard (1).png",
+			icon: "icons/dashboard1.png",
 			path: '/Dashboard'
 		},
 		{
