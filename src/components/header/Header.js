@@ -2,6 +2,9 @@ import React from 'react';
 import './Header.css';
 import Notification  from  'react-notifications';
 import  FontAwesomeIcon  from 'react-fontawesome';
+import { NotificationImportant, NotificationsOffTwoTone, SupervisedUserCircle, SupervisedUserCircleOutlined, SupervisedUserCircleRounded } from '@material-ui/icons';
+import { Button } from 'react-bootstrap';
+import { Person, PersonFill, PersonFillGear, PersonFillLock } from 'react-bootstrap-icons';
 export default function Header() {
   return (
     <div className="header ">
@@ -10,10 +13,10 @@ export default function Header() {
             <h3>Claims Management</h3>
         </div>
         <div className="notif">
-            <button ><FontAwesomeIcon icon="fa-sharp fa-solid fa-bell" /></button>
-            <p> Nom Prénom</p>
-            <p>Fonction</p>
-            <button ><FontAwesomeIcon icon="fa-solid fa-user" /></button>
+            <Button variant=''><NotificationImportant  size={20} color='red'/></Button>
+            <div><p> Nom Prénom</p></div>
+            <div><p>Fonction</p></div>
+            <Button variant='' ><PersonFillGear size={30} /></Button>
         </div>
     </div>
   )

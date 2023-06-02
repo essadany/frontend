@@ -1,0 +1,15 @@
+.filter{
+  padding:20px;
+}
+.filter input{
+  width: 300px;
+}
+form{
+  padding-left: 50px;
+  padding-right: 50px;
+  margin-bottom: 30px;
+}
+div .table{
+  width: 1200px;
+  margin: auto;
+}

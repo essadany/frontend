@@ -1,23 +1,29 @@
 
-form{
-    padding: 50px 50px;
-}
-legend {
-    position: relative;
-   
-  }
-  
-  legend::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 1px;
-    right: 1px;
-    border-top: 1px solid black;
-  
-  }
-.table{
 
-   margin: auto;
-   width: 1200px;
+legend {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
+legend:after {
+  display: inline-block;
+  margin: 0 0 8px 20px;
+  height: 2px;
+  content: " ";
+  text-shadow: none;
+  background-color: #999;
+  width: 40%;
+}
+legend:before {
+  display: inline-block;
+  margin: 0 20px 8px 0;
+  height: 2px;
+  content: " ";
+  text-shadow: none;
+  background-color: #999;
+  width: 40%;
+}
+
+
+

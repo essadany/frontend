@@ -3,12 +3,15 @@ import './Product.css';
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import Table from '../filter/Table';
+import { Button } from 'react-bootstrap';
 
 export default function Product() {
     const options = [
         { value: 'Clapet', label: 'Clapet' },
-        { value: 'Clapet', label: 'Gicleur' },
-        { value: 'Clapet', label: 'Bobine' }
+        { value: 'Module', label: 'Module' },
+        { value: 'Bobine', label: 'Bobine' },
+        { value: 'Gicleur', label: 'Gicleur' },
+        { value: 'Faiscaux', label: 'Faiscaux' }
         ]
 
     // Get Product list ---------------------------------------------------------------------------------------------------------------
@@ -46,6 +49,7 @@ export default function Product() {
         const [zone, setZone] = useState(options[1]);
         const [uap, setUap] = useState("");
         const [message, setMessage] = useState("");
+        const [editB,setEditB] = useState(true);
 
 
         let handleSubmit = async (e) => {
@@ -84,30 +88,49 @@ export default function Product() {
           const [id,setId] = useState('');
           function selectProduct(id){
             let product=products[id-1];
-            setProduct_ref(product.product_ref);
-                setCustomer_ref(product.customer_ref);
-                setName(product.name);
-                setZone(product.zone);
-                setUap(product.uap);
-                setId(product.id)
-          }
+              setProduct_ref(product.product_ref);
+              setCustomer_ref(product.customer_ref);
+              setName(product.name);
+              setZone(product.zone);
+              setUap(product.uap);
+              setId(product.id)
+          };
           function updateProduct(){
             let item={product_ref ,customer_ref ,name ,zone ,uap }
             console.warn("item",item)
-            fetch(`http://127.0.0.1:8000/api/product/${id}`, {
-              method: 'PUT',
-              headers:{
-                'Accept' : 'application/json',
-                'Content-Type':'application/json'
-              },
-              body:JSON.stringify(item)
-            }).then((result) => {
-                result.json().then((resp) => {
-                  console.warn(resp)
-                  getProducts()
-                })
-              })
+            try{
+                fetch(`http://127.0.0.1:8000/api/product/${id}`, {
+                  method: 'PUT',
+                  headers:{
+                    'Accept' : 'application/json',
+                    'Content-Type':'application/json'
+                  },
+                  body:JSON.stringify(item)
+                }).then((result) => {
+                    if (result.ok){
+                      getProducts();
+                      setProduct_ref("");
+                      setCustomer_ref("");
+                      setZone("");
+                      setName("");
+                      setUap("");
+                      alert("Product Updated successfully");
+                      setEditB(true);
+                    }else{
+                      result.json().then((resp) => {
+                        console.warn(resp)
+                        alert("Some error occured, Verify that : - All fields required are typed -The product reference is not duplicated! - The customer reference exists in customers table (if not than add it in product interface)");
+
+                      })
+                    }
+                    
+                  })
+                
+              } catch (err) {
+              console.log(err);
             }
+          }
+            
           // Delete Product ------------------------------------------------------------------------------------------------------------------------
           function deleteProduct(id) {
             fetch(`http://127.0.0.1:8000/api/product/${id}`, {
@@ -136,7 +159,9 @@ export default function Product() {
   return (
     <div className='main product'>
         <h2>Products</h2>
+        
         <div className='border'>
+        <fieldset>
             <legend>ADD PRODUCT</legend>
             <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
                 
@@ -174,21 +199,22 @@ export default function Product() {
                     </div>
                 </div>
                 
-                <div class=" col-12">
-                    <button class="btn btn-primary" type="submit">Add Product</button>
-                    <button onClick={updateProduct} className='btn btn-outline-primary' type='submit'>Edit<i class="fa-solid fa-pen-to-square"></i></button>
+                <div style={{marginTop:40}} class=" col-md-4">
+                    <Button style={{marginRight:20}} variant='primary' type="submit">Add Product</Button>
+                    <Button  onClick={updateProduct} disabled={editB} variant='success' type='submit'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
                     
                 </div>
             </form>
-            
+            </fieldset>
             <div >
                 <legend >LIST OF PRODUCTS</legend>
-                <input
-                  type="text"
-                  placeholder="Filter table"
-                  value={filter}
-                  onChange={handleChange}
-                />
+                <div className='row md-4 filter'>
+                  <div  className='col-md-4'></div>
+                  <div  className='col-md-4'></div>
+                  <div  className='col-md-4'>
+                    <input  class="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
+                  </div>
+                </div>
                 <table className="table" >
                     <thead>
                         <tr>
@@ -207,8 +233,9 @@ export default function Product() {
                                 <td>{item.name}</td>
                                 <td>{item.zone}</td>
                                 <td>{item.uap}</td>
-                                <td><button onClick={()=>selectProduct(item.id)} className='btn btn-outline-primary'>Edit<i class="fa-solid fa-pen-to-square"></i></button></td>
-                                <td><button onClick={()=>deleteProduct(item.id)} className='btn btn-outline-danger' >Delete<i class="fa-solid fa-user-xmark"></i></button></td>
+                                <td><Button onClick={()=>{selectProduct(item.id);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                                <td><Button onClick={()=>deleteProduct(item.id)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
+                                
 
                     </tr>
                     ))}

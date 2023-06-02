@@ -3,18 +3,24 @@
 .header{
     width:1400px;
 	height: 60px;
-	background-color: #b9baa3;
+	background-color: #9d4edd;
 	text-align: center;
     position: fixed;
     margin-left: 100px;
     display: flex;
     justify-content: space-between;
     z-index: 2;
+    color: white;
     
 	
 }
 .notif{
     display: flex;
+    align-items: center;
+}
+.notif div{
+    display: block;
+    
 }
 
 .header{

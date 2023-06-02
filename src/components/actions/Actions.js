@@ -6,7 +6,8 @@ export default function Actions() {
     <div className='main'>
         <Tab />
         <h2 >Actions</h2>
-        <div className='border'></div>
+        <div className='border'>
+        </div>
     </div>
   )
 }
