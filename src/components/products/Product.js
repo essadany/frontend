@@ -6,14 +6,7 @@ import Table from '../filter/Table';
 import { Button } from 'react-bootstrap';
 
 export default function Product() {
-    const options = [
-        { value: 'Clapet', label: 'Clapet' },
-        { value: 'Module', label: 'Module' },
-        { value: 'Bobine', label: 'Bobine' },
-        { value: 'Gicleur', label: 'Gicleur' },
-        { value: 'Faiscaux', label: 'Faiscaux' }
-        ]
-
+ 
     // Get Product list ---------------------------------------------------------------------------------------------------------------
         const [error, setError] = useState(null);
         const [isLoaded, setIsLoaded] = useState(false);
@@ -43,10 +36,44 @@ export default function Product() {
           getProducts();
         }, [])
         // Add Product ------------------------------------------------------------------------------------------------
+        const [customers,setCustomers]= useState([]);
+        function getCustomers(){
+          fetch("http://127.0.0.1:8000/api/customers")
+            .then(res => res.json())
+            .then(
+              (result) => {
+                setIsLoaded(true);
+                setCustomers(result);
+              },
+              // Note: it's important to handle errors here
+              // instead of a catch() block so that we don't swallow
+              // exceptions from actual bugs in components.
+              (error) => {
+                setIsLoaded(true);
+                setError(error);
+              }
+            )
+        }
+        useEffect(() => {
+          getCustomers();
+        }, []);
+          // Afficher la liste des clients et des zones des produits dans le formulaire        
+        const customer_names = customers.map((item)=>({ value : item.name, label : item.name}));
+        const product_zones = [
+          {value: 'Module', label: 'Module'},
+          {value: 'Gicleur', label: 'Gicleur'},
+          {value: 'Clapet', label: 'Clapet'},
+          {value: 'Vanne', label: 'Vanne'},
+          {value: 'Faiscaux', label: 'Faiscaux'},
+          {value: 'Bobine', label: 'Bobine'}
+        ]
+      
         const [product_ref, setProduct_ref] = useState("");
+        const [customer_id, setCustomer_id] = useState("");
         const [customer_ref, setCustomer_ref] = useState("");
+        const [customer_name, setCustomer_name] = useState("");
         const [name, setName] = useState("");
-        const [zone, setZone] = useState(options[1]);
+        const [zone, setZone] = useState("");
         const [uap, setUap] = useState("");
         const [message, setMessage] = useState("");
         const [editB,setEditB] = useState(true);
@@ -55,6 +82,11 @@ export default function Product() {
         let handleSubmit = async (e) => {
             e.preventDefault();
             try {
+              
+              
+              setCustomer_id(2);
+              console.log(customer_id);
+              //2.
               let res = await fetch("http://127.0.0.1:8000/api/product", {
                 method: "POST",
                 headers: {
@@ -63,12 +95,13 @@ export default function Product() {
                 body: JSON.stringify({
                   product_ref : product_ref,
                   customer_ref : customer_ref,
+                  customer_id : customer_id,
                   name: name,
                   zone: zone,
                   uap: uap
                 }),
               })
-              let resJson = await res.json();
+              
               
               if (res.status === 200) {
                 setProduct_ref("");
@@ -90,13 +123,14 @@ export default function Product() {
             let product=products[id-1];
               setProduct_ref(product.product_ref);
               setCustomer_ref(product.customer_ref);
+              //setCustomer_name(customer_name);
               setName(product.name);
               setZone(product.zone);
               setUap(product.uap);
               setId(product.id)
           };
           function updateProduct(){
-            let item={product_ref ,customer_ref ,name ,zone ,uap }
+            let item={product_ref ,customer_ref , customer_id,name ,zone ,uap }
             console.warn("item",item)
             try{
                 fetch(`http://127.0.0.1:8000/api/product/${id}`, {
@@ -111,6 +145,7 @@ export default function Product() {
                       getProducts();
                       setProduct_ref("");
                       setCustomer_ref("");
+                      setCustomer_name("");
                       setZone("");
                       setName("");
                       setUap("");
@@ -180,6 +215,11 @@ export default function Product() {
                     </div>
                 </div>
                 <div class="col-md-4">
+                  <label for="validationCustom02" class="form-label">Customer name* :</label>
+                  <Select options={customer_names} class="form-select"  label={customer_name} aria-label="Default select example" onChange={(e)=>setCustomer_name(e.label)} />
+                </div>
+                
+                <div class="col-md-4">
                     <label for="validationCustom02" class="form-label">Product name* : </label>
                     <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setName(e.target.value)}   value={name} required />
                     <div class="valid-feedback">
@@ -188,7 +228,7 @@ export default function Product() {
                 </div>
                 <div class="col-md-4">
                     <label for="validationCustom02" class="form-label">Zone* :</label>
-                    <Select options={options} class="form-select"  value={zone} aria-label="Default select example" onChange={(e)=>setZone(e.label)} />
+                    <Select options={product_zones} class="form-select"  label={zone} aria-label="Default select example" onChange={(e)=>setZone(e.label)} />
                     
                 </div>
                 <div class="col-md-4">
@@ -215,7 +255,7 @@ export default function Product() {
                     <input  class="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
                   </div>
                 </div>
-                <table className="table" >
+                <table className="table table-striped" >
                     <thead>
                         <tr>
                             <th >Interne ref</th>

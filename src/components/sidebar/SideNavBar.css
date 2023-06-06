@@ -74,6 +74,9 @@
 	background-color: var(--primary);
 }
 
+.hamburger:link span {
+	background-color: var(--primary);
+}
 
 /* ///////////////////// */
 /* ///////////////////// */

@@ -111,6 +111,7 @@ export default function Claims() {
             setDef_mode('');
             setNbr_claimed_parts('');
             alert("Claim Added successfully");
+            setShow(false);
           } else {
             alert("Some error occured, Verify that : - All fields required are typed -The claim reference is not duplicated! - The product reference exists in products table (if not than add it in product interface)");
           }
@@ -162,7 +163,6 @@ export default function Claims() {
           }).then((result) => {
               if (result.ok){
                 getClaims()
-                alert("Claim Updated successfully");
                 setInternal_ID('');
                 setRefRecClient('');
                 setProduct_ref('');
@@ -174,6 +174,8 @@ export default function Claims() {
                 setClaim_details('');
                 setDef_mode('');
                 setNbr_claimed_parts('');
+                alert("Claim Updated successfully");
+                setShow(false);
               }else{
                 result.json().then((resp) => {
                   console.warn(resp);

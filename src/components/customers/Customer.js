@@ -16,7 +16,7 @@ export default function Customer() {
         const [error, setError] = useState(null);
         const [isLoaded, setIsLoaded] = useState(false);
         const [customers, setCustomers] = useState([]);
-      
+        
         // Note: the empty deps array [] means
         // this useEffect will run once
         // similar to componentDidMount()
@@ -176,7 +176,7 @@ export default function Customer() {
                 <div className='col-md-4'></div>
                 <div class=" col-md-4" style={{marginTop:40}}>
                     <Button variant="primary" type="submit"  style={{marginRight:20}}>Add Customer</Button>
-                    <Button variant="success" onClick={updateCustomer} disabled={editB} type='submit'>Edit<i class="fa-solid fa-pen-to-square"></i></Button>
+                    <Button variant="success" onClick={updateCustomer} disabled={editB} type='submit'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
 
                 </div>
             </form>
@@ -190,7 +190,7 @@ export default function Customer() {
                     <input  class="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
                   </div>
                 </div>
-                <table className="table" >
+                <table className="table table-striped" >
                     <thead>
                         <tr>
                             <th >Customer ref</th>
