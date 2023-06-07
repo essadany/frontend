@@ -16,7 +16,7 @@ export default function Header() {
             <Button variant=''><NotificationImportant  size={20} color='red'/></Button>
             <div><p> Nom Prénom</p></div>
             <div><p>Fonction</p></div>
-            <Button variant='' ><PersonFillGear size={30} /></Button>
+            <Button  href='' variant='' ><PersonFillGear size={30} /></Button>
         </div>
     </div>
   )

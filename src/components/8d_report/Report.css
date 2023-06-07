@@ -13,4 +13,13 @@
     padding-bottom: 30px;
     height: 1000px;
 }
-
+.report_header{
+  width: 1400px;
+ 
+  display: flex;
+  align-items: center;
+}
+.report_header div{
+  display: inline;
+  width: 400px;
+}

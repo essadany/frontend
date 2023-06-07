@@ -72,6 +72,29 @@ export default function Claims() {
     const [prod_designation, setProd_designation] = useState("");
     const [nbr_claimed_parts, setNbr_claimed_parts] = useState("");
     const [status,setStatus] = useState("red")
+    const [products,setProducts]= useState([]);
+        function getProducts(){
+          fetch("http://127.0.0.1:8000/api/products")
+            .then(res => res.json())
+            .then(
+              (result) => {
+                setIsLoaded(true);
+                setProducts(result);
+              },
+              // Note: it's important to handle errors here
+              // instead of a catch() block so that we don't swallow
+              // exceptions from actual bugs in components.
+              (error) => {
+                setIsLoaded(true);
+                setError(error);
+              }
+            )
+        }
+        useEffect(() => {
+          getProducts();
+        }, []);
+
+    const products_ref = products.map((item)=>({ value : item.id, label : item.product_ref}));
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -112,6 +135,7 @@ export default function Claims() {
             setNbr_claimed_parts('');
             alert("Claim Added successfully");
             setShow(false);
+            handleClose();
           } else {
             alert("Some error occured, Verify that : - All fields required are typed -The claim reference is not duplicated! - The product reference exists in products table (if not than add it in product interface)");
           }
@@ -176,6 +200,7 @@ export default function Claims() {
                 setNbr_claimed_parts('');
                 alert("Claim Updated successfully");
                 setShow(false);
+                handleClose();
               }else{
                 result.json().then((resp) => {
                   console.warn(resp);
@@ -221,7 +246,7 @@ export default function Claims() {
         <div className='border '>
         <Button onClick={()=>{handleShow();setModalTitle("Add New Claim");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Claim</Button>
         <Modal
-        size='xl'
+        size='md'
         show={show}
         onHide={handleClose}
         backdrop="static"
@@ -232,77 +257,74 @@ export default function Claims() {
         </Modal.Header>
         <Modal.Body>
             <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom01" class="form-label">Intern ID* :</label>
                     <input type="text" class="form-control" id="validationCustom01" onChange={(e)=>setInternal_ID(e.target.value)} value={internal_ID} required />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Customer Claim ref* :</label>
                     <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setRefRecClient(e.target.value)}  value={refRecClient} required />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <label for="validationCustom02" class="form-label">Product reference* :</label>
-                    <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setProduct_ref(e.target.value)}  value={product_ref} required />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
+                <div class="col-md-6">
+                  <label  class="form-label">Product reference* :</label>
+                  <Select options={products_ref} class="form-select" defaultValue={product_ref}   aria-label="Default select example" onChange={(e)=>setProduct_ref(e.label)} />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Product engraving* : </label>
                     <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setEngraving(e.target.value)}   value={engraving} required />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Date of Production* : </label>
                     <input type="date" class="form-control" id="validationCustom02" onChange={(e)=>setProd_date(e.target.value)}   value={prod_date} required />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Object* : </label>
                     <textarea class="form-control" id="validationCustom02" onChange={(e)=>setObject(e.target.value)}   value={object} required />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Opening date* :</label>
                     <input type="date" class="form-control" id="validationCustom02"  onChange={(e)=>setOpening_date(e.target.value)}  value={opening_date} required />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Final customer :</label>
                     <input type="text" class="form-control" id="validationCustom02"  onChange={(e)=>setFinal_cusomer(e.target.value)}  value={final_cusomer}  />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Defaillance mode :</label>
                     <textarea  class="form-control" id="validationCustom02"  onChange={(e)=>setDef_mode(e.target.value)}  value={def_mode}  />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Claim details :</label>
                     <textarea  class="form-control" id="validationCustom02"  onChange={(e)=>setClaim_details(e.target.value)}  value={claim_details}  />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Number of Claimed parts* :</label>
                     <input type='number'  class="form-control" id="validationCustom02"  onChange={(e)=>setNbr_claimed_parts(e.target.value)}  value={nbr_claimed_parts} required />
                     <div class="valid-feedback">
@@ -318,8 +340,7 @@ export default function Claims() {
           <Button onClick={updateClaim} hidden={editB} variant="success" >Update</Button>
           <Button onClick={handleSubmit} hidden={addB} variant="primary" >Save</Button>
           </Modal.Footer>
-      </Modal>
-            
+      </Modal>     
             <div >
                 <legend >List of Claims</legend>
                 <div className='row md-4 filter'>
@@ -363,8 +384,8 @@ export default function Claims() {
                               <td>{item.nbr_claimed_parts}</td>
                               <td><Dot color={status} size={60}/></td>
                               <td><Button onClick={()=>{selectClaim(item.id);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
-                              {/*<td><Button onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>*/}
-                              <td><Button variant='light' ><TicketDetailed color='orange'  size={25}/></Button></td>
+                              <td><Button onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
+                              <td><Button variant='success' href='./Report' ><TicketDetailed color='orange'  size={25}/></Button></td>
 
                     </tr>
                     ))}

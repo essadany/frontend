@@ -24,7 +24,7 @@ export default function Tab() {
                 <a class="nav-link" href="/Containement">CONTAINEMENT</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/5_Whey">5 WHY</a>
+                <a class="nav-link" href="/Five_Why">5 WHY</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/Label_Checking">LABEL CHECKING</a>

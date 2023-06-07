@@ -22,6 +22,7 @@ import Containement from './components/containement/Containement';
 import Five_Why from './components/5why/Five_Why';
 import Label_Check from './components/label_checking/Label_Check';
 import Login from './components/authenification/Login';
+import Annexe from './components/8d_annexe/Annexe';
 export default function Interface() {
   return (
     <div className='Interface'>
@@ -30,6 +31,7 @@ export default function Interface() {
         <Routes>
         <Route exact path='/' element={< Dashboard />}>  </Route>
           <Route exact path='/Dashboard' element={< Dashboard />}>  </Route>
+          <Route exact path='/Annexe' element={< Annexe />}>  </Route>
           <Route exact path='/Claims' element={< Claims />}>  </Route>
           <Route exact path='/Customer' element={<Customer />}>  </Route>
           <Route exact path='/Product' element={<Product />}>  </Route>
@@ -41,7 +43,7 @@ export default function Interface() {
           <Route exact path='/Meetings' element={< Meetings />}>  </Route>
           <Route exact path='/Problem_Description' element={<Pb_desc />}>  </Route>
           <Route exact path='/Containement' element={<Containement />}>  </Route>
-          <Route exact path='/5_Why' element={< Five_Why />}>  </Route>
+          <Route exact path='/Five_Why' element={< Five_Why />}>  </Route>
           <Route exact path='/Label_Checking' element={<Label_Check />}>  </Route>
           <Route exact path='/Actions' element={<Actions />}>  </Route>
           <Route exact path='Effectiveness' element={<Effectiveness />}>  </Route>

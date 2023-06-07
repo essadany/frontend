@@ -3,11 +3,18 @@ import './Customer.css';
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { Button } from 'react-bootstrap';
+import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";
 
+import  Modal  from 'react-bootstrap/Modal'
 
 
 export default function Customer() {
-    const options = [
+        const [show, setShow] = useState(false);
+        const handleClose = () => setShow(false);
+        const handleShow = () => setShow(true);
+        const [modalTitle,setModalTitle]= useState('Add new Product');
+        const [addB,setAddB] = useState('');
+      const options = [
         { value: 'Intern', label: 'Intern' },
         { value: 'Extern', label: 'Extern' }
         ]
@@ -71,6 +78,7 @@ export default function Customer() {
                 setName("");
                 setInfo("");
                 alert("Customer Added successfully");
+                handleClose();
               } else {
                 alert("Some error occured, try again!");
               }
@@ -79,19 +87,20 @@ export default function Customer() {
             }
           };
           //Update Customer -------------------------------------------------------------------------------------------------
-          const [id,setId] = useState('');
-          function selectCustomer(id){
-            let customer=customers[id-1];
-            setCustomer_ref(customer.customer_ref);
+          const [customer,setCustomer] = useState([]);
+          function selectCustomer(customer){
+            
+           
+                setCustomer_ref(customer.customer_ref);
                 setName(customer.name);
                 setCategory(customer.category);
                 setInfo(customer.info);
-                setId(customer.id)
+                setCustomer(customer)
           }
           function updateCustomer(){
             let item={customer_ref ,name ,category ,info }
             console.warn("item",item)
-            fetch(`http://127.0.0.1:8000/api/customer/${id}`, {
+            fetch(`http://127.0.0.1:8000/api/customer/${customer.id}`, {
               method: 'PUT',
               headers:{
                 'Accept' : 'application/json',
@@ -107,6 +116,7 @@ export default function Customer() {
                   setName("");
                   setInfo("");
                   setEditB(true);
+                  handleClose();
                 }else{
                   result.json().then((resp) => {
                     console.warn(resp)
@@ -146,40 +156,57 @@ export default function Customer() {
     <div className='main Customer'>
         <h2>Customers</h2>
         <div className='border'>
-            <legend>ADD Customer</legend>
-            <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
-                <div class="col-md-4">
-                    <label for="validationCustom02" class="form-label">Reference* :</label>
-                    <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setCustomer_ref(e.target.value)}  value={customer_ref} required />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label for="validationCustom02" class="form-label">Customer name* : </label>
-                    <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setName(e.target.value)}   value={name} required />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label for="validationCustom02" class="form-label">Category* :</label>
-                    <Select options={options} class="form-select"  value={category} aria-label="Default select example" onChange={(e)=>setCategory(e.label)} />
-                </div>
-                <div class="col-md-4">
-                    <label for="validationCustom02" class="form-label">About : </label>
-                    <textarea type="text" class="form-control" id="validationCustom02" onChange={(e)=>setInfo(e.target.value)}   value={info}  />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
-                </div>
-                <div className='col-md-4'></div>
-                <div class=" col-md-4" style={{marginTop:40}}>
-                    <Button variant="primary" type="submit"  style={{marginRight:20}}>Add Customer</Button>
-                    <Button variant="success" onClick={updateCustomer} disabled={editB} type='submit'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+        <Button onClick={()=>{handleShow();setModalTitle("Add New Customer");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Customer</Button>
 
-                </div>
-            </form>
+        <Modal
+                size='md'
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+                >
+                <Modal.Header closeButton>
+                <Modal.Title>{modalTitle}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
+                        <div class="col-md-6">
+                            <label for="validationCustom02" class="form-label">Reference* :</label>
+                            <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setCustomer_ref(e.target.value)}  value={customer_ref} required />
+                            <div class="valid-feedback">
+                            Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="validationCustom02" class="form-label">Customer name* : </label>
+                            <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setName(e.target.value)}   value={name} required />
+                            <div class="valid-feedback">
+                            Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="validationCustom02" class="form-label">Category* :</label>
+                            <Select options={options} class="form-select"  defaultValue={category} aria-label="Default select example" onChange={(e)=>setCategory(e.label)} />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="validationCustom02" class="form-label">About : </label>
+                            <textarea type="text" class="form-control" id="validationCustom02" onChange={(e)=>setInfo(e.target.value)}   value={info}  />
+                            <div class="valid-feedback">
+                            Looks good!
+                            </div>
+                        </div>
+                        <div className='col-md-6'></div>
+                    </form>
+                    </Modal.Body>
+                  <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                      Annuler
+                  </Button>
+                  <Button onClick={handleSubmit} hidden={addB} variant='primary'>Save</Button>
+                  <Button onClick={updateCustomer} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                            
+                  </Modal.Footer>
+            </Modal>   
             
             <div >
                 <legend >LIST OF Customers</legend>
@@ -187,7 +214,7 @@ export default function Customer() {
                   <div  className='col-md-4'></div>
                   <div  className='col-md-4'></div>
                   <div  className='col-md-4'>
-                    <input  class="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
+                    <input  className="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
                   </div>
                 </div>
                 <table className="table table-striped" >
@@ -206,8 +233,8 @@ export default function Customer() {
                                 <td>{item.name}</td>
                                 <td>{item.category}</td>
                                 <td>{item.info}</td>
-                                <td><Button onClick={()=>{selectCustomer(item.id);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
-                                <td><Button onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
+                                <td><Button style={{marginRight:10}} onClick={()=>{handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
 
                     </tr>
                     ))}
