@@ -9,13 +9,66 @@
 .border{
     border:double;
     border-bottom: 1px solid black;
-    padding-top: 20px;
+    
     padding-bottom: 30px;
-    height: 1000px;
+    height: max-content;
+    margin-bottom: 20px;
 }
+
+.border div{
+  margin-top: 10px;
+}
+
+legend {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+legend:after {
+  display: inline-block;
+  margin: 0 0 8px 20px;
+  height: 2px;
+  content: " ";
+  text-shadow: none;
+  background-color: #999;
+  min-width: 30%;
+  max-width: 40%;
+}
+legend:before {
+  display: inline-block;
+  margin: 0 20px 8px 0;
+  height: 2px;
+  content: " ";
+  text-shadow: none;
+  background-color: #999;
+  min-width: 30%;
+  max-width: 40%;
+}
+.filter{
+  padding:20px;
+}
+.filter input{
+  width: 300px;
+}
+form{
+  padding-left: 50px;
+  padding-right: 50px;
+  
+  align-items: center;
+}
+div .table{
+  width: 1200px;
+  margin: auto;
+  
+}
+.border Button{
+  margin-bottom: 20px;
+}
+/*Not Common CSS*/
 .report_header{
-  width: 1400px;
- 
+  width: 100%;
+  
   display: flex;
   align-items: center;
 }

@@ -244,6 +244,7 @@ export default function Claims() {
     <div className='main'>
         <h2 >Claims</h2>
         <div className='border '>
+        <div>
         <Button onClick={()=>{handleShow();setModalTitle("Add New Claim");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Claim</Button>
         <Modal
         size='md'
@@ -341,6 +342,7 @@ export default function Claims() {
           <Button onClick={handleSubmit} hidden={addB} variant="primary" >Save</Button>
           </Modal.Footer>
       </Modal>     
+      </div>
             <div >
                 <legend >List of Claims</legend>
                 <div className='row md-4 filter'>
