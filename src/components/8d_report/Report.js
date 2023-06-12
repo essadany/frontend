@@ -3,7 +3,7 @@ import Tab from '../tabs/Tab'
 import './Report.css';
 import { Button } from 'react-bootstrap';
 import { CloudDownload, Download, Plus } from 'react-bootstrap-icons';
-import { Delete, Edit, FontDownload, FontDownloadSharp } from '@material-ui/icons';
+import { AddAPhoto, Delete, Edit } from '@material-ui/icons';
 export default function Report() {
   const fileInputRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -60,26 +60,26 @@ export default function Report() {
   return (
     <div className='main'>
       <Tab />
-      <h2 >8D Report</h2>
+      <h2 ><img className='report_icon' src='icons/stamp.png'/>  8D Report</h2>
       <div className='border'>
-        <div className='report_header'>
-          <div>
-            <form className='row g-3'>
-              <div className="col-md-2">
-                  <label  for='1' className="col-form-label">opening date :</label>
+        <div className='row report_header'>
+          <div className='col-md-4'>
+            <form className=' g-3'>
+              <div className="">
+                  <label  className="col-form-label">opening date :</label>
                   <input  type="date" class="form-control form-control-sm"  required />     
                   
               </div>
-              <div className="col-md-2">
+              <div className="">
                   <label  for='2' className=" col-form-label">Update date :</label>
                   <input type="date" class="form-control form-control-sm" required />
               </div>
             </form>
           </div>
-          <div><Button variant='success'><Download /></Button></div>
-          <div>
-            <form className='row g-3'>
-              <div class="col-md-2">
+          <div className='col-md-4'><Button variant='success'><Download /></Button></div>
+          <div className='col-md-4'>
+            <form className=' g-3'>
+              <div class="">
                   <label  class="form-label">Reported by :</label>
                   <textarea class="form-control form-control-sm"  required />
               </div>
@@ -123,7 +123,7 @@ export default function Report() {
               
               <div className='col-md-4'>
                 <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
-                <Button onClick={handleImportClick}  ><Plus  size={30}  /></Button>
+                <Button onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
               </div>
             </div>
             
@@ -131,7 +131,7 @@ export default function Report() {
 
           <div>
             <legend>Containment Action(s)</legend>
-            <form>
+            <form className='row'>
               <div class="col-md-12">
                   <textarea  class="form-control"  required />
               </div>

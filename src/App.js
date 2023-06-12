@@ -7,11 +7,11 @@ import AuthUser from './components/Login/AuthUser';
 import Auth from './components/sidebar/Auth';
 import Guest from './components/sidebar/guest';
 import Dashboard from './components/dashboard/Dashboard';
-import ProtectedRoute from "./ProtectedRoute";
-
+import './App.css'
 function App() {
   return (
-    <Interface />
+    <div className='app'><Interface /></div>
+    
     /*<Router>
       <Routes>
         <Route path="/login" element={<Login />} />

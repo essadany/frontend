@@ -198,6 +198,7 @@ export default function Product() {
         <h2>Products</h2>
         
         <div className='border'>
+        <div>
         <Button onClick={()=>{handleShow();setModalTitle("Add New Product");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Product</Button>
 
         <Modal
@@ -251,6 +252,7 @@ export default function Product() {
                             
                   </Modal.Footer>
               </Modal>  
+              </div>
             <div >
                 <legend >LIST OF PRODUCTS</legend>
                 <div className='row md-4 filter'>

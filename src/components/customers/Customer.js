@@ -156,6 +156,7 @@ export default function Customer() {
     <div className='main Customer'>
         <h2>Customers</h2>
         <div className='border'>
+          <div>
         <Button onClick={()=>{handleShow();setModalTitle("Add New Customer");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Customer</Button>
 
         <Modal
@@ -186,11 +187,11 @@ export default function Customer() {
                         </div>
                         <div class="col-md-6">
                             <label for="validationCustom02" class="form-label">Category* :</label>
-                            <Select options={options} class="form-select"  defaultValue={category} aria-label="Default select example" onChange={(e)=>setCategory(e.label)} />
+                            <Select options={options} className="form-select"  defaultValue={category} aria-label="Default select example" onChange={(e)=>setCategory(e.label)} />
                         </div>
                         <div class="col-md-6">
                             <label for="validationCustom02" class="form-label">About : </label>
-                            <textarea type="text" class="form-control" id="validationCustom02" onChange={(e)=>setInfo(e.target.value)}   value={info}  />
+                            <textarea type="text" className="form-control" id="validationCustom02" onChange={(e)=>setInfo(e.target.value)}   value={info}  />
                             <div class="valid-feedback">
                             Looks good!
                             </div>
@@ -207,9 +208,9 @@ export default function Customer() {
                             
                   </Modal.Footer>
             </Modal>   
-            
+            </div>
             <div >
-                <legend >LIST OF Customers</legend>
+                <legend >List Of Customers</legend>
                 <div className='row md-4 filter'>
                   <div  className='col-md-4'></div>
                   <div  className='col-md-4'></div>
