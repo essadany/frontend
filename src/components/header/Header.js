@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <div className="header ">
         <div className="logo">
-            <img src="icons/technical-support.png"  className="d-inline-block align-top" alt="Logo"/>
+            <img src="../icons/technical-support.png"  className="d-inline-block align-top" alt="Logo"/>
             <h3>Claims Management</h3>
         </div>
         <div className="notif">

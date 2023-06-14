@@ -6,6 +6,7 @@ import { BarChartLineFill, Braces, Dot, Play, Plus, PlusCircle, TicketDetailed, 
 import './MyActions.css';
 import  Modal  from 'react-bootstrap/Modal'
 import { CircularProgress, LinearProgress } from '@material-ui/core';
+import  Select  from 'react-select';
 export default function MyActions() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -59,15 +60,18 @@ export default function MyActions() {
                   </Modal.Footer>
             </Modal>   
                 </div>
-                <div className='row g-3 filter'>
-                  <div  className='col-md-2'>
-                    <label>Claim reference : </label>
-                    <FormSelect className="form-control " />
-                  </div>
-                  <div  className='col-md-6'></div>
-                  <div  className='col-md-4 filter'>
-                    <input  className="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
-                  </div>
+                <div className='filter'>
+                  <form className='row'>
+                    <div  className='col-2'>
+                      <label>Claim reference : </label>
+                      <Select   />
+                    </div>
+                    <div  className='col-6'></div>
+                    <div  className='col-4 filter'>
+                      <input  className="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
+                    </div>
+                  </form>
+                  
                 </div>
                 <div className='table-responsive'>
                   <table className="table table-striped" >

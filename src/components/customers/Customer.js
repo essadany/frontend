@@ -28,7 +28,7 @@ export default function Customer() {
         // this useEffect will run once
         // similar to componentDidMount()
         function getCustomers(){
-          fetch("http://127.0.0.1:8000/api/customers")
+          fetch("http://127.0.0.1:8000/api/customers_activated")
             .then(res => res.json())
             .then(
               (result) => {
@@ -52,6 +52,7 @@ export default function Customer() {
         const [name, setName] = useState("");
         const [category, setCategory] = useState(options[1]);
         const [info, setInfo] = useState("");
+        const [deleted, setDeleted] = useState(false);
         const [message, setMessage] = useState("");
         const [editB,setEditB] = useState(true);
 
@@ -128,16 +129,32 @@ export default function Customer() {
 
             }
           // Delete Customer ------------------------------------------------------------------------------------------------------------------------
-          function deleteCustomer(id) {
-            fetch(`http://127.0.0.1:8000/api/customer/${id}`, {
-              method: 'DELETE'
-            }).then((result) => {
-              result.json().then((resp) => {
-                console.warn(resp)
-                getCustomers()
-                alert('Customer Deleted Successfully')
-              })
-            })
+          function deleteCustomer(id){
+            try{
+                fetch(`http://127.0.0.1:8000/api/customer_disactivated/${id}`, {
+                  method: 'PUT',
+                  headers:{
+                    'Accept' : 'application/json',
+                    'Content-Type':'application/json'
+                  },
+                  body:JSON.stringify(deleted)
+                }).then((result) => {
+                    if (result.ok){
+                      getCustomers();
+                      alert("Customer Deleted successfully");
+                    }else{
+                      result.json().then((resp) => {
+                        console.warn(resp)
+                        alert("Some error occured!");
+
+                      })
+                    }
+                    
+                  })
+                
+              } catch (err) {
+              console.log(err);
+            }
           }
           // Filter Customers --------------------------------------------------------------------------------------------------------------------------
           const [filter, setFilter] = useState("");
@@ -174,27 +191,18 @@ export default function Customer() {
                         <div class="col-md-6">
                             <label for="validationCustom02" class="form-label">Reference* :</label>
                             <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setCustomer_ref(e.target.value)}  value={customer_ref} required />
-                            <div class="valid-feedback">
-                            Looks good!
-                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="validationCustom02" class="form-label">Customer name* : </label>
                             <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setName(e.target.value)}   value={name} required />
-                            <div class="valid-feedback">
-                            Looks good!
-                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="validationCustom02" class="form-label">Category* :</label>
-                            <Select options={options} className="form-select"  defaultValue={category} aria-label="Default select example" onChange={(e)=>setCategory(e.label)} />
+                            <Select options={options} defaultValue={category} aria-label="Default select example" onChange={(e)=>setCategory(e.label)} />
                         </div>
                         <div class="col-md-6">
                             <label for="validationCustom02" class="form-label">About : </label>
                             <textarea type="text" className="form-control" id="validationCustom02" onChange={(e)=>setInfo(e.target.value)}   value={info}  />
-                            <div class="valid-feedback">
-                            Looks good!
-                            </div>
                         </div>
                         <div className='col-md-6'></div>
                     </form>

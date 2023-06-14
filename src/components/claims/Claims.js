@@ -4,7 +4,7 @@ import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi }
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import  Modal  from 'react-bootstrap/Modal'
-import {Button} from 'react-bootstrap';
+import {Button, FormSelect} from 'react-bootstrap';
 import './Claims.css';
 import { Details } from '@material-ui/icons';
 export default function Claims() {
@@ -19,24 +19,23 @@ export default function Claims() {
     { value: 'Intern', label: 'Intern' },
     { value: 'Extern', label: 'Extern' }
     ]
-  const options1 = [
-    { value: 'Module', label: 'Module' },
-    { value: 'Bobine', label: 'Bobine' },
-    { value: 'Faiscaux', label: 'Faiscaux' },
-    { value: 'Clapet', label: 'Clapet' },
-    { value: 'Gicleur', label: 'Gicleur' }
-    ]
+    const claims_status = [
+      { value: 'not started', label: 'not started' },
+      { value: 'on going', label: 'on going' },
+      { value: 'done', label: 'done' }
+      ]
 
 // Get Claim list ---------------------------------------------------------------------------------------------------------------
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [claims, setClaims] = useState([]);
+    
   
     // Note: the empty deps array [] means
     // this useEffect will run once
     // similar to componentDidMount()
     function getClaims(){
-      fetch("http://127.0.0.1:8000/api/claims")
+      fetch("http://127.0.0.1:8000/api/claims_join")
         .then(res => res.json())
         .then(
           (result) => {
@@ -59,7 +58,7 @@ export default function Claims() {
     
     const [internal_ID, setInternal_ID] = useState(" ");
     const [refRecClient, setRefRecClient] = useState("");
-    const[product_ref,setProduct_ref] = useState('');
+    const [product_ref, setProduct_ref] = useState("");
     const [engraving, setEngraving] = useState("");
     const [prod_date, setProd_date] = useState("");
     const [type, setType] = useState(options[1]);
@@ -71,15 +70,18 @@ export default function Claims() {
     const [def_mode, setDef_mode] = useState("");
     const [prod_designation, setProd_designation] = useState("");
     const [nbr_claimed_parts, setNbr_claimed_parts] = useState("");
-    const [status,setStatus] = useState("red")
+    const [deleted,setDeleted]= useState(false);
+    const [status,setStatus] = useState("red");
     const [products,setProducts]= useState([]);
-        function getProducts(){
-          fetch("http://127.0.0.1:8000/api/products")
+    const [customers,setCustomers]= useState([]);
+    const [customer_id,setCustomer_id]= useState('');
+        function getCustomers(){
+          fetch("http://127.0.0.1:8000/api/customers")
             .then(res => res.json())
             .then(
               (result) => {
                 setIsLoaded(true);
-                setProducts(result);
+                setCustomers(result);
               },
               // Note: it's important to handle errors here
               // instead of a catch() block so that we don't swallow
@@ -91,11 +93,35 @@ export default function Claims() {
             )
         }
         useEffect(() => {
-          getProducts();
+          getCustomers();
         }, []);
 
-    const products_ref = products.map((item)=>({ value : item.id, label : item.product_ref}));
+        const customer_names = customers.map((item)=>({ value : item.id, label : item.name}));
+
+    function getProductsByCustomer(customer_id){
+      
+      fetch(`http://127.0.0.1:8000/api/products_by_customer/${customer_id}`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setProducts(result);       
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+    }
     
+   
+    const products_name = products.map((item)=>({ value : item.product_ref, label : item.name}));   
+    const [customer_name,setCustomer_name]= useState(customer_names[0]);
+    const[product_name,setProduct_name] = useState(products_name[0]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -105,15 +131,7 @@ export default function Claims() {
               'Accept' : 'application/json',
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({
-              internal_ID ,
-              refRecClient ,
-              product_ref,
-              engraving ,
-              prod_date ,
-              object ,
-              opening_date ,
-              final_cusomer ,
+            body: JSON.stringify({ internal_ID , refRecClient , product_ref, engraving , prod_date , object , opening_date , final_cusomer ,
               claim_details ,
               def_mode ,
               nbr_claimed_parts,
@@ -124,7 +142,7 @@ export default function Claims() {
           if (res.status === 200) {
             setInternal_ID('');
             setRefRecClient('');
-            setProduct_ref('');
+            setProduct_name(products_name[0]);
             setEngraving('');
             setProd_date('');
             setObject('');
@@ -150,7 +168,9 @@ export default function Claims() {
         console.log(claim)
         setInternal_ID(claim.internal_ID);
           setRefRecClient(claim.refRecClient);
+          setProduct_name(claim.product_name);
           setProduct_ref(claim.product_ref);
+          setCustomer_name(claim.customer_name);
           setEngraving(claim.engraving);
           setProd_date(claim.prod_date);
           setObject(claim.object);
@@ -189,7 +209,7 @@ export default function Claims() {
                 getClaims()
                 setInternal_ID('');
                 setRefRecClient('');
-                setProduct_ref('');
+                setProduct_name(products_name[0]);
                 setEngraving('');
                 setProd_date('');
                 setObject('');
@@ -218,20 +238,39 @@ export default function Claims() {
         }
       // Delete Claim ------------------------------------------------------------------------------------------------------------------------
       function deleteClaim(id) {
-        fetch(`http://127.0.0.1:8000/api/claim/${id}`, {
-          method: 'DELETE'
-        }).then((result) => {
-          result.json().then((resp) => {
-            console.warn(resp)
-            getClaims()
-            alert('Claim Deleted Successfully')
-          })
-        })
+        try{
+          fetch(`http://127.0.0.1:8000/api/claim_disactivated/${id}`, {
+            method: 'PUT',
+            headers:{
+              'Accept' : 'application/json',
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify(deleted)
+          }).then((result) => {
+              if (result.ok){
+                getClaims();
+                alert("Claim Deleted successfully");
+              }else{
+                result.json().then((resp) => {
+                  console.warn(resp)
+                  alert("Some error occured!");
+
+                })
+              }
+              
+            })
+          
+        } catch (err) {
+        console.log(err);
+      }
       }
       // Filter claims --------------------------------------------------------------------------------------------------------------------------
       const [filter, setFilter] = useState("");
-      const handleChange = (e) => {
+      const handleInputChange = (e) => {
         setFilter(e.target.value);
+      };
+      const handleSelectChange = (e) => {
+        setFilter(e.value);
       };
 
       const filteredData = claims.filter((item) =>
@@ -273,8 +312,12 @@ export default function Claims() {
                     </div>
                 </div>
                 <div class="col-md-6">
+                  <label  class="form-label">Customer* :</label>
+                  <Select options={customer_names} class="form-select" defaultValue={customer_name}   aria-label="Default select example" onChange={(e)=>{setProduct_ref('');setCustomer_id(e.value);setCustomer_name(e.label);getProductsByCustomer(e.value)}} />
+                </div>
+                <div class="col-md-6">
                   <label  class="form-label">Product reference* :</label>
-                  <Select options={products_ref} class="form-select" defaultValue={product_ref}   aria-label="Default select example" onChange={(e)=>setProduct_ref(e.label)} />
+                  <Select options={products_name} class="form-select" defaultValue={product_name}   aria-label="Default select example" onChange={(e)=>{setProduct_name(e.label);setProduct_ref(e.value)}} />
                 </div>
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Product engraving* : </label>
@@ -319,8 +362,8 @@ export default function Claims() {
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Claim details :</label>
-                    <textarea  class="form-control" id="validationCustom02"  onChange={(e)=>setClaim_details(e.target.value)}  value={claim_details}  />
+                    <label for="validationCustom02" class="form-label">Claim details* :</label>
+                    <textarea  class="form-control" id="validationCustom02"  onChange={(e)=>setClaim_details(e.target.value)}  value={claim_details} required />
                     <div class="valid-feedback">
                     Looks good!
                     </div>
@@ -345,18 +388,30 @@ export default function Claims() {
       </div>
             <div >
                 <legend >List of Claims</legend>
-                <div className='row md-4 filter'>
-                  <div  className='col-md-4'></div>
-                  <div  className='col-md-4'></div>
-                  <div  className='col-md-4'>
-                    <input  class="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
-                  </div>
+                <div className='filter'>
+                  <form className='row'>
+                  <div  className='col-2'>
+                      <label>Type : </label>
+                      <Select options={options} defaultValue={filter} onChange={handleSelectChange}   />
+                    </div>
+                    <div  className='col-2'></div>
+                    <div  className='col-2'>
+                      <label>Status : </label>
+                      <Select options={claims_status} defaultValue={filter} onChange={handleSelectChange} />
+                    </div>
+                    <div  className='col-2'></div>
+                    <div  className='col-4 filter'>
+                      <input  className="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleInputChange} />
+                    </div>
+                  </form>
+                  
                 </div>
                 <div className='table-responsive'>
                 <table className="table mx-auto table-striped " >
                     <thead>
                         <tr>
                             <th >internal ID</th>
+                            <th >Type</th>
                             <th >Customer ref</th>
                             <th>Product ref</th>
                             <th >Engraving</th>
@@ -374,6 +429,7 @@ export default function Claims() {
                     {filteredData.map((item, i) => (
                             <tr key={i}>
                               <td>{item.internal_ID}</td>
+                              <td>{item.category}</td>
                               <td>{item.refRecClient}</td>
                               <td>{item.product_ref}</td>
                               <td>{item.engraving}</td>
@@ -387,8 +443,8 @@ export default function Claims() {
                               <td><Dot color={status} size={60}/></td>
                               <td><Button onClick={()=>{selectClaim(item.id);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                               <td><Button onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
-                              <td><Button variant='success' href='./Report' ><TicketDetailed color='orange'  size={25}/></Button></td>
-
+                              <td><Button  variant='success' href={`/Report/${item.id}`} ><TicketDetailed color='orange'  size={25}/></Button></td>
+                            
                     </tr>
                     ))}
                     </tbody>

@@ -82,6 +82,7 @@ export default function Product() {
         const [name, setName] = useState(customer_names[1]);
         const [zone, setZone] = useState(product_zones[1]);
         const [uap, setUap] = useState("");
+        const [deleted, setDeleted] = useState(false);
         const [message, setMessage] = useState("");
         const [editB,setEditB] = useState(true);
 
@@ -172,16 +173,32 @@ export default function Product() {
           }
             
           // Delete Product ------------------------------------------------------------------------------------------------------------------------
-          function deleteProduct(id) {
-            fetch(`http://127.0.0.1:8000/api/product/${id}`, {
-              method: 'DELETE'
-            }).then((result) => {
-              result.json().then((resp) => {
-                console.warn(resp)
-                getProducts_customers();
-                alert('Product Deleted Successfully')
-              })
-            })
+          function deleteProduct(product){
+            try{
+                fetch(`http://127.0.0.1:8000/api/product_disactivated/${product.product_id}`, {
+                  method: 'PUT',
+                  headers:{
+                    'Accept' : 'application/json',
+                    'Content-Type':'application/json'
+                  },
+                  body:JSON.stringify(deleted)
+                }).then((result) => {
+                    if (result.ok){
+                      getProducts_customers();
+                      alert("Product Deleted successfully");
+                    }else{
+                      result.json().then((resp) => {
+                        console.warn(resp)
+                        alert("Some error occured!");
+
+                      })
+                    }
+                    
+                  })
+                
+              } catch (err) {
+              console.log(err);
+            }
           }
           // Filter Products --------------------------------------------------------------------------------------------------------------------------
           const [filter, setFilter] = useState("");
@@ -234,12 +251,15 @@ export default function Product() {
                         <div class="col-md-6">
                             <label class="form-label">Product name* : </label>
                             <input type="text" class="form-control"  onChange={(e)=>setName(e.target.value)}   value={name} required />
-                    
                         </div>
+
                         <div class="col-md-6">
                             <label  class="form-label">Zone* :</label>
                             <Select options={product_zones} class="form-select" defaultValue={zone}  aria-label="Default select example" onChange={(e)=>setZone(e.label)} />
-                            
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">UAP Engineer : </label>
+                            <input type="text" class="form-control"  onChange={(e)=>setUap(e.target.value)}   value={uap}  />
                         </div>
                     </form>
                     </Modal.Body>
@@ -255,12 +275,18 @@ export default function Product() {
               </div>
             <div >
                 <legend >LIST OF PRODUCTS</legend>
-                <div className='row md-4 filter'>
-                  <div  className='col-md-4'></div>
-                  <div  className='col-md-4'></div>
-                  <div  className='col-md-4'>
-                    <input  class="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
-                  </div>
+                <div className='filter'>
+                  <form className='row'>
+                    <div  className='col-2'>
+                      <label >Customer : </label>
+                      <Select  options={customer_names} />
+                    </div>
+                    <div  className='col-6'></div>
+                    <div  className='col-4 filter'>
+                      <input  className="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
+                    </div>
+                  </form>
+                  
                 </div>
                 <table className="table table-striped" >
                     <thead>
@@ -268,7 +294,7 @@ export default function Product() {
                             <th >Interne ref</th>
                             <th >Customer ref</th>
                             <th>Customer name</th>
-                            <th >Name</th>
+                            <th >Product name</th>
                             <th>Zone</th>
                             <th>UAP Engineer</th>
                         </tr>                   
@@ -278,12 +304,12 @@ export default function Product() {
                             <tr key={i}>
                                 <td>{item.product_ref}</td>
                                 <td>{item.customer_ref}</td>
-                                <td>{item.product_name}</td>
                                 <td>{item.customer_name}</td>
+                                <td>{item.product_name}</td>
                                 <td>{item.zone}</td>
                                 <td>{item.uap}</td>
                                 <td><Button style={{marginRight:10}} onClick={()=>{selectProduct(item);handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button onClick={()=>deleteProduct(item.product_id)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
+                                    <Button onClick={()=>deleteProduct(item)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
                                 
 
                     </tr>

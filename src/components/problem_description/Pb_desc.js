@@ -104,7 +104,7 @@ export default function Pb_desc() {
     
     <div className='main'>
         <Tab />
-        <h2 ><img className='report_icon' src='icons/problem_desc.png'/>  Problem Description</h2>
+        <h2 ><img className='report_icon' src='../icons/problem_desc.png'/>  Problem Description</h2>
         <div className='border'>
         <div className='row report_header'>
           <div className='col-md-4'>

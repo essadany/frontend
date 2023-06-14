@@ -4,7 +4,10 @@ import './Report.css';
 import { Button } from 'react-bootstrap';
 import { CloudDownload, Download, Plus } from 'react-bootstrap-icons';
 import { AddAPhoto, Delete, Edit } from '@material-ui/icons';
+import { useParams } from 'react-router';
 export default function Report() {
+  const { claim_id } = useParams();
+
   const fileInputRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -60,7 +63,7 @@ export default function Report() {
   return (
     <div className='main'>
       <Tab />
-      <h2 ><img className='report_icon' src='icons/stamp.png'/>  8D Report</h2>
+      <h2 ><img className='report_icon' src='../icons/stamp.png'/>  8D Report {claim_id}</h2>
       <div className='border'>
         <div className='row report_header'>
           <div className='col-md-4'>

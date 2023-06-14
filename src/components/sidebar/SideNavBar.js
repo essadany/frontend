@@ -21,37 +21,37 @@ const SideNavBar = () => {
 	const menuItems = [
 		{
 			text: "Dashboard",
-			icon: "icons/dashboard1.png",
+			icon: "../icons/dashboard1.png",
 			path: '/Dashboard'
 		},
 		{
 			text: "List of Claims",
-			icon: "icons/delivery-box.png",
+			icon: "../icons/delivery-box.png",
 			path: '/Claims'
 		},
 		{
 			text: "My Actions",
-			icon: "icons/to-do-list.png",
+			icon: "../icons/to-do-list.png",
 			path: '/MyActions'
 		},
 		{
 			text: "Claims Tracking",
-			icon: "icons/list.png",
+			icon: "../icons/list.png",
 			path: '/Claim_track'
 		},
 		{
 			text: "Customer",
-			icon: "icons/customer.png",
+			icon: "../icons/customer.png",
 			path: '/Customer'
 		},
 		{
 			text: "Product",
-			icon: "icons/product.png",
+			icon: "../icons/product.png",
 			path: '/Product'
 		},
 		{
 			text: "Users",
-			icon: "icons/followers.png",
+			icon: "../icons/followers.png",
 			path: '/Users'
 		},
 	];
@@ -67,7 +67,7 @@ const SideNavBar = () => {
 				<div className="nav-heading">
 					{isExpanded && (
 						<div className="nav-brand">
-							<img src="icons/bontaz.png" alt="" srcset="" />
+							<img src="../icons/bontaz.png" alt="" srcset="" />
 							<h1>ontaz</h1>
 						</div>
 					)}

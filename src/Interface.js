@@ -31,22 +31,23 @@ export default function Interface() {
         <Routes>
         <Route exact path='/' element={< Dashboard />}>  </Route>
           <Route exact path='/Dashboard' element={< Dashboard />}>  </Route>
-          <Route exact path='/Annexe' element={< Annexe />}>  </Route>
           <Route exact path='/Claims' element={< Claims />}>  </Route>
           <Route exact path='/Customer' element={<Customer />}>  </Route>
           <Route exact path='/Product' element={<Product />}>  </Route>
+          <Route exact path='/Annexe/:claim_id' element={< Annexe />}>  </Route>
+          
           <Route exact path='/Claim_track' element={<Claim_track />}>  </Route>
           <Route exact path='/MyActions' element={<MyActions />}>  </Route>
           <Route exact path='/Users' element={<Users />}>  </Route>
-          <Route exact path='/Report' element={<Report />}>  </Route>
-          <Route exact path='/Team' element={<Team />}>  </Route>
-          <Route exact path='/Meetings' element={< Meetings />}>  </Route>
-          <Route exact path='/Problem_Description' element={<Pb_desc />}>  </Route>
-          <Route exact path='/Containement' element={<Containement />}>  </Route>
-          <Route exact path='/Five_Why' element={< Five_Why />}>  </Route>
-          <Route exact path='/Label_Checking' element={<Label_Check />}>  </Route>
-          <Route exact path='/Actions' element={<Actions />}>  </Route>
-          <Route exact path='Effectiveness' element={<Effectiveness />}>  </Route>
+          <Route exact path='/Report/:claim_id' element={<Report />}>  </Route>
+          <Route exact path='/Team/:claim_id' element={<Team />}>  </Route>
+          <Route exact path='/Meetings/:claim_id' element={< Meetings />}>  </Route>
+          <Route exact path='/Problem_Description/:claim_id' element={<Pb_desc />}>  </Route>
+          <Route exact path='/Containement/:claim_id' element={<Containement />}>  </Route>
+          <Route exact path='/Five_Why/:claim_id' element={< Five_Why />}>  </Route>
+          <Route exact path='/Label_Checking/:claim_id' element={<Label_Check />}>  </Route>
+          <Route exact path='/Actions/:claim_id' element={<Actions />}>  </Route>
+          <Route exact path='Effectiveness/:claim_id' element={<Effectiveness />}>  </Route>
           <Route exact path='*' element="error 404">  </Route>
         </Routes>
     </div>

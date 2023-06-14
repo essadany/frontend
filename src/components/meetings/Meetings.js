@@ -35,7 +35,7 @@ export default function Meetings() {
   return (
     <div className='main'>
         <Tab />
-        <h2 >Meetings</h2>
+        <h2 ><img className='report_icon' src='../../icons/meeting.png'/>  Meetings</h2>
         <div className='border'>
         <div>
         <Button onClick={()=>{handleShow();setModalTitle("Add New Meeting");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Meeting</Button>

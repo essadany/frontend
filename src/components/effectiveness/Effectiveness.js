@@ -5,7 +5,7 @@ export default function Effectiveness() {
   return (
     <div className='main'>
         <Tab />
-        <h2 ><img className='report_icon' src='icons/effect.png'/>  Detailled Proof of Effectiveness For Long Term Action</h2>
+        <h2 ><img className='report_icon' src='../icons/effect.png'/>  Detailled Proof of Effectiveness For Long Term Action</h2>
         <div className='border'>
           <form className='row '>
             <div className='col-2'>
