@@ -15,16 +15,7 @@ export default function Claims() {
   const [modalTitle,setModalTitle]= useState('Add new Claim');
   const [addB,setAddB] = useState('');
   const [editB,setEditB] = useState('');
-  const options = [
-    { value: 'Intern', label: 'Intern' },
-    { value: 'Extern', label: 'Extern' }
-    ]
-    const claims_status = [
-      { value: 'not started', label: 'not started' },
-      { value: 'on going', label: 'on going' },
-      { value: 'done', label: 'done' }
-      ]
-
+ 
 // Get Claim list ---------------------------------------------------------------------------------------------------------------
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -61,7 +52,7 @@ export default function Claims() {
     const [product_ref, setProduct_ref] = useState("");
     const [engraving, setEngraving] = useState("");
     const [prod_date, setProd_date] = useState("");
-    const [type, setType] = useState(options[1]);
+    const [type, setType] = useState("");
     const [object, setObject] = useState("");
     const [opening_date, setOpening_date] = useState("");
     const [direct_customer, setDirect_customer] = useState("");
@@ -96,7 +87,7 @@ export default function Claims() {
           getCustomers();
         }, []);
 
-        const customer_names = customers.map((item)=>({ value : item.id, label : item.name}));
+        
 
     function getProductsByCustomer(customer_id){
       
@@ -116,11 +107,16 @@ export default function Claims() {
         }
       )
     }
+    useEffect(()=>{
+      if (customer_id !== '') {
+        getProductsByCustomer(customer_id);
+      }
+    },[customer_id])
     
    
-    const products_name = products.map((item)=>({ value : item.product_ref, label : item.name}));   
-    const [customer_name,setCustomer_name]= useState(customer_names[0]);
-    const[product_name,setProduct_name] = useState(products_name[0]);
+    
+    const [customer_name,setCustomer_name]= useState("");
+    const[product_name,setProduct_name] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -142,7 +138,7 @@ export default function Claims() {
           if (res.status === 200) {
             setInternal_ID('');
             setRefRecClient('');
-            setProduct_name(products_name[0]);
+            setProduct_name("");
             setEngraving('');
             setProd_date('');
             setObject('');
@@ -154,6 +150,7 @@ export default function Claims() {
             alert("Claim Added successfully");
             setShow(false);
             handleClose();
+            getClaims();
           } else {
             alert("Some error occured, Verify that : - All fields required are typed -The claim reference is not duplicated! - The product reference exists in products table (if not than add it in product interface)");
           }
@@ -163,14 +160,15 @@ export default function Claims() {
       };
       //Update Claim -------------------------------------------------------------------------------------------------
       const [id,setId] = useState("");
-      function selectClaim(id){
-        let claim=claims[id-1];
+      function selectClaim(claim){
+        
         console.log(claim)
         setInternal_ID(claim.internal_ID);
           setRefRecClient(claim.refRecClient);
           setProduct_name(claim.product_name);
-          setProduct_ref(claim.product_ref);
           setCustomer_name(claim.customer_name);
+          setCustomer_id(claim.customer_id);
+          setProduct_ref(claim.product_ref);
           setEngraving(claim.engraving);
           setProd_date(claim.prod_date);
           setObject(claim.object);
@@ -209,8 +207,9 @@ export default function Claims() {
                 getClaims()
                 setInternal_ID('');
                 setRefRecClient('');
-                setProduct_name(products_name[0]);
                 setEngraving('');
+                setProduct_ref('');
+                setCustomer_name('');
                 setProd_date('');
                 setObject('');
                 setOpening_date('');
@@ -266,14 +265,25 @@ export default function Claims() {
       }
       // Filter claims --------------------------------------------------------------------------------------------------------------------------
       const [filter, setFilter] = useState("");
+      const [filter1, setFilter1] = useState("");
+      const [filter2, setFilter2] = useState("");
       const handleInputChange = (e) => {
         setFilter(e.target.value);
       };
-      const handleSelectChange = (e) => {
-        setFilter(e.value);
+      const handleSelectChange2 = (e) => {
+        setFilter2(e.target.value);
+      };
+      const handleSelectChange1 = (e) => {
+        setFilter1(e.target.value);
       };
 
       const filteredData = claims.filter((item) =>
+        Object.values(item).some((value) =>
+          String(value).toLowerCase().includes(filter1.toLowerCase())
+        ) &&
+        Object.values(item).some((value) =>
+          String(value).toLowerCase().includes(filter2.toLowerCase())
+        ) &&
         Object.values(item).some((value) =>
           String(value).toLowerCase().includes(filter.toLowerCase())
         )
@@ -313,11 +323,17 @@ export default function Claims() {
                 </div>
                 <div class="col-md-6">
                   <label  class="form-label">Customer* :</label>
-                  <Select options={customer_names} class="form-select" defaultValue={customer_name}   aria-label="Default select example" onChange={(e)=>{setProduct_ref('');setCustomer_id(e.value);setCustomer_name(e.label);getProductsByCustomer(e.value)}} />
+                  <select data-live-search="true"   className='selectpicker form-select' onChange={(e)=>{setCustomer_name(e.label);setCustomer_id(e.target.value)}} required >
+                    <option disabled selected>--- Select Customer ---</option>
+                    {customers.map((item)=>(<option value={item.id} selected={item.id===customer_id}>{item.name}</option>))}
+                  </select>
                 </div>
                 <div class="col-md-6">
                   <label  class="form-label">Product reference* :</label>
-                  <Select options={products_name} class="form-select" defaultValue={product_name}   aria-label="Default select example" onChange={(e)=>{setProduct_name(e.label);setProduct_ref(e.value)}} />
+                  <select data-live-search="true"  className='selectpicker form-select' onChange={(e)=>{setProduct_ref(e.target.value)}}  required >
+                    <option disabled selected>--- Select Product ---</option>
+                    {products.map((item)=>(<option  selected={item.product_ref===product_ref}>{item.product_ref}</option>))}
+                  </select>
                 </div>
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Product engraving* : </label>
@@ -392,13 +408,21 @@ export default function Claims() {
                   <form className='row'>
                   <div  className='col-2'>
                       <label>Type : </label>
-                      <Select options={options} defaultValue={filter} onChange={handleSelectChange}   />
+                      <select data-live-search="true"  className='selectpicker form-select' value={filter1} onChange={handleSelectChange1} required >
+                      <option disabled selected>--- Select Type ---</option>
+                      <option>Intern</option>
+                      <option>Extern</option>
+                  </select>
                     </div>
                     <div  className='col-2'></div>
                     <div  className='col-2'>
                       <label>Status : </label>
-                      <Select options={claims_status} defaultValue={filter} onChange={handleSelectChange} />
-                    </div>
+                      <select data-live-search="true"  className='selectpicker form-select' value={filter2} onChange={handleSelectChange2} required >
+                      <option disabled selected>--- Select Status ---</option>
+                      <option>not started</option>
+                      <option>on going</option>
+                      <option>done</option>
+                  </select>                    </div>
                     <div  className='col-2'></div>
                     <div  className='col-4 filter'>
                       <input  className="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleInputChange} />
@@ -441,7 +465,7 @@ export default function Claims() {
                               <td>{item.def_mode}</td>
                               <td>{item.nbr_claimed_parts}</td>
                               <td><Dot color={status} size={60}/></td>
-                              <td><Button onClick={()=>{selectClaim(item.id);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                              <td><Button onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                               <td><Button onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
                               <td><Button  variant='success' href={`/Report/${item.id}`} ><TicketDetailed color='orange'  size={25}/></Button></td>
                             

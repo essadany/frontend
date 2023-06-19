@@ -24,6 +24,9 @@ export default function Product() {
           const handleChange = (e) => {
             setFilter(e.target.value);
           };
+          const handleChange2 = (e) => {
+            setFilter2(e.target.value);
+          };
         function getProducts_customers(){
           fetch("http://127.0.0.1:8000/api/products_join_customers")
             .then(res => res.json())
@@ -65,8 +68,9 @@ export default function Product() {
           getCustomers();
         }, []);
           // Afficher la liste des clients et des zones des produits dans le formulaire        
-        const customer_names = customers.map((item)=>({ value : item.id, label : item.name}));
+        
         const product_zones = [
+          {value: '', label: '--- Select Zone ---',Selected : true, Disabled : true},
           {value: 'Module', label: 'Module'},
           {value: 'Gicleur', label: 'Gicleur'},
           {value: 'Clapet', label: 'Clapet'},
@@ -79,8 +83,8 @@ export default function Product() {
         const [customer_id, setCustomer_id] = useState("");
         const [customer_ref, setCustomer_ref] = useState("");
         const [customer_name, setCustomer_name] = useState("");
-        const [name, setName] = useState(customer_names[1]);
-        const [zone, setZone] = useState(product_zones[1]);
+        const [name, setName] = useState('');
+        const [zone, setZone] = useState('');
         const [uap, setUap] = useState("");
         const [deleted, setDeleted] = useState(false);
         const [message, setMessage] = useState("");
@@ -114,6 +118,7 @@ export default function Product() {
                 setUap("");
                 alert("Product Added successfully");
                 handleClose();
+                getProducts_customers();
               } else {
                 alert("Some error occured, try again!");
               }
@@ -127,6 +132,7 @@ export default function Product() {
               setProduct(product);
               setCustomer_ref(product.customer_ref);
               setCustomer_name(product.customer_name);
+              setCustomer_id(product.customer_id)
               setName(product.product_name);
               setZone(product.zone);
               setUap(product.uap);
@@ -202,10 +208,14 @@ export default function Product() {
           }
           // Filter Products --------------------------------------------------------------------------------------------------------------------------
           const [filter, setFilter] = useState("");
+          const [filter2, setFilter2] = useState("");
           
           const filteredData = products_customers.filter((item) =>
             Object.values(item).some((value) =>
               String(value).toLowerCase().includes(filter.toLowerCase())
+            ) && 
+            Object.values(item).some((value) =>
+              String(value).toLowerCase().includes(filter2.toLowerCase())
             )
           );
           
@@ -229,37 +239,45 @@ export default function Product() {
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
+                <form className="row g-3  needs-validation" onSubmit={handleSubmit}>
                         
-                        <div class="col-md-6">
-                            <label  class="form-label">Intern reference* :</label>
-                            <input type="text" class="form-control" onChange={(e)=>setProduct_ref(e.target.value)} value={product_ref} required />
-                            <div class="valid-feedback">
-                            Looks good!
-                            </div>
+                        <div className="col-md-6">
+                            <label  className="form-label">Intern reference* :</label>
+                            <input type="text" className="form-control" onChange={(e)=>setProduct_ref(e.target.value)} value={product_ref} required />
                         </div>
-                        <div class="col-md-6">
-                            <label  class="form-label">Customer reference* :</label>
-                            <input type="text" class="form-control" onChange={(e)=>setCustomer_ref(e.target.value)}  value={customer_ref} required />
+                        <div className="col-md-6">
+                            <label  className="form-label">Customer reference* :</label>
+                            <input type="text" className="form-control" onChange={(e)=>setCustomer_ref(e.target.value)}  value={customer_ref} required />
                             
                         </div>
-                        <div class="col-md-6">
-                          <label  class="form-label">Customer name* :</label>
-                          <Select options={customer_names} class="form-select" defaultValue={customer_name}   aria-label="Default select example" onChange={(e)=>{setCustomer_name(e.label);setCustomer_id(e.value)}} />
+                        <div className="col-md-6">
+                          <label  className="form-label">Customer name* :</label>
+                          <select data-live-search="true"  className='selectpicker form-select' onChange={(e)=>{setCustomer_name(e.label);setCustomer_id(e.target.value)}} required >
+                            <option disabled selected>--- Select User ---</option>
+                            {customers.map((item)=>(<option value={item.id} selected={item.id === customer_id}>{item.name}</option> ))}
+                          </select>
                         </div>
                         
-                        <div class="col-md-6">
-                            <label class="form-label">Product name* : </label>
-                            <input type="text" class="form-control"  onChange={(e)=>setName(e.target.value)}   value={name} required />
+                        <div className="col-md-6">
+                            <label className="form-label">Product name* : </label>
+                            <input type="text" className="form-control"  onChange={(e)=>setName(e.target.value)}   value={name} required />
                         </div>
 
-                        <div class="col-md-6">
-                            <label  class="form-label">Zone* :</label>
-                            <Select options={product_zones} class="form-select" defaultValue={zone}  aria-label="Default select example" onChange={(e)=>setZone(e.label)} />
+                        <div className="col-md-6">
+                            <label  className="form-label">Zone* :</label>
+                            <select data-live-search="true"  className='selectpicker form-select' onChange={(e)=>setZone(e.target.value)} required >
+                            <option selected disabled>--- Select Zone ---</option>
+                            <option selected={zone==="Module"} >Module</option>
+                            <option selected={zone==="Vanne"}>Vanne</option>
+                            <option selected={zone==="Clapet"}>Clapet</option>
+                            <option selected={zone==="Gicleur"}>Gicleur</option>
+                            <option selected={zone==="Faiscaux"}>Faiscaux</option>
+                            <option selected={zone==="Bobine"}>Bobine</option>
+                            </select>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">UAP Engineer : </label>
-                            <input type="text" class="form-control"  onChange={(e)=>setUap(e.target.value)}   value={uap}  />
+                        <div className="col-md-6">
+                            <label className="form-label">UAP Engineer : </label>
+                            <input type="text" className="form-control"  onChange={(e)=>setUap(e.target.value)}   value={uap}  />
                         </div>
                     </form>
                     </Modal.Body>
@@ -267,8 +285,8 @@ export default function Product() {
                   <Button variant="secondary" onClick={handleClose}>
                       Annuler
                   </Button>
-                  <Button onClick={handleSubmit} hidden={addB} variant='primary'>Save</Button>
-                  <Button onClick={updateProduct} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                  <Button type='submit' onClick={handleSubmit} hidden={addB} variant='primary'>Save</Button>
+                  <Button  type='submit' onClick={updateProduct} hidden={editB} variant='success'>Update<i className="fa-solid fa-pen-to-square"></i></Button>
                             
                   </Modal.Footer>
               </Modal>  
@@ -279,11 +297,14 @@ export default function Product() {
                   <form className='row'>
                     <div  className='col-2'>
                       <label >Customer : </label>
-                      <Select  options={customer_names} />
+                      <select data-live-search="true" label={filter} className='selectpicker form-select' onChange={handleChange} required >
+                            <option selected disabled >--- Select User ---</option>
+                            {customers.map((item)=>(<option >{item.name}</option> ))}
+                          </select>
                     </div>
                     <div  className='col-6'></div>
                     <div  className='col-4 filter'>
-                      <input  className="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
+                      <input  className="form-control " type="text" placeholder="Filter table" value={filter2} onChange={handleChange2} />
                     </div>
                   </form>
                   
@@ -308,8 +329,8 @@ export default function Product() {
                                 <td>{item.product_name}</td>
                                 <td>{item.zone}</td>
                                 <td>{item.uap}</td>
-                                <td><Button style={{marginRight:10}} onClick={()=>{selectProduct(item);handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button onClick={()=>deleteProduct(item)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
+                                <td><Button style={{marginRight:10}} onClick={()=>{selectProduct(item);handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button onClick={()=>deleteProduct(item)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
                                 
 
                     </tr>

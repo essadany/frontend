@@ -7,10 +7,21 @@ import './MyActions.css';
 import  Modal  from 'react-bootstrap/Modal'
 import { CircularProgress, LinearProgress } from '@material-ui/core';
 import  Select  from 'react-select';
+import { useParams } from 'react-router';
 export default function MyActions() {
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [modalTitle,setModalTitle]= useState('Add new Meeting');
+  const [addB,setAddB] = useState('');
+  const [editB,setEditB] = useState(true);
+
+
+ 
+
 
   // Filter Users --------------------------------------------------------------------------------------------------------------------------
   const [filter, setFilter] = useState("");
@@ -23,6 +34,8 @@ export default function MyActions() {
       String(value).toLowerCase().includes(filter.toLowerCase())
     )
   );*/
+
+  
   return (
     <div className='main'>
         <h2 >My Actions</h2>

@@ -1,12 +1,74 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Tab from '../tabs/Tab'
 import './Report.css';
 import { Button } from 'react-bootstrap';
 import { CloudDownload, Download, Plus } from 'react-bootstrap-icons';
 import { AddAPhoto, Delete, Edit } from '@material-ui/icons';
 import { useParams } from 'react-router';
+import moment from "moment";
+
 export default function Report() {
-  const { claim_id } = useParams();
+  const {claim_id} = useParams();
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [show, setShow] = useState(false);
+  const [modalTitle,setModalTitle]= useState('Add new Sorting');
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [addB,setAddB] = useState('');
+  const [editB,setEditB] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [containement_actions,setContainement_actions] = useState("");
+  const [first_batch3,setFirst_batch3] = useState("");
+  const [date_cause_definition,setDate_cause_definition] = useState("");
+  const [opening_date,setOpening_date] = useState("");
+  const [update_date,setUpdate_date] = useState("");
+  const [report_id,setReport_id] = useState('');
+  const [report,setReport] = useState('');
+  const [reported_by,setReported_by] = useState('');
+  const [pilot,setPilot] = useState('');
+  const [ddm	, setDdm] = useState(false);
+  const [approved,setApproved]= useState(false);
+  const [others,setOthers] = useState(false);
+  const [ctrl_plan	,setCtrl_plan] = useState(false);
+  const [pfmea	,setPfmea] = useState(false);
+  const [dfmea	,setDfmea] = useState(false);
+  const [progress_rate	,setProgress_rate] = useState(0);
+
+
+  //Get report
+  function getReport(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/report`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setReport(result);
+          setReport_id(result.id);
+          setContainement_actions(result.containement_actions);
+          setFirst_batch3(result.first_batch3);
+          setDate_cause_definition(result.date_cause_definition);
+          const date = moment(result.updated_at).format("YYYY-MM-DD");
+          setUpdate_date(date);
+          setDdm(result.ddm);
+          setDfmea(result.dfmea);
+          setPfmea(result.pfmea);
+          setOthers(result.others);
+          setPilot(result.pilot);
+          setApproved(result.approved);
+          setCtrl_plan(result.ctrl_plan);
+
+        },
+
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }
+  useEffect(() => {
+    getReport();
+  }, [claim_id])
 
   const fileInputRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -75,7 +137,7 @@ export default function Report() {
               </div>
               <div className="">
                   <label  for='2' className=" col-form-label">Update date :</label>
-                  <input type="date" class="form-control form-control-sm" required />
+                  <input type="date" class="form-control form-control-sm" disabled value={update_date} required />
               </div>
             </form>
           </div>

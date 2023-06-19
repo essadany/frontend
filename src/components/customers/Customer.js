@@ -14,10 +14,7 @@ export default function Customer() {
         const handleShow = () => setShow(true);
         const [modalTitle,setModalTitle]= useState('Add new Product');
         const [addB,setAddB] = useState('');
-      const options = [
-        { value: 'Intern', label: 'Intern' },
-        { value: 'Extern', label: 'Extern' }
-        ]
+      
 
     // Get Customer list ---------------------------------------------------------------------------------------------------------------
         const [error, setError] = useState(null);
@@ -50,7 +47,7 @@ export default function Customer() {
         // Add Customer ------------------------------------------------------------------------------------------------
         const [customer_ref, setCustomer_ref] = useState("");
         const [name, setName] = useState("");
-        const [category, setCategory] = useState(options[1]);
+        const [category, setCategory] = useState("");
         const [info, setInfo] = useState("");
         const [deleted, setDeleted] = useState(false);
         const [message, setMessage] = useState("");
@@ -198,7 +195,11 @@ export default function Customer() {
                         </div>
                         <div class="col-md-6">
                             <label for="validationCustom02" class="form-label">Category* :</label>
-                            <Select options={options} defaultValue={category} aria-label="Default select example" onChange={(e)=>setCategory(e.label)} />
+                            <select data-live-search="true"  className='selectpicker form-select' value={category} onChange={(e)=>setCategory(e.target.value)}  required >
+                            <option disabled selected>--- Select Category ---</option>
+                            <option>Intern</option>
+                            <option>Extern</option>
+                        </select>
                         </div>
                         <div class="col-md-6">
                             <label for="validationCustom02" class="form-label">About : </label>

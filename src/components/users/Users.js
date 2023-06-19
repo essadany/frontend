@@ -85,6 +85,7 @@ export default function Users() {
                 setRole("");
                 alert("User Added successfully");
                 handleClose();
+                getUsers();
               } else {
                 alert("Some error occured, try again!");
               }

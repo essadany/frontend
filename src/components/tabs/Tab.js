@@ -6,7 +6,7 @@ import Team from '../team/Team';
 import { useParams } from 'react-router';
 export default function Tab() {
     const { claim_id } = useParams();
-
+    
   return (
     <div className='tab'>
         <ul class="nav nav-tabs">
@@ -32,7 +32,7 @@ export default function Tab() {
                 <a class="nav-link" href={`/Five_Why/${claim_id}`}>5 WHY</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`Label_Checking/${claim_id}`}>LABEL CHECKING </a>
+                <a class="nav-link" href={`/Label_Checking/${claim_id}`}>LABEL CHECKING </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href={`/Actions/${claim_id}`}>ACTIONS</a>
