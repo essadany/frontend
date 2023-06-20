@@ -66,10 +66,75 @@ export default function Report() {
         }
       )
   }
+
+  
+  //Get Preventive actions
+  const [preventive_actions,setPreventive_actions] = useState([]);
+  function getPreventiveActions(){
+    console.warn('report_id=',report_id);
+    fetch(`http://127.0.0.1:8000/api/report/${report_id}/preventive_actions`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setPreventive_actions(result);
+        },
+
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }
+  
+  //Get Implemented actions
+  const [implemented_actions,setImplemented_actions] = useState([]);
+  function getImplementedActions(){
+    fetch(`http://127.0.0.1:8000/api/report/${report_id}/implemented_actions`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setImplemented_actions(result);
+        },
+
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }
+  
+  //Get Potential actions
+  const [potential_actions,setPotential_actions] = useState([]);
+  function getPotentialActions(){
+    fetch(`http://127.0.0.1:8000/api/report/${report_id}/potential_actions`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setPotential_actions(result);
+        },
+
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }
   useEffect(() => {
     getReport();
   }, [claim_id])
-
+  useEffect(() => {
+    getPreventiveActions();
+  }, [report_id])
+  useEffect(() => {
+    getImplementedActions();
+  }, [report_id])
+  useEffect(() => {
+    getPotentialActions();
+  }, [report_id])
+ // Import images code ----------------------------------------------
   const fileInputRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -238,26 +303,20 @@ export default function Report() {
                     <thead>
                         <tr>
                             <th >Action</th>
+                            <th >Pilot</th>
                             <th>Planned Date</th>
                             <th >Status</th>
                         </tr>                   
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>jfdhirg r eiugf fhuriuhr_ui hdsjdhg_u guerighre hg_ureg</td>
-                        <td>08/06/2023</td>
-                        <td>on going</td>
-                      </tr>
-                      <tr>
-                        <td>jfdhirg r eiugf fhuriuhr_ui hdsjdhg_u guerighre hg_ureg</td>
-                        <td>08/06/2023</td>
-                        <td>on going</td>
-                      </tr>
-                      <tr>
-                        <td>jfdhirg r eiugf fhuriuhr_ui hdsjdhg_u guerighre hg_ureg</td>
-                        <td>08/06/2023</td>
-                        <td>on going</td>
-                      </tr>
+                    {potential_actions.map((item)=>(
+                        <tr>
+                          <td>{item.action}</td>
+                          <td>{item.name}</td>
+                          <td>{item.planned_date}</td>
+                          <td>{item.status}</td>
+                        </tr>
+                      ))}
                     </tbody>
                 </table>       
               </div>
@@ -288,29 +347,19 @@ export default function Report() {
                         <tr>
                             <th >Action</th>
                             <th >Pilot</th>
-                            <th>Date</th>
+                            <th>Planned Date</th>
                             <th >Status</th>
                         </tr>                   
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>jfdhirg r eiugf fhuriuhr_ui hdsjdhg_u guerighre hg_ureg</td>
-                        <td>ES-SADANY YASSINE</td>
-                        <td>08/06/2023</td>
-                        <td>on going</td>
-                      </tr>
-                      <tr>
-                        <td>jfdhirg r eiugf fhuriuhr_ui hdsjdhg_u guerighre hg_ureg</td>
-                        <td>ES-SADANY YASSINE</td>
-                        <td>08/06/2023</td>
-                        <td>on going</td>
-                      </tr>
-                      <tr>
-                        <td>jfdhirg r eiugf fhuriuhr_ui hdsjdhg_u guerighre hg_ureg</td>
-                        <td>ES-SADANY YASSINE</td>
-                        <td>08/06/2023</td>
-                        <td>on going</td>
-                      </tr>
+                      {implemented_actions.map((item)=>(
+                        <tr>
+                          <td>{item.action}</td>
+                          <td>{item.name}</td>
+                          <td>{item.planned_date}</td>
+                          <td>{item.status}</td>
+                        </tr>
+                      ))}
                     </tbody>
                 </table>       
               </div>
@@ -332,23 +381,19 @@ export default function Report() {
                         <tr>
                             <th >Action</th>
                             <th >Pilot</th>
-                            <th>Date</th>
+                            <th>Planned Date</th>
                             <th >Status</th>
                         </tr>                   
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>jfdhirg r eiugf fhuriuhr_ui hdsjdhg_u guerighre hg_ureg</td>
-                        <td>ES-SADANY YASSINE</td>
-                        <td>08/06/2023</td>
-                        <td>on going</td>
-                      </tr>
-                      <tr>
-                        <td>jfdhirg r eiugf fhuriuhr_ui hdsjdhg_u guerighre hg_ureg</td>
-                        <td>ES-SADANY YASSINE</td>
-                        <td>08/06/2023</td>
-                        <td>on going</td>
-                      </tr>
+                    {preventive_actions.map((item)=>(
+                        <tr>
+                          <td>{item.action}</td>
+                          <td>{item.name}</td>
+                          <td>{item.planned_date}</td>
+                          <td>{item.status}</td>
+                        </tr>
+                      ))}
                     </tbody>
                 </table>       
                 </div>

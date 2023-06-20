@@ -59,11 +59,6 @@ export default function Containement() {
         }
       )
   }
-  useEffect(() => {
-    getContainement();
-  }, [claim_id])
-
-  
   
   //Update Containement
   function updateContainement(){
@@ -100,6 +95,9 @@ export default function Containement() {
         }
       )
   }
+  useEffect(() => {
+    getContainement();
+  }, [claim_id])
   useEffect(() => {
     getSortings();
   }, [containement_id])
@@ -281,12 +279,12 @@ export default function Containement() {
                         </div>
                         <div className='col-md-6'></div>
                         <div className='modal-footer'>
-                  <Button variant="secondary" onClick={handleClose}>
-                      Annuler
-                  </Button>
-                  <Button type='submit'   hidden={addB} onClick={handleSubmit} variant='primary'>Save</Button>
-                  <Button  hidden={editB} variant='success' onClick={updateSorting}>Update<i class="fa-solid fa-pen-to-square"></i></Button> 
-                  </div>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Annuler
+                        </Button>
+                        <Button type='submit'   hidden={addB} onClick={handleSubmit} variant='primary'>Save</Button>
+                        <Button  hidden={editB} variant='success' onClick={updateSorting}>Update<i class="fa-solid fa-pen-to-square"></i></Button> 
+                        </div>
                     </form>
                     </Modal.Body>
             </Modal>   

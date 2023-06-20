@@ -1,10 +1,80 @@
 import React from 'react'
 import Tab from '../tabs/Tab'
-import { useRef, useState } from 'react'
+
 import { Button } from 'react-bootstrap';
 import { CloudDownload, Download, Plus } from 'react-bootstrap-icons';
-import { AddAPhoto, Delete, Edit } from '@material-ui/icons';
+import { AddAPhoto, Delete, Done, Edit } from '@material-ui/icons';
+import { useParams } from 'react-router'
+import { useState, useEffect, useRef } from 'react'
+import moment from "moment";
 export default function Pb_desc() {
+
+  const {claim_id} = useParams();
+
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [addB,setAddB] = useState('');
+  const [editB,setEditB] = useState('');
+  const [what, setWhat] = useState('');
+  const [who, setWho] = useState('');
+  const [where,setWhere ] = useState('');
+  const [when,setWhen ] = useState('');
+  const [why,setWhy ] = useState('');
+  const [how, setHow] = useState('');
+  const [how_many_before, setHow_many_before] = useState('');
+  const [how_many_after,setHow_many_after ] = useState('');
+  const [recurrence, setRecurrence] = useState(false);
+  const [received,setReceived ] = useState(false);
+  const [date_reception,setDate_reception ] = useState('');
+  const [date_done,setDate_done ] = useState('');
+  const [bontaz_fault,setBontaz_fault ] = useState(false);
+  const [description, setDescription ] = useState('');
+  const [opening_date,setOpening_date]= useState('');
+  const [update_date,setUpdate_date]= useState('');
+  const [problem_desc,setProblem_desc] = useState('');
+  const [id,setId] = useState('');
+
+   //Get Problem description
+   function getProbDesc(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/problem_description`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setProblem_desc(result);
+          setId(result.id);
+          setWhat(result.what);
+          setWho(result.who);
+          setWhere(result.where);
+          setWhy(result.why);
+          setHow(result.how);
+          setHow_many_before(result.how_many_before);
+          setHow_many_after(result.how_many_after);
+          setRecurrence(result.recurrence);
+          setReceived(result.received);
+          setDate_reception(result.date_reception);
+          setDate_done(result.date_done);
+          setBontaz_fault(result.bontaz_fault);
+          setDescription(result.description);
+          const date = moment(result.updated_at).format("YYYY-MM-DD");
+          setUpdate_date(date);
+
+
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }
+  useEffect(() => {
+    getProbDesc();
+  }, [claim_id])
+
+
   // Good and Bad part-------------------------------------------------------
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
@@ -99,7 +169,39 @@ export default function Pb_desc() {
     setSelectedFiles(updatedFiles);
   };
   
+//Update Problem description
+function updateProblem_desc(){
+            
+  fetch(`http://127.0.0.1:8000/api/problem_description/${id}`, {
+    method: 'PUT',
+    headers:{
+      'Accept' : 'application/json',
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+    what,
+    where,
+    who,
+    when,
+    why,
+    how,
+    how_many_before,
+    how_many_after,
+    recurrence,
+    received,
+    date_reception,
+    date_done,
+    bontaz_fault,
+    description    })
+  }).then((result) => {
 
+        result.json().then((resp) => {
+          console.warn(resp)
+       
+      })
+      
+    }) 
+  }
   return (
     
     <div className='main'>
@@ -111,7 +213,7 @@ export default function Pb_desc() {
             <form className='row g-3'>
               <div className="">
                   <label className="col-form-label">opening date :</label>
-                  <input  type="date" class="form-control form-control-sm"  required />      
+                  <input  type="date" class="form-control form-control-sm" disabled={!isEditing} value={opening_date}  onChange={(e)=>setOpening_date(e.target.value)} required />      
               </div>
             </form>
           </div>
@@ -123,43 +225,43 @@ export default function Pb_desc() {
               <form className='row form-group'>
                 <div class="col-md-6">
                     <label  className=" form-label">What happened ? </label>
-                    <textarea  class="  form-control form-control-sm" required />
+                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={what} onChange={(e)=>setWhat(e.target.value)} required />
                 </div>
                 <div className='col-md-4'></div>
                 <div className="form-check col-md-2">
                   <label  className="form-check-label">Is it recurrent :</label>
-                  <input type="checkbox"  class="form-check-input" required />
+                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={recurrence} onChange={(e)=>setRecurrence(e.target.value)} required />
                 </div>
                 <div class="col-md-6">
                     <label  className=" form-label">Who detected it (Name and function) ? </label>
-                    <textarea  class="  form-control form-control-sm" required />
+                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={who} onChange={(e)=>setWho(e.target.value)} required />
                 </div>
                 <div class="col-md-6">
                     <label  className=" form-label">Where has it been detected (operation) ? </label>
-                    <textarea  class="  form-control form-control-sm" required />
+                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={where} onChange={(e)=>setWhere(e.target.value)} required />
                 </div>
                 <div class="col-md-6">
                     <label  className=" form-label">When has it been detected and manufactured ? </label>
-                    <input type='date'  class="col-md-3  form-control form-control-sm" required />
+                    <input type='date'  class="col-md-3  form-control form-control-sm" disabled={!isEditing} value={when} onChange={(e)=>setWhen(e.target.value)} required />
                 </div>
                 <div class="col-md-6">
                     <label  className=" form-label">Why is it a problem ? </label>
-                    <textarea  class="  form-control form-control-sm" required />
+                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={why} onChange={(e)=>setWhy(e.target.value)} required />
                 </div>
                 <div class="col-md-4">
                     <label  className=" form-label">How has it been detected ? </label>
-                    <textarea  class="  form-control form-control-sm" required />
+                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={how} onChange={(e)=>setHow(e.target.value)} required />
                 </div>
                 <div class="col-md-2">
                     <label  className=" form-label">How many parts ? </label>
                 </div>
                 <div class="col-md-3">
                     <label  className=" form-label">before sorting ? </label>
-                    <input type='number'  class="  form-control form-control-sm" required />
+                    <input type='number'  class="  form-control form-control-sm" disabled={!isEditing} value={how_many_before} onChange={(e)=>setHow_many_before(e.target.value)} required />
                 </div>
                 <div class="col-md-3">
                     <label  className=" form-label">after sorting ? </label>
-                    <input type='number'  class="  form-control form-control-sm" required />
+                    <input type='number'  class="  form-control form-control-sm" disabled={!isEditing} value={how_many_after} onChange={(e)=>setHow_many_after(e.target.value)} required />
                 </div>
               </form>
             </div>
@@ -210,16 +312,16 @@ export default function Pb_desc() {
             <form className='form-group g-3 row'>
               <div className="form-check col-md-4">
                   <label  className="form-check-label">Has Bontaz received the detective parts ?</label>
-                  <input type="checkbox"  class="form-check-input" required />
+                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={received} onChange={(e)=>setReceived(e.target.value)} required />
               </div>
               <div className='col-md-5'></div>
               <div className="col-md-3">
                   <label className=" col-form-label">Date of reception :</label>
-                  <input type="date" class="form-control form-control-sm" required />
+                  <input type="date" class="form-control form-control-sm" disabled={!isEditing} value={date_reception} onChange={(e)=>setDate_reception(e.target.value)} required />
               </div>
               <div class="col-md-12">
                   <label  className=" col-form-label">Analyse:</label>
-                  <textarea  class="form-control"  required />
+                  <textarea  class="form-control" value={description} disabled={!isEditing}  onChange={(e)=>setDescription(e.target.value)} required />
               </div>
             </form>
             </div>
@@ -248,17 +350,17 @@ export default function Pb_desc() {
               <form className='g-3  row'>
                 <div className="form-check col-md-1">
                     <label  className="form-check-label">YES</label>
-                    <input type="radio" name='radio'  class="form-check-input" required />
+                    <input type="radio" name='radio'  class="form-check-input" disabled={!isEditing} required />
                 </div>
                 <div className='col-md-2'></div>
                 <div className="form-check col-md-1">
                     <label  className="form-check-label">NO</label>
-                    <input type="radio" name='radio' class="form-check-input" required />
+                    <input type="radio" name='radio' class="form-check-input" disabled={!isEditing}  checked={bontaz_fault} onChange={(e)=>setBontaz_fault(e.target.value)} required />
                 </div>
                 <div className='col-md-5'></div>
                 <div className="col-md-3">
                     <label   className=" col-form-label">Done date :</label>
-                    <input type="date"  class="form-control form-control-sm" required />
+                    <input type="date"  class="form-control form-control-sm" disabled={!isEditing} value={date_done} onChange={(e)=>setDate_done(e.target.value)} required />
                 </div> 
 
               </form>
@@ -266,8 +368,7 @@ export default function Pb_desc() {
             
           </div>
           <div>
-            <Button style={{marginRight:10}} variant="success" >Edit</Button>
-            <Button variant='primary' >Save</Button>
+            <Button variant='primary'onClick={()=>{setIsEditing(!isEditing);updateProblem_desc();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
 
         </div>

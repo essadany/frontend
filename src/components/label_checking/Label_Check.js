@@ -25,7 +25,38 @@ export default function Label_Check() {
   const [bontaz_plant,setBontaz_plant] = useState('');
   const [sorting_method,setSorting_method] = useState('');
   const [internal_ID,setInternal_ID] = useState('');
+  const bontaz_plants =[{value: "'El Jadida", label : 'El Jadida'},{value: "Shanghai", label : 'Shanghai'},{value: "Marnaz", label : 'Marnaz'},
+                        {value: "Fouchana", label : 'Fouchana'},{value: "Dobra", label : 'Dobra'},{value: "Velka", label : 'Velka'},
+                        {value: "Viana Do Casteo", label : 'Viana Do Casteo'},{value: "Troy", label : 'Troy'},
+                        {value: "Pingamonhangaba-sp", label : 'Pingamonhangaba-sp'}];
 
+   //Get Label Checking
+   function getLabelCheck(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/label_checking_join`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setId(result.id);
+          setProduct_ref(result.product_ref);
+          setCustomer_ref(result.customer_ref);
+          setBontaz_plant(result.bontaz_plant);
+          setSorting_method(result.sorting_method);
+          setInternal_ID(result.internal_ID);   
+        },
+
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }
+
+  useEffect(() => {
+    getLabelCheck();
+  }, [claim_id])
+  
+  // Edit image code----------------------------------------------------------
 
   const [image1, setImage1] = useState(null);
 
@@ -49,53 +80,38 @@ export default function Label_Check() {
   };
   
 
-  //Get Label Checking
-  function getLabelCheck(){
-    fetch(`http://127.0.0.1:8000/api/label_checking_join/${claim_id}`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setLabel_check(result);
-          setId(result.id);
-          setProduct_ref(result.product_ref);
-          setCustomer_ref(result.customer_ref);
-          setBontaz_plant(result.bontaz_plant);
-          setSorting_method(result.sorting_method);
-          setInternal_ID(result.internal_ID);   
-          
-          console.log("claim_id = ",claim_id);       
-        },
-
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
-  }
-  useEffect(() => {
-    getLabelCheck();
-  }, [claim_id])
+ 
 
   //Update Label Checking
-  function updateLabelCheck(){
-            
-    fetch(`http://127.0.0.1:8000/api/label_checking/${id}`, {
-      method: 'PUT',
-      headers:{
-        'Accept' : 'application/json',
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({sorting_method ,bontaz_plant})
-    }).then((result) => {
+    function updateLabelCheck(){
+      try{
+          fetch(`http://127.0.0.1:8000/api/label_checking/${id}`, {
+            method: 'PUT',
+            headers:{
+              'Accept' : 'application/json',
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({sorting_method : sorting_method ,bontaz_plant: bontaz_plant})
+          }).then((result) => {
+              if (result.ok){
+                console.log("id = ",id);
+                alert("Label Checking Updated successfully");
+                
+              }else{
+                result.json().then((resp) => {
+                  console.warn(resp)
+                  alert("Some error occured!");
 
-          result.json().then((resp) => {
-            console.warn(resp)
-         
-        })
-        
-      }) 
+                })
+              }
+              
+            })
+          
+        } catch (err) {
+        console.log(err);
+      }
     }
+      
   return (
     <div className='main'>
         <Tab />
@@ -105,15 +121,15 @@ export default function Label_Check() {
             <form >
             <div >
                 <label  className="form-label">Customer Part Number :</label>
-                <input type="text" className="form-control" disabled value={label_check.customer_ref} required />
+                <input type="text" className="form-control" disabled value={customer_ref} required />
             </div>
             <div >
                 <label  className="form-label">Customer Complaint n°:</label>
-                <input type="text" className="form-control" disabled value={label_check.internal_ID} required />
+                <input type="text" className="form-control" disabled value={internal_ID} required />
             </div>
             <div>
                 <label  className="form-label">Bontaz Part Number :</label>
-                <input type="text" className="form-control" disabled value={label_check.product_ref} required />
+                <input type="text" className="form-control" disabled value={product_ref} required />
             </div>
             <div>
                 <label  className="form-label">Sorting method :</label>
@@ -121,7 +137,10 @@ export default function Label_Check() {
             </div>
             <div>
                 <label  className="form-label">Bontaz Plant :</label>
-                <input type="text" className="form-control"  value={bontaz_plant} onChange={(e)=>setBontaz_plant(e.target.value)} required />
+                <select data-live-search="true"  className='selectpicker form-select' onChange={(e)=>setBontaz_plant(e.target.value)} required >
+                        <option disabled selected>--- Select User ---</option>
+                        {bontaz_plants.map((item)=>(<option value={item.label} selected={item.label===bontaz_plant}>{item.label}</option>))}
+                      </select>            
             </div>
             </form>
           </div>
@@ -146,7 +165,7 @@ export default function Label_Check() {
             </div>        
           </div>
           <div className='col-6'>
-            <Button onClick={updateLabelCheck} variant='success'>Save</Button>
+            <Button onClick={updateLabelCheck}  variant='success'>Save</Button>
           </div>
         </div>
         

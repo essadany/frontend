@@ -59,33 +59,6 @@ export default function Meetings() {
       )
       console.log(users_of_team);
   }
-  
-  useEffect(() => {
-    getUsersOfTeam();
-  }, [claim_id]);
-
-  //Get absences in each meeting
-
-  
-  const getAbsences = (id) => {
-    fetch(`http://127.0.0.1:8000/api/meeting/${id}/absences`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setAbsences(result);
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      );
-      return absences.map((user) => user.name).join(';');
-  }
-  
 
 
    // Get Meetings of Team 
@@ -108,10 +81,39 @@ export default function Meetings() {
       )
       console.log(meetings);
   }
-  
+ 
+  //Get absences in each meeting
+
+  const [id,setId]=useState('');
+  const getAbsences = (id) => {
+    setId(id);
+    fetch(`http://127.0.0.1:8000/api/meeting/${id}/absences`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setAbsences(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+      return absences.map((user) => user.name).join(';');
+  }
+  useEffect(() => {
+    getUsersOfTeam();
+  }, [claim_id]);
   useEffect(() => {
     getMeetings();
   }, [claim_id]);
+  useEffect(() => {
+    getAbsences();
+  }, [id]);
+  // Add meeting--------------------------------------------------------
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -143,7 +145,7 @@ export default function Meetings() {
     }
   };
 
-   //Add Meeting -------------------------------------------------------------------------------------------------
+   //Update Meeting -------------------------------------------------------------------------------------------------
    const [meeting_id,setMeeting_id] =useState('');
    function selectMeeting(meeting){
        setDate(meeting.date);
@@ -200,23 +202,24 @@ export default function Meetings() {
     )
   );
  // Add Absence -----------------------------------------------------------------------------------------------------
- function AddAbsence(){
+ let AddAbsence = async (e)=>{
+  e.preventDefault();
   try {
-    let res = fetch(`http://127.0.0.1:8000/api/add_absence`, {
+    let res = fetch(`http://127.0.0.1:8000/api/meeting_user`, {
       method: "POST",
       headers: {
         'Accept' : 'application/json',
           'Content-Type' : 'application/json'
       },
-      body: JSON.stringify({ meeting_id : meeting_id , user_id : user_id }),
+      body: JSON.stringify({ meeting_id , user_id }),
     })
     console.log(meeting_id,user_id);
     if (res.status === 200) {
       alert("User Added successfully as an absent");
-      getMeetings();
     } else {
       console.log(error);
-      
+      console.log(res.status);
+
     }
   } catch (err) {
     console.log(err);
@@ -275,7 +278,7 @@ export default function Meetings() {
             <div >
                 <legend >List Of Meetings</legend>
                 <div>
-                  <form className='row g-3 ' onSubmit={AddAbsence}>
+                  <form className='row g-3 '>
                     <div className='col-3'>
                       <select className='form-select' required onChange={(e)=>setUser_id(e.target.value)}>
                         <option  selected disabled >--- Select User ---</option>
@@ -289,7 +292,7 @@ export default function Meetings() {
                       </select>
                     </div>
                     <div className='col-3'>
-                      <Button  type='submit' variant='danger'><PlusCircle />  Add Absence</Button>
+                      <Button onClick={AddAbsence} variant='danger'><PlusCircle />  Add Absence</Button>
                     </div>                               
                   </form></div>
                 <div className='row md-4 filter'>
@@ -316,9 +319,13 @@ export default function Meetings() {
                             <td>{item.type}</td>
                             <td>{item.date}</td>
                             <td>{item.comment}</td>
-                            <td>
-                                {/*getAbsences(item.id)*/}
-                            </td>
+                            <td className='text-center'>
+                          {absences
+                            .filter((abs) => abs.meeting_id === item.id)
+                            .map((abs) => (
+                              <div key={abs.id}>{abs.name}</div>
+                            ))}
+                        </td>
                             <td><Button style={{marginRight:10}} onClick={()=>{selectMeeting(item);setModalTitle("Update Meeting");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                         </tr>
                         ))}
