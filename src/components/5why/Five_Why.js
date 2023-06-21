@@ -20,7 +20,7 @@ export default function () {
   const [update_date,setUpdate_date] = useState("");
   const [containement_id,setContainemen_id] = useState('');
   const [containement,setContainement] = useState('');
-  const [sorting_id,setSorting_id] = useState('');
+  const [result_id,setResult_id] = useState('');
   const [system_results,setSystem_results] = useState('');
   const [detection_results	, setDetection_results] = useState('');
   const [occurence_results,setOccurence_results]= useState('');
@@ -103,12 +103,15 @@ export default function () {
   }
   //Get Results
   function getResults(){
-    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/five_lignes`)
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/results`)
       .then(res => res.json())
       .then(
         (result) => {
           setIsLoaded(true);
           setResults(result);
+          setOccurence_results(result.filter(item=>item.type==="occurence").map(item => item.input)[0]);
+          setDetection_results(result.filter(item=>item.type==="detection").map(item => item.input)[0]);
+          setSystem_results(result.filter(item=>item.type==="system").map(item => item.input)[0]);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -129,25 +132,33 @@ export default function () {
     getFiveLignes();
   }, [claim_id])
  
-  //Update Containement
-  function updateContainement(){
-            
-    fetch(`http://127.0.0.1:8000/api/containement/${containement_id}`, {
-      method: 'PUT',
-      headers:{
-        'Accept' : 'application/json',
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({method_description : method_description ,method_validation : method_validation ,risk_assesment : risk_assesment })
-    }).then((result) => {
+  //Update Results
+  const updatedInputs= [occurence_results,detection_results,system_results];
+  const updateResults = async () => {
+    try {
+      await Promise.all(results.map(async (result, index) => {
+        const input = updatedInputs[index];
+        const requestOptions = {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ input: input }),
+        };
 
-          result.json().then((resp) => {
-            console.warn(resp)
-         
-        })
-        
-      }) 
+        const response = await fetch(`http://127.0.0.1:8000/api/result/${result.id}`, requestOptions);
+        const data = await response.json();
+
+        console.log(data);
+        // Handle success message or any other logic
+      }));
+
+      console.log('All lines updated successfully');
+      // Handle success message or any other logic
+
+    } catch (error) {
+      console.error(error);
+      // Handle error message or any other logic
     }
+  };
   return (
     <div className='main'>
         <Tab />
@@ -172,17 +183,17 @@ export default function () {
               <form>
                 <div>
                   <label>Why :</label>
-                  <textarea rows={1} className='form-control form-control-sm'/>
+                  <textarea rows={1}  disabled={!isEditing} className='form-control form-control-sm'/>
                 </div>
                 <div>
                   <label>Answer :</label>
-                  <textarea rows={1} className='form-control form-control-sm'/>
+                  <textarea rows={1}  disabled={!isEditing} className='form-control form-control-sm'/>
                 </div>
 
                 {occurenceArea.map((occurenceArea, index) => (
                   <div>
                     <label>{occurenceArea} :</label>
-                    <textarea rows={1} key={index}  className='form-control form-control-sm'/>
+                    <textarea rows={1} key={index}  disabled={!isEditing}  className='form-control form-control-sm'/>
                   </div>
                   
                 ))}
@@ -194,7 +205,7 @@ export default function () {
                 
                <div>
                   <label>Result :</label>
-                  <textarea rows={3} className='form-control form-control-sm' value={occurence_results} onChange={(e)=>setOccurence_results(e.target.value)}/>
+                  <textarea rows={3} className='form-control form-control-sm'  disabled={!isEditing}  value={occurence_results} onChange={(e)=>setOccurence_results(e.target.value)}/>
                </div>
               </form>
             </div>
@@ -206,17 +217,17 @@ export default function () {
               <form>
                 <div>
                   <label>Why :</label>
-                  <textarea rows={1} className='form-control form-control-sm'/>
+                  <textarea rows={1}  disabled={!isEditing}  className='form-control form-control-sm'/>
                 </div>
                 <div>
                   <label>Answer :</label>
-                  <textarea rows={1} className='form-control form-control-sm'/>
+                  <textarea rows={1}  disabled={!isEditing}  className='form-control form-control-sm'/>
                 </div>
 
                 {detectionArea.map((detectionArea, index) => (
                   <div>
                     <label>{detectionArea} :</label>
-                    <textarea rows={1} key={index}  className='form-control form-control-sm'/>
+                    <textarea rows={1} key={index}   disabled={!isEditing}  className='form-control form-control-sm'/>
                   </div>
                 ))}
                 
@@ -227,7 +238,7 @@ export default function () {
                   
                 <div>
                     <label>Result :</label>
-                    <textarea rows={3} className='form-control form-control-sm' value={detection_results} onChange={(e)=>setDetection_results(e.target.value)}/>
+                    <textarea rows={3} className='form-control form-control-sm'  disabled={!isEditing}  value={detection_results} onChange={(e)=>setDetection_results(e.target.value)}/>
                 </div>
               </form>
             </div>
@@ -239,17 +250,17 @@ export default function () {
               <form>
                 <div>
                   <label>Why :</label>
-                  <textarea rows={1} className='form-control form-control-sm'/>
+                  <textarea rows={1}  disabled={!isEditing}  className='form-control form-control-sm'/>
                 </div>
                 <div>
                   <label>Answer :</label>
-                  <textarea rows={1} className='form-control form-control-sm'/>
+                  <textarea rows={1}  disabled={!isEditing}  className='form-control form-control-sm'/>
                 </div>
 
                 {systemArea.map((systemArea, index) => (
                   <div>
                     <label>{systemArea} :</label>
-                    <textarea rows={1} key={index}  className='form-control form-control-sm'/>
+                    <textarea rows={1} key={index}  disabled={!isEditing}   className='form-control form-control-sm'/>
                     </div>
                 ))}
                 
@@ -260,15 +271,14 @@ export default function () {
                   
                 <div>
                     <label>Result :</label>
-                    <textarea rows={3} className='form-control form-control-sm' value={system_results} onChange={(e)=>setSystem_results(e.target.value)}/>
+                    <textarea rows={3} className='form-control form-control-sm'  disabled={!isEditing}  value={system_results} onChange={(e)=>setSystem_results(e.target.value)}/>
                 </div>
               </form>
             </div>
           </div>
         
           <div>
-            <Button style={{marginRight:10}} variant="success" >Edit</Button>
-            <Button variant='primary' >Save</Button>
+            <Button variant='primary'onClick={()=>{setIsEditing(!isEditing);updateResults();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
       </div>
     </div>

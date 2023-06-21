@@ -419,8 +419,7 @@ export default function Report() {
             </div>
           </div>
           <div>
-            <Button style={{marginRight:10}} variant="success" >Edit</Button>
-            <Button variant='primary' >Save</Button>
+            <Button variant='primary'onClick={()=>{setIsEditing(!isEditing);setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
         </div>
     </div>

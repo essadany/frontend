@@ -31,18 +31,24 @@ export default function Label_Check() {
                         {value: "Pingamonhangaba-sp", label : 'Pingamonhangaba-sp'}];
 
    //Get Label Checking
+   useEffect(() => {
+    getLabelCheck();
+    
+  }, [claim_id])
    function getLabelCheck(){
     fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/label_checking_join`)
       .then(res => res.json())
       .then(
         (result) => {
           setIsLoaded(true);
+          setLabel_check(result);
           setId(result.id);
           setProduct_ref(result.product_ref);
           setCustomer_ref(result.customer_ref);
           setBontaz_plant(result.bontaz_plant);
           setSorting_method(result.sorting_method);
           setInternal_ID(result.internal_ID);   
+          
         },
 
         (error) => {
@@ -52,9 +58,7 @@ export default function Label_Check() {
       )
   }
 
-  useEffect(() => {
-    getLabelCheck();
-  }, [claim_id])
+  
   
   // Edit image code----------------------------------------------------------
 
@@ -94,7 +98,6 @@ export default function Label_Check() {
             body:JSON.stringify({sorting_method : sorting_method ,bontaz_plant: bontaz_plant})
           }).then((result) => {
               if (result.ok){
-                console.log("id = ",id);
                 alert("Label Checking Updated successfully");
                 
               }else{
@@ -108,6 +111,7 @@ export default function Label_Check() {
             })
           
         } catch (err) {
+          alert(id);
         console.log(err);
       }
     }
