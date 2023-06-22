@@ -27,15 +27,20 @@ export default function Users() {
         const [phone, setPhone] = useState("");
         const [password, setPassword] = useState("");
         const [role, setRole] = useState("user");
+        const [user_id, setUser_id] = useState("");
+
         const [isAdmin, setIsAdmin] = useState(false);
         const [deleted, setDeleted] = useState(false);
 
-        const checkAdmin = (event) => {
-          setIsAdmin(event.target.checked);
-          if (isAdmin===true){
-            setRole('admin')
+        function checkAdmin() {
+          setIsAdmin(!isAdmin);
+        
+          if (!isAdmin) {
+            setRole('admin');
+          } else {
+            setRole('user');
           }
-        };
+        }
         // Note: the empty deps array [] means
         // this useEffect will run once
         // similar to componentDidMount()
@@ -102,11 +107,12 @@ export default function Users() {
               setPassword(user.password);
               setPhone(user.phone);
               setRole(user.role);
-              setIsAdmin((user.role='admin'))
+              setUser_id(user.id);
+              setIsAdmin((user.role==='admin'))
           }
           function updateUser(){
             
-            fetch(`http://127.0.0.1:8000/api/user/${user.id}`, {
+            fetch(`http://127.0.0.1:8000/api/user/${user_id}`, {
               method: 'PUT',
               headers:{
                 'Accept' : 'application/json',
@@ -125,6 +131,7 @@ export default function Users() {
                   setRole("user");
                   setEditB(true);
                   handleClose();
+                  setIsAdmin(false);
                 }else{
                   result.json().then((resp) => {
                     console.warn(resp)
@@ -205,7 +212,7 @@ export default function Users() {
                         </div>
                         <div className="form-check col-md-6">
                           <label  className="form-check-label">Admin ?</label>
-                          <input type="checkbox" checked={isAdmin} class="form-check-input" required value={role} onChange={(e)=>{checkAdmin(e)}}/>
+                          <input type="checkbox" checked={isAdmin} class="form-check-input" required  onChange={(e)=>checkAdmin()}/>
                         </div>
                         <div class="col-md-6">
                             <label  class="form-label">Email* :</label>

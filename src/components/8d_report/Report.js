@@ -20,11 +20,13 @@ export default function Report() {
   const [isEditing, setIsEditing] = useState(false);
   const [containement_actions,setContainement_actions] = useState("");
   const [first_batch3,setFirst_batch3] = useState("");
+  const [first_batch6,setFirst_batch6] = useState("");
   const [date_cause_definition,setDate_cause_definition] = useState("");
-  const [opening_date,setOpening_date] = useState("");
+  const [sub_date,setSub_date] = useState("");
+  const [due_date,setDue_date] = useState("");
   const [update_date,setUpdate_date] = useState("");
   const [report_id,setReport_id] = useState('');
-  const [report,setReport] = useState('');
+  const [report,setReport] = useState([]);
   const [reported_by,setReported_by] = useState('');
   const [pilot,setPilot] = useState('');
   const [ddm	, setDdm] = useState(false);
@@ -33,12 +35,14 @@ export default function Report() {
   const [ctrl_plan	,setCtrl_plan] = useState(false);
   const [pfmea	,setPfmea] = useState(false);
   const [dfmea	,setDfmea] = useState(false);
+  const [users_of_team	,setUsers_of_team] = useState([]);
+
   const [progress_rate	,setProgress_rate] = useState(0);
 
 
   //Get report
-  function getReport(){
-    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/report`)
+  function getReport_join(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/report_join`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -50,6 +54,8 @@ export default function Report() {
           setDate_cause_definition(result.date_cause_definition);
           const date = moment(result.updated_at).format("YYYY-MM-DD");
           setUpdate_date(date);
+          setSub_date(result.sub_date);
+          setDue_date(result.due_date);
           setDdm(result.ddm);
           setDfmea(result.dfmea);
           setPfmea(result.pfmea);
@@ -57,6 +63,8 @@ export default function Report() {
           setPilot(result.pilot);
           setApproved(result.approved);
           setCtrl_plan(result.ctrl_plan);
+          setFirst_batch6(result.first_batch6);
+          setReported_by(result.reported_by);
 
         },
 
@@ -65,6 +73,26 @@ export default function Report() {
           setError(error);
         }
       )
+  };
+   // Get Users of Team 
+  
+   function getUsersOfTeam(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team_users`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setUsers_of_team(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+      console.log(users_of_team);
   }
 
   
@@ -123,11 +151,14 @@ export default function Report() {
       )
   }
   useEffect(() => {
-    getReport();
-  }, [claim_id])
+    getReport_join();
+  }, [claim_id]);
+  useEffect(() => {
+    getUsersOfTeam();
+  }, [claim_id]);
   useEffect(() => {
     getPreventiveActions();
-  }, [report_id])
+  }, [report_id]);
   useEffect(() => {
     getImplementedActions();
   }, [report_id])
@@ -187,34 +218,75 @@ export default function Report() {
     updatedFiles.splice(index, 1);
     setSelectedFiles(updatedFiles);
   };
+
+  //Update Report
+function updateReport(){
+            
+  try{
+    fetch(`http://127.0.0.1:8000/api/report/${report_id}`, {
+    method: 'PUT',
+    headers:{
+      'Accept' : 'application/json',
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+    sub_date,
+    due_date,
+    containement_actions ,
+    first_batch3,
+    date_cause_definition,
+    reported_by,
+    ddm,
+    dfmea,
+    pfmea,
+    others,
+    pilot,
+    approved,
+    ctrl_plan,
+    first_batch6
+   })
+  }).then((result) => {
+
+        result.json().then((resp) => {
+          console.warn(resp)
+          console.log("pilot=",pilot);
+       
+      })
+      
+    }) 
+  } catch(err){
+    console.error(err)
+  }
+  }
   return (
     <div className='main'>
       <Tab />
       <h2 ><img className='report_icon' src='../icons/stamp.png'/>  8D Report {claim_id}</h2>
       <div className='border'>
-        <div className='row report_header'>
-          <div className='col-md-4'>
-            <form className=' g-3'>
-              <div className="">
+        <div className=' report_header'>
+            <form className='row  g-3'>
+              <div className="col-4">
                   <label  className="col-form-label">opening date :</label>
-                  <input  type="date" class="form-control form-control-sm"  required />     
-                  
+                  <input  type="date" class="form-control form-control-sm" value={report.opening_date}   required />     
               </div>
-              <div className="">
-                  <label  for='2' className=" col-form-label">Update date :</label>
-                  <input type="date" class="form-control form-control-sm" disabled value={update_date} required />
-              </div>
-            </form>
-          </div>
-          <div className='col-md-4'><Button variant='success'><Download /></Button></div>
-          <div className='col-md-4'>
-            <form className=' g-3'>
-              <div class="">
+              <div className='col-4'><Button variant='success'><Download /></Button></div>
+              <div class="col-4">
                   <label  class="form-label">Reported by :</label>
-                  <textarea class="form-control form-control-sm"  required />
+                  <textarea class="form-control form-control-sm" disabled={!isEditing} value={reported_by} onChange={(e)=>setReported_by(e.target.value)} required />
               </div>
-            </form>
-          </div>
+              <div className="col-4">
+                  <label   className=" col-form-label">Update date :</label>
+                  <input type="date" class="form-control form-control-sm" disabled={!isEditing}  value={update_date} required />
+              </div>
+          <div className="col-4">
+                  <label   className=" col-form-label">Due date :</label>
+                  <input type="date" class="form-control form-control-sm" disabled={!isEditing} value={due_date} onChange={(e)=>setDue_date(e.target.value)} required />
+              </div>
+              <div className="col-4">
+                  <label  className=" col-form-label">Closure date :</label>
+                  <input type="date" class="form-control form-control-sm" disabled={!isEditing} value={sub_date} onChange={(e)=>setSub_date(e.target.value)} required />
+              </div>
+              </form>
           </div>
 
           <div className='description '>
@@ -222,20 +294,20 @@ export default function Report() {
             <div>
               <form className='row'>
                 <div class="col-md-12">
-                    <textarea  class="form-control"  required />
+                    <textarea  class="form-control" value={report.what}   required />
                 </div>
                 <div className="col-md-3 ">
                     <label  for='3' className=" col-form-label">Engraving :</label>
-                    <input type="text" id='3' class="form-control form-control-sm" required />
+                    <input type="text" id='3' class="form-control form-control-sm" value={report.engraving} required />
                 </div>
                 <div className="col-md-3">
                     <label  for='4' className=" col-form-label">Production date :</label>
-                    <input type="date" id='4' class="form-control form-control-sm" required />
+                    <input type="date" id='4' class="form-control form-control-sm" value={report.production_date} required />
                 </div>
                 <div className='col-md-3'></div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">Recurrence :</label>
-                  <input type="checkbox"  class="form-check-input" required />
+                  <input type="checkbox"  class="form-check-input"  checked={report.recurrence} required />
                 </div>
               </form>
             </div>
@@ -244,7 +316,7 @@ export default function Report() {
               <div className='col-md-4'>
                 <img key={index} src={file} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
                 <div>
-                <Button style={{marginRight:5}} variant='secondary' onClick={() => handleReplaceClick(index)}><Edit /></Button>
+                {/*<Button style={{marginRight:5}} variant='secondary' onClick={() => handleReplaceClick(index)}><Edit /></Button>*/}
                 <Button variant='danger' onClick={() => handleDeleteClick(index)}><Delete /></Button>
                 </div>
                 
@@ -263,11 +335,11 @@ export default function Report() {
             <legend>Containment Action(s)</legend>
             <form className='row'>
               <div class="col-md-12">
-                  <textarea  class="form-control"  required />
+                  <textarea  class="form-control" value={containement_actions} disabled={!isEditing} onChange={(e)=>setContainement_actions(e.target.value)}  required />
               </div>
               <div className="col-md-2">
                   <label  for='4' className=" col-form-label">First Batch Certified :</label>
-                  <input type="text" id='4' class="form-control form-control-sm" required />
+                  <input type="text" id='4' class="form-control form-control-sm" disabled={!isEditing} value={first_batch3} onChange={(e)=>setFirst_batch3(e.target.value)} required />
               </div>
             </form>
           </div>
@@ -277,20 +349,20 @@ export default function Report() {
             <form className='row'>
               <div class="col-md-6">
                   <label  className=" col-form-label">On Occurence:</label>
-                  <textarea  class="form-control"  required />
+                  <textarea  class="form-control" value={report.occurrence_root_cause} disabled={!isEditing} required />
               </div>
               <div class="col-md-6">
               <label  className=" col-form-label">On No Detection:</label>
-                  <textarea  class="form-control"  required />
+                  <textarea  class="form-control"  value={report.detection_root_cause} disabled={!isEditing} required />
               </div>
               <div className="form-check col-md-4">
                 <label  className="form-check-label">Is Bontaz Responsible for this issue </label>
-                <input type="checkbox" class="form-check-input" required />
+                <input type="checkbox" class="form-check-input" checked={report.bontaz_fault} required />
               </div>
               <div className='col-md-4'></div>
               <div className="col-md-3">
                   <label  for='4' className=" col-form-label">Date of Roote Cause Definition :</label>
-                  <input type="date" id='4' class="form-control form-control-sm" required />
+                  <input type="date" id='4' class="form-control form-control-sm" disabled={!isEditing} value={date_cause_definition} onChange={(e)=>setDate_cause_definition(e.target.value)} required />
               </div>
 
             </form>
@@ -324,16 +396,18 @@ export default function Report() {
               <form className='row'>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">DDM </label>
-                  <input type="checkbox"  class="form-check-input" required />
+                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={ddm} onChange={(e)=>setDdm(!ddm)} required />
                 </div>
                 <div className="col-md-3">
                   <label  className=" col-form-label">Pilot :</label>
-                  <input type="text"  class="form-control form-control-sm" required />
-                </div>
+                  <select className='form-select' disabled={!isEditing} required onChange={(e)=>setPilot(e.target.value)}>
+                        <option  selected disabled >--- Select User ---</option>
+                      {users_of_team.map((item)=>(<option value={item.name} selected={item.name===pilot} >{item.name}</option>))}
+                      </select>                </div>
                 <div className='col-md-3'></div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">Approved </label>
-                  <input type="checkbox"  class="form-check-input" required />
+                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={approved} onChange={(e)=>setApproved(!approved)} required />
                 </div>
               </form>
             </div>
@@ -367,7 +441,7 @@ export default function Report() {
               <form>
               <div className="col-md-2">
                   <label  for='4' className=" col-form-label">First Batch Certified :</label>
-                  <input type="text" id='4' class="form-control form-control-sm" required />
+                  <input type="text" id='4' class="form-control form-control-sm" disabled={!isEditing} value={first_batch6} onChange={(e)=>setFirst_batch6(e.target.value)} required />
               </div>
               </form>
             </div>
@@ -401,25 +475,25 @@ export default function Report() {
               <form className='row'>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">DFMEA </label>
-                  <input type="checkbox"  class="form-check-input" required />
+                  <input type="checkbox"  class="form-check-input" checked={dfmea} disabled={!isEditing} onChange={(e)=>setDfmea(!dfmea)} required />
                 </div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">PFMEA </label>
-                  <input type="checkbox"  class="form-check-input" required />
+                  <input type="checkbox"  class="form-check-input" checked={pfmea} disabled={!isEditing} onChange={(e)=>setPfmea(!dfmea)} required />
                 </div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">Ctrl Plan </label>
-                  <input type="checkbox"  class="form-check-input" required />
+                  <input type="checkbox"  class="form-check-input" checked={ctrl_plan} disabled={!isEditing} onChange={(e)=>setCtrl_plan(!ctrl_plan)} required />
                 </div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">Others </label>
-                  <input type="checkbox"  class="form-check-input" required />
+                  <input type="checkbox"  class="form-check-input" checked={others} disabled={!isEditing} onChange={(e)=>setOthers(!others)} required />
                 </div>
               </form>
             </div>
           </div>
           <div>
-            <Button variant='primary'onClick={()=>{setIsEditing(!isEditing);setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button variant='primary'onClick={()=>{updateReport();setIsEditing(!isEditing);setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
         </div>
     </div>

@@ -281,7 +281,10 @@ export default function Actions() {
                   <form className='row'>
                     <div  className='col-2'>
                       <label >Status : </label>
-                      <Select  options={actions_status} />
+                      <select className='form-select' required onChange={(e)=>setStatus(e.target.value)}>
+                        <option  selected disabled >--- Select Status ---</option>
+                      {actions_status.map((item)=>(<option value={item.label} >{item.label}</option>))}
+                      </select>
                     </div>
                     <div  className='col-6'></div>
                     <div  className='col-4 filter'>

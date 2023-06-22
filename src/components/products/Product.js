@@ -298,7 +298,7 @@ export default function Product() {
                     <div  className='col-2'>
                       <label >Customer : </label>
                       <select data-live-search="true" label={filter} className='selectpicker form-select' onChange={handleChange} required >
-                            <option selected disabled >--- Select User ---</option>
+                            <option selected disabled >--- Select Customer ---</option>
                             {customers.map((item)=>(<option >{item.name}</option> ))}
                           </select>
                     </div>

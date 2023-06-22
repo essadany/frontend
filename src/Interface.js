@@ -35,7 +35,7 @@ export default function Interface() {
           <Route exact path='/Customer' element={<Customer />}>  </Route>
           <Route exact path='/Product' element={<Product />}>  </Route>
           <Route exact path='/Annexe/:claim_id' element={< Annexe />}>  </Route>
-          
+
           <Route exact path='/Claim_track' element={<Claim_track />}>  </Route>
           <Route exact path='/MyActions' element={<MyActions />}>  </Route>
           <Route exact path='/Users' element={<Users />}>  </Route>

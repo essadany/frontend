@@ -18,47 +18,16 @@ export default function Label_Check() {
   const [editB,setEditB] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [label_check,setLabel_check] = useState('');
-  const [id,setId] = useState('');
+  const [label_check_id,setLabel_check_id] = useState('');
 
-  const [product_ref,setProduct_ref] = useState('');
-  const [customer_ref,setCustomer_ref] = useState('');
   const [bontaz_plant,setBontaz_plant] = useState('');
   const [sorting_method,setSorting_method] = useState('');
-  const [internal_ID,setInternal_ID] = useState('');
   const bontaz_plants =[{value: "'El Jadida", label : 'El Jadida'},{value: "Shanghai", label : 'Shanghai'},{value: "Marnaz", label : 'Marnaz'},
-                        {value: "Fouchana", label : 'Fouchana'},{value: "Dobra", label : 'Dobra'},{value: "Velka", label : 'Velka'},
+                        {value: "Fouchana", label : 'Fouchana'},{value: "Velka Dobra", label : 'Velka Dobra'},
                         {value: "Viana Do Casteo", label : 'Viana Do Casteo'},{value: "Troy", label : 'Troy'},
                         {value: "Pingamonhangaba-sp", label : 'Pingamonhangaba-sp'}];
 
-   //Get Label Checking
-   useEffect(() => {
-    getLabelCheck();
-    
-  }, [claim_id])
-   function getLabelCheck(){
-    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/label_checking_join`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setLabel_check(result);
-          setId(result.id);
-          setProduct_ref(result.product_ref);
-          setCustomer_ref(result.customer_ref);
-          setBontaz_plant(result.bontaz_plant);
-          setSorting_method(result.sorting_method);
-          setInternal_ID(result.internal_ID);   
-          
-        },
-
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
-  }
-
-  
+   
   
   // Edit image code----------------------------------------------------------
 
@@ -67,11 +36,11 @@ export default function Label_Check() {
   const handleImageChange1 = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
-
+  
     reader.onload = () => {
       setImage1(reader.result);
     };
-
+  
     if (file) {
       reader.readAsDataURL(file);
     }
@@ -81,21 +50,90 @@ export default function Label_Check() {
     setIsEditing(true);
     const fileInput = document.getElementById('file-input1');
     fileInput.click();
+    const formData = new FormData();
+    formData.append('image', image1);
+  
+    fetch('http://127.0.0.1:8000/api/upload-image', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Image uploaded successfully:', data);
+      // Save the received image path in your application state or perform any additional actions
+      setImage1(data.imagePath);
+    })
+    .catch(error => {
+      console.error('Error uploading image:', error);
+      // Handle any errors
+    });
+
   };
   
+  /*const handleSubmit = (event) => {
+    event.preventDefault();
 
- 
+    const formData = new FormData();
+    formData.append('image', image1);
+
+    fetch('http://127.0.0.1:8000/api/upload-image', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Image uploaded successfully:', data);
+        // Perform any additional actions after successful upload
+      })
+      .catch(error => {
+        console.error('Error uploading image:', error);
+        // Handle any errors
+      });
+    }*/
+  
+  /*const handleEditClick1 = () => {
+    setIsEditing(true);
+    const fileInput = document.getElementById('file-input1');
+    fileInput.click();
+  };*/
+  
+
+ //Get Label Checking
+ function getLabelCheck(){
+  fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/label_checking_join`)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        setIsLoaded(true);
+        setLabel_check(result);
+        setLabel_check_id(result.id);
+        setBontaz_plant(result.bontaz_plant);
+        setSorting_method(result.sorting_method);
+
+      },
+
+      (error) => {
+        setIsLoaded(true);
+        setError(error);
+      }
+    )
+};
+
+useEffect(() => {
+  getLabelCheck();
+  
+}, [claim_id]);
 
   //Update Label Checking
     function updateLabelCheck(){
       try{
-          fetch(`http://127.0.0.1:8000/api/label_checking/${id}`, {
+          fetch(`http://127.0.0.1:8000/api/label_checking/${label_check_id}`, {
             method: 'PUT',
             headers:{
               'Accept' : 'application/json',
               'Content-Type':'application/json'
             },
-            body:JSON.stringify({sorting_method : sorting_method ,bontaz_plant: bontaz_plant})
+            body:JSON.stringify({bontaz_plant, sorting_method })
           }).then((result) => {
               if (result.ok){
                 alert("Label Checking Updated successfully");
@@ -111,10 +149,11 @@ export default function Label_Check() {
             })
           
         } catch (err) {
-          alert(id);
+          alert(label_check_id);
         console.log(err);
       }
     }
+    
       
   return (
     <div className='main'>
@@ -125,15 +164,15 @@ export default function Label_Check() {
             <form >
             <div >
                 <label  className="form-label">Customer Part Number :</label>
-                <input type="text" className="form-control" disabled value={customer_ref} required />
+                <input type="text" className="form-control" disabled value={label_check.customer_ref} required />
             </div>
             <div >
                 <label  className="form-label">Customer Complaint n°:</label>
-                <input type="text" className="form-control" disabled value={internal_ID} required />
+                <input type="text" className="form-control" disabled value={label_check.internal_ID} required />
             </div>
             <div>
                 <label  className="form-label">Bontaz Part Number :</label>
-                <input type="text" className="form-control" disabled value={product_ref} required />
+                <input type="text" className="form-control" disabled value={label_check.product_ref} required />
             </div>
             <div>
                 <label  className="form-label">Sorting method :</label>
@@ -151,21 +190,23 @@ export default function Label_Check() {
           <div className='col-6'>
             <h5>Product picture</h5>
             <div>
-            {image1 ? (
-                  <img src={image1} style={{ width: '300px', height: '200px'}} alt="Uploaded" />
+            {
+                image1 ? (
+                  <img src={image1} style={{ width: '300px', height: '200px' }} alt="Uploaded" />
                 ) : (
                   <div className="placeholder-image">No image uploaded</div>
-                )}
-                <input
-                  type="file"
-                  id="file-input1"
-                  accept="image/*"
-                  onChange={handleImageChange1}
-                  style={{ display: 'none' }}
-                />
-                <div>
-                  <Button onClick={handleEditClick1}><Edit /></Button>
-                </div>
+                )
+              }
+              <input
+                type="file"
+                id="file-input1"
+                accept="image/*"
+                onChange={handleImageChange1}
+                style={{ display: 'none' }}
+              />
+              <div>
+                <Button onClick={handleEditClick1}><Edit /></Button>
+              </div>
             </div>        
           </div>
           <div className='col-6'>

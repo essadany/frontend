@@ -1,12 +1,13 @@
 import React from 'react'
 import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";
-
+import Header from '../header/Header';
+import SideNavBar from '../sidebar/SideNavBar';
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import  Modal  from 'react-bootstrap/Modal'
 import {Button, FormSelect} from 'react-bootstrap';
 import './Claims.css';
-import { Details } from '@material-ui/icons';
+import { Details, Done } from '@material-ui/icons';
 export default function Claims() {
   const [show, setShow] = useState(false);
 
@@ -62,9 +63,10 @@ export default function Claims() {
     const [prod_designation, setProd_designation] = useState("");
     const [nbr_claimed_parts, setNbr_claimed_parts] = useState("");
     const [deleted,setDeleted]= useState(false);
-    const [status,setStatus] = useState("red");
     const [products,setProducts]= useState([]);
     const [customers,setCustomers]= useState([]);
+    const [status, setStatus] = useState("not started");
+
     const [customer_id,setCustomer_id]= useState('');
         function getCustomers(){
           fetch("http://127.0.0.1:8000/api/customers")
@@ -177,21 +179,22 @@ export default function Claims() {
           setClaim_details(claim.claim_details);
           setDef_mode(claim.def_mode);
           setNbr_claimed_parts(claim.nbr_claimed_parts);
-          setId(claim.id)
+          setId(claim.id);
       }
       function updateClaim(){
         let item = {
-          internal_ID ,
-          refRecClient ,
-          product_ref,
-          engraving ,
-          prod_date ,
-          object ,
-          opening_date ,
-          final_cusomer ,
-          claim_details ,
-          def_mode ,
-          nbr_claimed_parts,
+          internal_ID : internal_ID ,
+          refRecClient : refRecClient ,
+          product_ref : product_ref,
+          engraving : engraving,
+          prod_date : prod_date,
+          object : object,
+          opening_date : opening_date ,
+          final_cusomer : final_cusomer ,
+          claim_details : claim_details,
+          def_mode : def_mode,
+          nbr_claimed_parts : nbr_claimed_parts,
+          
         }
         console.warn("item",item)
         try{
@@ -233,8 +236,27 @@ export default function Claims() {
           }catch (err){
             console.log(err)
           }
-          
         }
+
+        //update Status
+        function updateStatus(claim){
+          let item = {
+            status : "done",
+          }
+          try{
+            fetch(`http://127.0.0.1:8000/api/claim_status/${claim.id}`, {
+              method: 'PUT',
+              headers:{
+                'Accept' : 'application/json',
+                'Content-Type':'application/json'
+              },
+              body:JSON.stringify(item)
+            })
+              
+            }catch (err){
+              console.log(err)
+            }
+          }
       // Delete Claim ------------------------------------------------------------------------------------------------------------------------
       function deleteClaim(id) {
         try{
@@ -290,6 +312,7 @@ export default function Claims() {
       );
 
   return (
+    
     <div className='main'>
         <h2 >Claims</h2>
         <div className='border '>
@@ -464,7 +487,8 @@ export default function Claims() {
                               <td>{item.claim_details}</td>
                               <td>{item.def_mode}</td>
                               <td>{item.nbr_claimed_parts}</td>
-                              <td><Dot color={status} size={60}/></td>
+                              <td><Dot color={item.status==='not started'?'orange':'green'} size={60}/></td>
+                              <td><Button onClick={()=>updateStatus(item)} variant='success'>Finaliser</Button></td>
                               <td><Button onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                               <td><Button onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
                               <td><Button  variant='success' href={`/Report/${item.id}`} ><TicketDetailed color='orange'  size={25}/></Button></td>
@@ -484,5 +508,6 @@ export default function Claims() {
             </div>
         </div>
     </div>
+
   )
 }

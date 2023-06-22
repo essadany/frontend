@@ -56,8 +56,7 @@ export default function Pb_desc() {
           setDate_done(result.date_done);
           setBontaz_fault(result.bontaz_fault);
           setDescription(result.description);
-          const date = moment(result.updated_at).format("YYYY-MM-DD");
-          setUpdate_date(date);
+
 
 
         },
@@ -203,8 +202,7 @@ function updateProblem_desc(){
     }) 
   }
   return (
-    
-    <div className='main'>
+      <div className='main'>
         <Tab />
         <h2 ><img className='report_icon' src='../icons/problem_desc.png'/>  Problem Description</h2>
         <div className='border'>
@@ -230,7 +228,7 @@ function updateProblem_desc(){
                 <div className='col-md-4'></div>
                 <div className="form-check col-md-2">
                   <label  className="form-check-label">Is it recurrent :</label>
-                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={recurrence} onChange={(e)=>setRecurrence(e.target.value)} required />
+                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={recurrence} onChange={(e)=>setRecurrence(!recurrence)} required />
                 </div>
                 <div class="col-md-6">
                     <label  className=" form-label">Who detected it (Name and function) ? </label>
@@ -312,7 +310,7 @@ function updateProblem_desc(){
             <form className='form-group g-3 row'>
               <div className="form-check col-md-4">
                   <label  className="form-check-label">Has Bontaz received the detective parts ?</label>
-                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={received} onChange={(e)=>setReceived(e.target.value)} required />
+                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={received} onChange={(e)=>setReceived(!received)} required />
               </div>
               <div className='col-md-5'></div>
               <div className="col-md-3">
@@ -350,12 +348,12 @@ function updateProblem_desc(){
               <form className='g-3  row'>
                 <div className="form-check col-md-1">
                     <label  className="form-check-label">YES</label>
-                    <input type="radio" name='radio'  class="form-check-input" disabled={!isEditing} required />
+                    <input type="radio" name='radio'  class="form-check-input"  checked={bontaz_fault} onChange={(e)=>setBontaz_fault(!bontaz_fault)} disabled={!isEditing} required />
                 </div>
                 <div className='col-md-2'></div>
                 <div className="form-check col-md-1">
                     <label  className="form-check-label">NO</label>
-                    <input type="radio" name='radio' class="form-check-input" disabled={!isEditing}  checked={bontaz_fault} onChange={(e)=>setBontaz_fault(e.target.value)} required />
+                    <input type="radio" name='radio' class="form-check-input" disabled={!isEditing}  required />
                 </div>
                 <div className='col-md-5'></div>
                 <div className="col-md-3">
@@ -373,5 +371,7 @@ function updateProblem_desc(){
 
         </div>
     </div>
+      
+    
   )
 }
