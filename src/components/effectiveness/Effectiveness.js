@@ -7,7 +7,7 @@ export default function Effectiveness() {
         <Tab />
         <h2 ><img className='report_icon' src='../icons/effect.png'/>  Detailled Proof of Effectiveness For Long Term Action</h2>
         <div className='border'>
-          <form className='row '>
+          <form className='row container '>
             <div className='col-2'>
               <label>Update date : </label>
               <input type='date' className='form-control form-control-sm'/>

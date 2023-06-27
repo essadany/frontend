@@ -239,7 +239,7 @@ export default function Product() {
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form className="row g-3  needs-validation" onSubmit={handleSubmit}>
+                <form className="row g-3 container  needs-validation" onSubmit={handleSubmit}>
                         
                         <div className="col-md-6">
                             <label  className="form-label">Intern reference* :</label>
@@ -294,7 +294,7 @@ export default function Product() {
             <div >
                 <legend >LIST OF PRODUCTS</legend>
                 <div className='filter'>
-                  <form className='row'>
+                  <form className='row container'>
                     <div  className='col-2'>
                       <label >Customer : </label>
                       <select data-live-search="true" label={filter} className='selectpicker form-select' onChange={handleChange} required >

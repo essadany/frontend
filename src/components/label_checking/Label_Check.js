@@ -161,7 +161,7 @@ useEffect(() => {
         <h2 >Label Checking</h2>
         <div className='border row' style={{alignItems:"center"}}>
           <div className='col-6' >
-            <form >
+            <form className='container' >
             <div >
                 <label  className="form-label">Customer Part Number :</label>
                 <input type="text" className="form-control" disabled value={label_check.customer_ref} required />

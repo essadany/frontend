@@ -184,25 +184,25 @@ export default function Customer() {
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
-                        <div class="col-md-6">
-                            <label for="validationCustom02" class="form-label">Reference* :</label>
-                            <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setCustomer_ref(e.target.value)}  value={customer_ref} required />
+                <form className="row container g-3  needs-validation" onSubmit={handleSubmit}>
+                        <div className="col-md-6">
+                            <label for="validationCustom02" className="form-label">Reference* :</label>
+                            <input type="text" className="form-control" id="validationCustom02" onChange={(e)=>setCustomer_ref(e.target.value)}  value={customer_ref} required />
                         </div>
-                        <div class="col-md-6">
-                            <label for="validationCustom02" class="form-label">Customer name* : </label>
-                            <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setName(e.target.value)}   value={name} required />
+                        <div className="col-md-6">
+                            <label for="validationCustom02" className="form-label">Customer name* : </label>
+                            <input type="text" className="form-control" id="validationCustom02" onChange={(e)=>setName(e.target.value)}   value={name} required />
                         </div>
-                        <div class="col-md-6">
-                            <label for="validationCustom02" class="form-label">Category* :</label>
+                        <div className="col-md-6">
+                            <label for="validationCustom02" className="form-label">Category* :</label>
                             <select data-live-search="true"  className='selectpicker form-select' value={category} onChange={(e)=>setCategory(e.target.value)}  required >
                             <option disabled selected>--- Select Category ---</option>
                             <option>Intern</option>
                             <option>Extern</option>
                         </select>
                         </div>
-                        <div class="col-md-6">
-                            <label for="validationCustom02" class="form-label">About : </label>
+                        <div className="col-md-6">
+                            <label for="validationCustom02" className="form-label">About : </label>
                             <textarea type="text" className="form-control" id="validationCustom02" onChange={(e)=>setInfo(e.target.value)}   value={info}  />
                         </div>
                         <div className='col-md-6'></div>
@@ -213,7 +213,7 @@ export default function Customer() {
                       Annuler
                   </Button>
                   <Button onClick={handleSubmit} hidden={addB} variant='primary'>Save</Button>
-                  <Button onClick={updateCustomer} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                  <Button onClick={updateCustomer} hidden={editB} variant='success'>Update<i className="fa-solid fa-pen-to-square"></i></Button>
                             
                   </Modal.Footer>
             </Modal>   
@@ -243,8 +243,8 @@ export default function Customer() {
                                 <td>{item.name}</td>
                                 <td>{item.category}</td>
                                 <td>{item.info}</td>
-                                <td><Button style={{marginRight:10}} onClick={()=>{handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
+                                <td><Button style={{marginRight:10}} onClick={()=>{handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
 
                     </tr>
                     ))}

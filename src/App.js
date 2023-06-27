@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import {  BrowserRouter as Router, Route, Routes,Navigate } from 'react-router-dom';
+import React,{useEffect, useState} from 'react';
+import {  BrowserRouter as Router, Route, Routes,Navigate, useLocation } from 'react-router-dom';
 import './Interface.css'
 import SideNavBar from './components/sidebar/SideNavBar';
 import Tab from './components/tabs/Tab';
@@ -23,189 +23,95 @@ import Label_Check from './components/label_checking/Label_Check';
 import Login from './components/Login/login';
 import Annexe from './components/8d_annexe/Annexe';
 import './App.css'
+import './components/8d_report/Report.css'
+import './components/header/Header.css'
 
-function PrivateRoute({ isAuthenticated, redirectTo, ...rest }) {
-  return isAuthenticated ? (
-    <Route {...rest} />
-  ) : (
-    <Navigate to={redirectTo} replace state={{ from: rest.location }} />
-  );
+import {useAuth, AuthProvider } from './components/Login/AuthProvider';
+import { RequireAuth } from './components/Login/RequireAuth';
+
+
+
+export default function App() {
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Set the CSS variables dynamically
+  useEffect(() => {
+    document.documentElement.style.setProperty('--window-width', `${windowWidth}px`);
+    document.documentElement.style.setProperty('--window-height', `${windowHeight}px`);
+    console.log('width = ',windowWidth)
+    
+  }, [windowWidth, windowHeight]);
+
+
+
+  const Menu = ()=>{
+    if (useAuth().user ){
+      return (<><SideNavBar />
+      <Header /></>);
+    }
+  } 
+  const location = useLocation();
+
+  const isLoginPage = location.pathname === '/login';
+if (isLoginPage) {
+  document.body.classList.add('login-page');
+} else {
+  document.body.classList.remove('login-page');
 }
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-  };
-  return (    
+  return (  
+      
     <div className='app'>
-        <Router>
-      <Routes>
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} />
-        <Route exact path="/Dashboard" element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Dashboard />
-          </>
-        ) : (
-          <Navigate to="/login" replace />
-        )} />
-         <Route exact path='/Claims' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Claims />
-          </>
-        ) : (
-          <Navigate to="/login" replace />
-        )} />  
-          <Route exact path='/Customer'  element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Customer />
-          </>
-        ) : (
-          <Navigate to="/login" replace />
-        )} />
-         <Route exact path='/Product' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Product />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Annexe/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Annexe />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )}  />
 
-          <Route exact path='/Claim_track' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Claim_track />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/MyActions' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <MyActions />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Users' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Users />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Report/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Report />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Team/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Team />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Meetings/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Meetings />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Problem_Description/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Pb_desc />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Containement/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Containement />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Five_Why/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Five_Why />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Label_Checking/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Label_Check />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='/Actions/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Actions />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='Effectiveness/:claim_id' element={isAuthenticated ? (
-          <>
-            <SideNavBar />
-            <Header />
-            <Effectiveness />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )} />
-          <Route exact path='*' element={(
-            <div style={{textAlign:"center",margin:"auto",height:"100px"}}><h5> Error 404 : Page not found</h5>  </div>
-          )
-            
-          }/>
+      
+          <AuthProvider>
+          
+      <Menu />
+
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route exact path='/' element={<RequireAuth>< Dashboard /></RequireAuth>}/>
+
+          <Route exact path='/Dashboard' element={<RequireAuth>< Dashboard /></RequireAuth>}/>
+          <Route exact path='/Claims' element={<RequireAuth>< Claims /></RequireAuth>}/>
+          <Route exact path='/Customer' element={<RequireAuth><Customer /></RequireAuth>}/>
+          <Route exact path='/Product' element={<RequireAuth><Product /></RequireAuth>}/>
+          <Route exact path='/Annexe/:claim_id' element={<RequireAuth>< Annexe /></RequireAuth>}/>
+
+          <Route exact path='/Claim_track' element={<RequireAuth><Claim_track /></RequireAuth>}/>
+          <Route exact path='/MyActions' element={<RequireAuth><MyActions /></RequireAuth>}/>
+          <Route exact path='/Users' element={<RequireAuth><Users /></RequireAuth>}/>
+          <Route exact path='/Report/:claim_id' element={<RequireAuth><Report /></RequireAuth>}/>
+          <Route exact path='/Team/:claim_id' element={<RequireAuth><Team /></RequireAuth>}/>
+          <Route exact path='/Meetings/:claim_id' element={<RequireAuth>< Meetings /></RequireAuth>}/>
+          <Route exact path='/Problem_Description/:claim_id' element={<RequireAuth><Pb_desc /></RequireAuth>}/>
+          <Route exact path='/Containement/:claim_id' element={<RequireAuth><Containement /></RequireAuth>}/>
+          <Route exact path='/Five_Why/:claim_id' element={<RequireAuth>< Five_Why /></RequireAuth>}/>
+          <Route exact path='/Label_Checking/:claim_id' element={<RequireAuth><Label_Check /></RequireAuth>}/>
+          <Route exact path='/Actions/:claim_id' element={<RequireAuth><Actions /></RequireAuth>}/>
+          <Route exact path='Effectiveness/:claim_id' element={<RequireAuth><Effectiveness /></RequireAuth>}/>
+          <Route exact path='*' element="error 404"/>
+      
       </Routes>
-    </Router>
+    </AuthProvider>
     </div>
     
   );
 }
 
-export default App;

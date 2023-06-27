@@ -2,8 +2,9 @@
 
 .side-nav-container {
 	background-color: #adb5bd;
-	height: auto;
-	width: 300px;
+	height: max-content;
+	/*width: 300px;*/
+	width:  var(--window-width)*0.17;
 	z-index: 3;
 
 	
@@ -14,8 +15,9 @@
 	
 }
 .side-nav-container-NX {
-	height: auto;
-	width: 100px;
+	height: max-content;
+	/*width: 100px;*/
+	width: var(--window-width)*0.07;
 	z-index: 3;
 
 }

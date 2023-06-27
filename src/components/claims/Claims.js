@@ -8,6 +8,7 @@ import  Modal  from 'react-bootstrap/Modal'
 import {Button, FormSelect} from 'react-bootstrap';
 import './Claims.css';
 import { Details, Done } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 export default function Claims() {
   const [show, setShow] = useState(false);
 
@@ -329,7 +330,7 @@ export default function Claims() {
         <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
+            <form class="row g-3 container needs-validation" onSubmit={handleSubmit}>
                 <div class="col-md-6">
                     <label for="validationCustom01" class="form-label">Intern ID* :</label>
                     <input type="text" class="form-control" id="validationCustom01" onChange={(e)=>setInternal_ID(e.target.value)} value={internal_ID} required />
@@ -428,7 +429,7 @@ export default function Claims() {
             <div >
                 <legend >List of Claims</legend>
                 <div className='filter'>
-                  <form className='row'>
+                  <form className='row container'>
                   <div  className='col-2'>
                       <label>Type : </label>
                       <select data-live-search="true"  className='selectpicker form-select' value={filter1} onChange={handleSelectChange1} required >
@@ -454,7 +455,7 @@ export default function Claims() {
                   
                 </div>
                 <div className='table-responsive'>
-                <table className="table mx-auto table-striped " >
+                <table className="table  table-striped " >
                     <thead>
                         <tr>
                             <th >internal ID</th>
@@ -491,7 +492,7 @@ export default function Claims() {
                               <td><Button onClick={()=>updateStatus(item)} variant='success'>Finaliser</Button></td>
                               <td><Button onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                               <td><Button onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
-                              <td><Button  variant='success' href={`/Report/${item.id}`} ><TicketDetailed color='orange'  size={25}/></Button></td>
+                              <td><Button  variant='success'> <Link to={`/Report/${item.id}`} ><TicketDetailed color='orange'  size={25}/></Link></Button></td>
                             
                     </tr>
                     ))}

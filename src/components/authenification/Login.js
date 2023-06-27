@@ -11,8 +11,8 @@ export default function Login() {
   };
   return (
     <div>
-        <form >
-            <div class="form-group">
+        <form className='row container'>
+            <div class=" form-group">
                 <label for="exampleInputLogin1">Login</label>
                 <input type="text" class="form-control" id="exampleInputLogin1" aria-describedby="textHelp" placeholder="Enter login" />
             </div>

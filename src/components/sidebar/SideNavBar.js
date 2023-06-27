@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import "./SideNavBar.css";
 import  { Link,BrowserRouter }  from 'react-router-dom';
+import { useAuth } from "../Login/AuthProvider";
 
 
 
-const SideNavBar = () => {
+const SideNavBar = ({isAuthentificated}) => {
+	const auth = useAuth()
+
 	const [notificationMessage, setNotificationMessage] = useState('');
 
 	const handleClick = () => {
@@ -55,6 +58,10 @@ const SideNavBar = () => {
 			path: '/Users'
 		},
 	];
+
+	if (isAuthentificated){
+		
+	}
 	return (
 		<div
 			className={
@@ -84,14 +91,14 @@ const SideNavBar = () => {
 				</div>
 				<div className="nav-menu">
 					{menuItems.map(({ text, icon, path }) => (
-						<a
+						<Link
 							className={isExpanded ? "menu-item" : "menu-item menu-item-NX"}
-							href={path}
+							to={path}
 						>
 							<img className={isExpanded ? "menu-item-icon" : "menu-item-icon-NX"} src={icon} alt="" srcset=""/>
 							{isExpanded && <p>{text}</p>}
 							
-						</a>
+						</Link>
 						
 					))}
 					<br/><br />

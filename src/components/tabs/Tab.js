@@ -4,6 +4,7 @@ import Annexe from '../8d_annexe/Annexe';
 import Report from '../8d_report/Report';
 import Team from '../team/Team';
 import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 export default function Tab() {
     const { claim_id } = useParams();
     
@@ -11,34 +12,34 @@ export default function Tab() {
     <div className='tab'>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link" aria-current="page" href={`/Report/${claim_id}`}>8D REPORT</a>
+                <Link class="nav-link" aria-current="page" to={`/Report/${claim_id}`}>8D REPORT</Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`/Annexe/${claim_id}`} >8D ANNEXE</a>
+                <Link class="nav-link" to={`/Annexe/${claim_id}`} >8D ANNEXE</Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`/Team/${claim_id}`}>TEAM</a>
+                <Link class="nav-link" to={`/Team/${claim_id}`}>TEAM</Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`/Meetings/${claim_id}`}>MEETINGS</a>
+                <Link class="nav-link" to={`/Meetings/${claim_id}`}>MEETINGS</Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`/Problem_Description/${claim_id}`}>PROBLEM DESCRIPTION</a>
+                <Link class="nav-link" to={`/Problem_Description/${claim_id}`}>PROBLEM DESCRIPTION</Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`/Containement/${claim_id}`}>CONTAINEMENT</a>
+                <Link class="nav-link" to={`/Containement/${claim_id}`}>CONTAINEMENT</Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`/Five_Why/${claim_id}`}>5 WHY</a>
+                <Link class="nav-link" to={`/Five_Why/${claim_id}`}>5 WHY</Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`/Label_Checking/${claim_id}`}>LABEL CHECKING </a>
+                <Link class="nav-link" to={`/Label_Checking/${claim_id}`}>LABEL CHECKING </Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`/Actions/${claim_id}`}>ACTIONS</a>
+                <Link class="nav-link" to={`/Actions/${claim_id}`}>ACTIONS</Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href={`/Effectiveness/${claim_id}`}>EFFECTIVENESS</a>
+                <Link class="nav-link" to={`/Effectiveness/${claim_id}`}>EFFECTIVENESS</Link>
             </li>
         </ul>
     

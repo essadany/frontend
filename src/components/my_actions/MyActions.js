@@ -54,7 +54,7 @@ export default function MyActions() {
                 <Modal.Title>Update Action</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <form class="row g-3">
+                  <form class="container row g-3">
                     <div class="col-12">
                       <label class="form-label">Commentaire : </label>
                       <textarea type="text" class="form-control"  />
@@ -74,7 +74,7 @@ export default function MyActions() {
             </Modal>   
                 </div>
                 <div className='filter'>
-                  <form className='row'>
+                  <form className='container row'>
                     <div  className='col-2'>
                       <label>Claim reference : </label>
                       <Select   />

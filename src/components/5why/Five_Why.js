@@ -165,7 +165,7 @@ export default function () {
         <h2 >5 Why Analyse {claim_id}</h2>
         <div className='border'>
           <div>
-            <form className='row'>
+            <form className='row container'>
               <div className='col-2'>
                 <label >Update date : </label>
                 <input type='date' className='form-control form-control-sm' />
@@ -180,7 +180,7 @@ export default function () {
           <div>
             <legend>Failure Occurence Analysis</legend>
             <div>
-              <form>
+              <form className='container'>
                 <div>
                   <label>Why :</label>
                   <textarea rows={1}  disabled={!isEditing} className='form-control form-control-sm'/>
@@ -214,7 +214,7 @@ export default function () {
           <div>
             <legend>Failure Detection Analysis</legend>
             <div>
-              <form>
+              <form className='container'>
                 <div>
                   <label>Why :</label>
                   <textarea rows={1}  disabled={!isEditing}  className='form-control form-control-sm'/>
@@ -247,7 +247,7 @@ export default function () {
           <div>
             <legend>Failure System Analysis</legend>
             <div>
-              <form>
+              <form className='container'>
                 <div>
                   <label>Why :</label>
                   <textarea rows={1}  disabled={!isEditing}  className='form-control form-control-sm'/>

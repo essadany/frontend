@@ -208,7 +208,7 @@ function updateProblem_desc(){
         <div className='border'>
         <div className='row report_header'>
           <div className='col-md-4'>
-            <form className='row g-3'>
+            <form className='row container g-3'>
               <div className="">
                   <label className="col-form-label">opening date :</label>
                   <input  type="date" class="form-control form-control-sm" disabled={!isEditing} value={opening_date}  onChange={(e)=>setOpening_date(e.target.value)} required />      
@@ -220,7 +220,7 @@ function updateProblem_desc(){
           <div className='description '>
             <legend>Problem Description</legend>
             <div>
-              <form className='row form-group'>
+              <form className='row container form-group'>
                 <div class="col-md-6">
                     <label  className=" form-label">What happened ? </label>
                     <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={what} onChange={(e)=>setWhat(e.target.value)} required />
@@ -307,7 +307,7 @@ function updateProblem_desc(){
           <div>
             <legend>Analyse Of The Defective Part(s)</legend>
             <div>
-            <form className='form-group g-3 row'>
+            <form className='form-group g-3 container row'>
               <div className="form-check col-md-4">
                   <label  className="form-check-label">Has Bontaz received the detective parts ?</label>
                   <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={received} onChange={(e)=>setReceived(!received)} required />
@@ -345,7 +345,7 @@ function updateProblem_desc(){
           <div>
             <legend>Bontaz Fault</legend>
             <div>
-              <form className='g-3  row'>
+              <form className='g-3 container row'>
                 <div className="form-check col-md-1">
                     <label  className="form-check-label">YES</label>
                     <input type="radio" name='radio'  class="form-check-input"  checked={bontaz_fault} onChange={(e)=>setBontaz_fault(!bontaz_fault)} disabled={!isEditing} required />

@@ -170,7 +170,7 @@ export default function Containement() {
         <h2 ><img className='report_icon' src='../icons/container.png'/>  Containement List - Risk Assesment</h2>
     <div className='border' disabled>
       <div>
-        <form className='row'>
+        <form className='row container'>
           <div className='col-2'>
             <label >Update date : </label>
             <input type='date'  className='form-control form-control-sm'  value={update_date} disabled />
@@ -185,7 +185,7 @@ export default function Containement() {
       <div>
         <legend>Sorting Method</legend>
         <div>
-          <form className='row '>
+          <form className='row container '>
             <div>
               <label className='label-control'>Method description</label>
               <textarea rows={4} className='form-control' disabled={!isEditing} value={method_description} onChange={(e)=>setMethod_description(e.target.value)}/>
@@ -201,7 +201,7 @@ export default function Containement() {
       <div>
         <legend>Risk Assesment</legend>
         <div>
-          <form className='row'>
+          <form className='row container'>
             <div>
               <textarea rows={6} className='form-control' disabled={!isEditing}  value={risk_assesment} onChange={(e)=>setRisk_assesment(e.target.value)}/>
             </div>
@@ -254,7 +254,7 @@ export default function Containement() {
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
+                <form class="row g-3 container needs-validation" onSubmit={handleSubmit}>
                         <div class="col-md-6">
                             <label  class="form-label">Location and company* :</label>
                             <input type="text" class="form-control"  required value={location_company} onChange={(e)=>setLocation_company(e.target.value)} />

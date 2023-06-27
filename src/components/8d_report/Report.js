@@ -264,7 +264,7 @@ function updateReport(){
       <h2 ><img className='report_icon' src='../icons/stamp.png'/>  8D Report {claim_id}</h2>
       <div className='border'>
         <div className=' report_header'>
-            <form className='row  g-3'>
+            <form className='row container g-3'>
               <div className="col-4">
                   <label  className="col-form-label">opening date :</label>
                   <input  type="date" class="form-control form-control-sm" value={report.opening_date}   required />     
@@ -292,7 +292,7 @@ function updateReport(){
           <div className='description '>
             <legend>Problem Description</legend>
             <div>
-              <form className='row'>
+              <form className='row container'>
                 <div class="col-md-12">
                     <textarea  class="form-control" value={report.what}   required />
                 </div>
@@ -333,7 +333,7 @@ function updateReport(){
 
           <div>
             <legend>Containment Action(s)</legend>
-            <form className='row'>
+            <form className='row container'>
               <div class="col-md-12">
                   <textarea  class="form-control" value={containement_actions} disabled={!isEditing} onChange={(e)=>setContainement_actions(e.target.value)}  required />
               </div>
@@ -346,7 +346,7 @@ function updateReport(){
 
           <div>
             <legend>Root Cause Or Escape Point</legend>
-            <form className='row'>
+            <form className='row container'>
               <div class="col-md-6">
                   <label  className=" col-form-label">On Occurence:</label>
                   <textarea  class="form-control" value={report.occurrence_root_cause} disabled={!isEditing} required />
@@ -393,7 +393,7 @@ function updateReport(){
                 </table>       
               </div>
             <div>
-              <form className='row'>
+              <form className='row container'>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">DDM </label>
                   <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={ddm} onChange={(e)=>setDdm(!ddm)} required />
@@ -438,7 +438,7 @@ function updateReport(){
                 </table>       
               </div>
             <div>
-              <form>
+              <form className='container'> 
               <div className="col-md-2">
                   <label  for='4' className=" col-form-label">First Batch Certified :</label>
                   <input type="text" id='4' class="form-control form-control-sm" disabled={!isEditing} value={first_batch6} onChange={(e)=>setFirst_batch6(e.target.value)} required />
@@ -472,7 +472,7 @@ function updateReport(){
                 </table>       
                 </div>
             <div>
-              <form className='row'>
+              <form className='row container'>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">DFMEA </label>
                   <input type="checkbox"  class="form-check-input" checked={dfmea} disabled={!isEditing} onChange={(e)=>setDfmea(!dfmea)} required />

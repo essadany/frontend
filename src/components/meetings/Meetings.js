@@ -244,7 +244,7 @@ export default function Meetings() {
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
+                <form class="row container g-3  needs-validation" onSubmit={handleSubmit}>
                         <div class="col-md-6">
                             <label  class="form-label">Type* :</label>
                             <select className='form-select col-2' onChange={(e)=>setType(e.target.value)}   required>
@@ -278,7 +278,7 @@ export default function Meetings() {
             <div >
                 <legend >List Of Meetings</legend>
                 <div>
-                  <form className='row g-3 '>
+                  <form className='container row g-3 '>
                     <div className='col-3'>
                       <select className='form-select' required onChange={(e)=>setUser_id(e.target.value)}>
                         <option  selected disabled >--- Select User ---</option>

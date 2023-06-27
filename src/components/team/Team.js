@@ -226,7 +226,7 @@ export default function Team() {
           <div className='col-md-2'></div>
             <div className='col-md-4 '> 
               <legend style={{borderRadius:20}}>Add a leader</legend>
-              <form className='g-3  ' onSubmit={handleAddLeader}>
+              <form className='g-3  container' onSubmit={handleAddLeader}>
                   <div class="">
                       <label for="validationCustom02" class="form-label">Leader* :</label>
                       <select  className='form-select' onChange={(e)=>{setName(e.label);setUser_id(e.target.value)}} required >
@@ -239,7 +239,7 @@ export default function Team() {
             </div>
             <div className='col-md-4 '>
               <legend style={{borderRadius:20}}>Add a member</legend>
-              <form class="g-3 " onSubmit={handleAddUserToTeam}>
+              <form class="g-3 container" onSubmit={handleAddUserToTeam}>
                     <div className=' '>
                       <label className='form-label'>Member name* :</label> 
                       <select data-live-search="true"  className='selectpicker form-select' onChange={(e)=>{setUser_id(e.target.value)}} required >

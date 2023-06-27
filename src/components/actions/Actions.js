@@ -278,7 +278,7 @@ export default function Actions() {
             <div >
                 <legend >List Of Actions</legend>
                 <div className='filter'>
-                  <form className='row'>
+                  <form className='row container'>
                     <div  className='col-2'>
                       <label >Status : </label>
                       <select className='form-select' required onChange={(e)=>setStatus(e.target.value)}>
