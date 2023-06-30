@@ -176,7 +176,7 @@ export default function Team() {
           console.warn("leader=", name);
           // Set the leader name
           const leaderName = users.find(user => user.id === parseInt(user_id))?.name || '';
-          const email = users.find(user => user.id === parseInt(user_id))?.email || '';
+          //const email = users.find(user => user.id === parseInt(user_id))?.email || '';
           setName(leaderName);
           setEmail(email);
           
@@ -229,7 +229,7 @@ export default function Team() {
               <form className='g-3  container' onSubmit={handleAddLeader}>
                   <div class="">
                       <label for="validationCustom02" class="form-label">Leader* :</label>
-                      <select  className='form-select' onChange={(e)=>{setName(e.label);setUser_id(e.target.value)}} required >
+                      <select  className='form-select' onChange={(e)=>{setName(e.label);setUser_id(e.target.value);setEmail(users.find(user => user.id === parseInt(e.target.value))?.email || '')}} required >
                       <option disabled selected>--- Select Leader ---</option>
                         {users.map((item)=>(<option key={item.id}  value={item.id} >{item.name}</option>))}
                       </select>

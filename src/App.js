@@ -28,6 +28,7 @@ import './components/header/Header.css'
 
 import {useAuth, AuthProvider } from './components/Login/AuthProvider';
 import { RequireAuth } from './components/Login/RequireAuth';
+import Ishikawa from './components/ishikawa/Ishikawa';
 
 
 
@@ -102,6 +103,7 @@ if (isLoginPage) {
           <Route exact path='/Meetings/:claim_id' element={<RequireAuth>< Meetings /></RequireAuth>}/>
           <Route exact path='/Problem_Description/:claim_id' element={<RequireAuth><Pb_desc /></RequireAuth>}/>
           <Route exact path='/Containement/:claim_id' element={<RequireAuth><Containement /></RequireAuth>}/>
+          <Route exact path='/Ishikawa/:claim_id' element={<RequireAuth><Ishikawa /></RequireAuth>}/>
           <Route exact path='/Five_Why/:claim_id' element={<RequireAuth>< Five_Why /></RequireAuth>}/>
           <Route exact path='/Label_Checking/:claim_id' element={<RequireAuth><Label_Check /></RequireAuth>}/>
           <Route exact path='/Actions/:claim_id' element={<RequireAuth><Actions /></RequireAuth>}/>

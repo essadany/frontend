@@ -18,16 +18,8 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [user, setUser] = useState({
-    id: "",
-    name: "",
-    email : "yassine",
-    password : "",
-    phone: "",
-    fonction : "",
-    role : "",
-    deleted: "",
-  });
+  const [accessToken, setAccessToken] = useState('');
+  const [user, setUser] = useState(null);
 
   
 
@@ -58,7 +50,6 @@ const Login = () => {
             auth.login(user)
             navigate(redirectPath, '/dashboard', {replace : true}); // Redirect to the dashboard page
           console.log('Login successful');
-          
 
         } else {
           // Authentication failed, display error message
@@ -69,7 +60,7 @@ const Login = () => {
       }
   };
  
- 
+
 
   return (
     <div  className='container login'>

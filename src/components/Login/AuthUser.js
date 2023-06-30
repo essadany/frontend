@@ -54,7 +54,21 @@ export default function AuthUser() {
       throw new Error('An error occurred while making the request.');
     }
   };
+  //------------------------------------------------------------last added
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    // Get the authentication state from the backend
+    const fetchIsLoggedIn = async () => {
+      const response = await fetch('/api/auth/is-logged-in');
+      if (response.ok) {
+        const data = await response.json();
+        setIsLoggedIn(data.is_logged_in);
+      }
+    };
+    fetchIsLoggedIn();
+  }, []);
+//---------------------------------------------------
   return {
     setToken: saveToken,
     token,
@@ -62,5 +76,6 @@ export default function AuthUser() {
     getToken,
     http,
     logout,
+    isLoggedIn
   };
 }

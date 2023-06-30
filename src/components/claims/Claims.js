@@ -432,7 +432,7 @@ export default function Claims() {
                   <form className='row container'>
                   <div  className='col-2'>
                       <label>Type : </label>
-                      <select data-live-search="true"  className='selectpicker form-select' value={filter1} onChange={handleSelectChange1} required >
+                      <select data-live-search="true"  className='selectpicker form-select' label={filter1} onChange={handleSelectChange1} required >
                       <option disabled selected>--- Select Type ---</option>
                       <option>Intern</option>
                       <option>Extern</option>
@@ -441,11 +441,11 @@ export default function Claims() {
                     <div  className='col-2'></div>
                     <div  className='col-2'>
                       <label>Status : </label>
-                      <select data-live-search="true"  className='selectpicker form-select' value={filter2} onChange={handleSelectChange2} required >
+                      <select data-live-search="true"  className='selectpicker form-select' label={filter2} onChange={handleSelectChange2} required >
                       <option disabled selected>--- Select Status ---</option>
-                      <option>not started</option>
                       <option>on going</option>
                       <option>done</option>
+                      <option>delayed</option>
                   </select>                    </div>
                     <div  className='col-2'></div>
                     <div  className='col-4 filter'>

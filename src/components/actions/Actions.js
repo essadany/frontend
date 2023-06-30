@@ -40,7 +40,8 @@ export default function Actions() {
   const actions_status = [
     { value: 'not started', label: 'not started' },
     { value: 'on going', label: 'on going' },
-    { value: 'done', label: 'done' }
+    { value: 'done', label: 'done' },
+    { value: 'delayed', label: 'delayed' }
     ]
 
     // Get Users of Team 
@@ -212,12 +213,19 @@ export default function Actions() {
   const handleChange = (e) => {
     setFilter(e.target.value);
   };
+  const [filter1, setFilter1] = useState("");
+  const handleChange1 = (e) => {
+    setFilter1(e.target.value);
+  };
 
-  /*const filteredData = Actions.filter((item) =>
+  const filteredData = actions.filter((item) =>
     Object.values(item).some((value) =>
       String(value).toLowerCase().includes(filter.toLowerCase())
+    ) &&
+    Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(filter1.toLowerCase())
     )
-  );*/
+  );
 
   return (
     <div className='main'>
@@ -281,7 +289,7 @@ export default function Actions() {
                   <form className='row container'>
                     <div  className='col-2'>
                       <label >Status : </label>
-                      <select className='form-select' required onChange={(e)=>setStatus(e.target.value)}>
+                      <select className='form-select selectpicker' required  label={filter1} onChange={handleChange1}>
                         <option  selected disabled >--- Select Status ---</option>
                       {actions_status.map((item)=>(<option value={item.label} >{item.label}</option>))}
                       </select>
@@ -310,7 +318,7 @@ export default function Actions() {
                         </tr>                   
                     </thead>
                     <tbody>
-                    {actions.map((item)=>(
+                    {filteredData.map((item)=>(
                         <tr key={item.id}>
                         <td className='text-center' >{item.action}</td>
                         <td className='text-center' >{item.type}</td>

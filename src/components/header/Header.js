@@ -23,8 +23,8 @@ export default function Header() {
         </div>
         <div className="notif">
             <Button variant=''><NotificationImportant  size={20} color='red'/></Button>
-            <div><p> {auth.user.name} </p>
-            <p>Fonction</p></div>
+            <div>{auth.user.name} <br />
+            {auth.user.fonction}</div>
             <Button  onClick={handlLogout} variant='' >Logout</Button>
             <Button   variant='' ><PersonFillGear size={30} /></Button>
         </div>
