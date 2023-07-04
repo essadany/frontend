@@ -29,6 +29,7 @@ import './components/header/Header.css'
 import {useAuth, AuthProvider } from './components/Login/AuthProvider';
 import { RequireAuth } from './components/Login/RequireAuth';
 import Ishikawa from './components/ishikawa/Ishikawa';
+import ExcelDownload from './components/8d_report/ExcelDownload';
 
 
 
@@ -79,9 +80,8 @@ if (isLoginPage) {
   return (  
       
     <div className='app'>
-
       
-          <AuthProvider>
+         <AuthProvider>
           
       <Menu />
 
@@ -111,7 +111,7 @@ if (isLoginPage) {
           <Route exact path='*' element="error 404"/>
       
       </Routes>
-    </AuthProvider>
+  </AuthProvider>  
     </div>
     
   );
