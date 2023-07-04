@@ -255,7 +255,7 @@ export default function Ishikawa() {
                             <th className='text-center' >Influence</th>
                             <th className='text-center' >Comments</th>
                             <th className='text-center' >Status</th>
-                            <th className='text-center' >isPrincipale</th>
+                            <th className='text-center' >is Principale</th>
                         </tr>                   
                     </thead>
                     <tbody>
@@ -265,8 +265,8 @@ export default function Ishikawa() {
                         <td className='text-center' >{item.input}</td>
                         <td className='text-center' >{item.influence}</td>
                         <td className='text-center' >{item.comment}</td>
-                        <td className='text-center' style={{color:item.status==='confirmed'? 'green': 'on going'? 'orange' : 'red'}}>{item.status}</td>
-                        <td className='text-center' >{item.isPrincipale===1? "X": ""}</td>
+                        <td className='text-center' style={{color:item.status==='confirmed'? 'green': 'on going'? 'orange' : 'red'}}><b>{item.status}</b></td>
+                        <td className='text-center' >{item.isPrincipale===1? <b>X</b>: ""}</td>
                         <td className='text-center' ><Button style={{marginRight:10}} onClick={()=>{setModalTitle("Update Cause");handleShow();setAddB(true);setEditB(false);selectCategorie(item)}} variant='primary'><Edit /></Button></td>
             </tr>
                     ))}

@@ -58,32 +58,60 @@ export default function MyActions() {
   //Begin Action-------------------------------------------------------------
   const currentDate = new Date();
   const formattedDate =  moment(currentDate.toDateString()).format("YYYY-MM-DD");
- 
-  function beginAction(id) {
-    try{
-      fetch(`http://127.0.0.1:8000/api/action/${id}/update_status`, {
-        method: 'PUT',
-        headers:{
-          'Accept' : 'application/json',
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify({status : "on going", start_date : formattedDate})
-      }).then((result) => {
-          if (result.ok){
-            getActions_join_Claims();
-          }else{
-            result.json().then((resp) => {
-              console.warn(resp)
-              alert("Some error occured!");
 
-            })
-          }
-          
-        })
-      
-    } catch (err) {
-    console.log(err);
-  }
+  function beginAction(item) {
+    if (item.status==='not started'){
+      try{
+        fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
+          method: 'PUT',
+          headers:{
+            'Accept' : 'application/json',
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({status : "on going", start_date : formattedDate, done_date:item.done_date})
+        }).then((result) => {
+            if (result.ok){
+              getActions_join_Claims();
+            }else{
+              result.json().then((resp) => {
+                console.warn(resp)
+                alert("Some error occured!");
+  
+              })
+            }
+            
+          })
+        
+      } catch (err) {
+      console.log(err);
+    }
+    } else if (item.status==="on going") {
+      try{
+        fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
+          method: 'PUT',
+          headers:{
+            'Accept' : 'application/json',
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({status : "done",start_date :item.start_date, done_date : formattedDate})
+        }).then((result) => {
+            if (result.ok){
+              getActions_join_Claims();
+            }else{
+              result.json().then((resp) => {
+                console.warn(resp)
+                alert("Some error occured!");
+  
+              })
+            }
+            
+          })
+        
+      } catch (err) {
+      console.log(err);
+    }
+    }
+    
   }
   //-------------------------------------------------------------------------------------
   //Action Done --------------------------------------------------------------------------------------------
@@ -201,7 +229,7 @@ export default function MyActions() {
                               <th >Done date</th>
                               <th>Comment</th>
                               <th>Status</th>
-                              <th>htrh</th>
+                              <th></th>
                               
                           </tr>                   
                       </thead>
@@ -213,9 +241,21 @@ export default function MyActions() {
                                   <td>{item.planned_date}</td>
                                   <td>{item.start_date}</td>
                                   <td>{item.done_date}</td>
-                                  <td>Exemple commentaire  <Button  className='circle-button' variant='secondary'><AddComment /></Button></td>
-                                  <td><Button className='circle-button' variant='primary' onClick={()=>beginAction(item.id)}><Play /></Button>
-                                  <Button className='circle-button' variant='success' onClick={()=>actionDone(item.id)}><Done /></Button></td>
+                                  <td>Exemple commentaire  <Button  className='circle-button' variant='secondary' ><AddComment /></Button></td>
+                                  <td>{item.status === 'done' ? (
+                                    <b style={{ color: 'green' }}>Done</b>
+                                  ) : item.status === 'not started' ? (
+                                    <Button className='circle-button' variant='none' onClick={() => beginAction(item)}>
+                                      <Play color='blue' />
+                                    </Button>
+                                  ) : (
+                                    <>
+                                      <b style={{ color: 'orange' }}>On going</b>
+                                      <Button className='circle-button' variant='none' onClick={() => beginAction(item)}>
+                                        <Done color='green' />
+                                      </Button>
+                                    </>
+                                  )}</td>
                                   <td><Button style={{marginRight:10}} onClick={()=>handleShow()} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>                            
                               </tr>
                       ))}

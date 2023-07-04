@@ -243,7 +243,7 @@ export default function Customer() {
                                 <td>{item.name}</td>
                                 <td>{item.category}</td>
                                 <td>{item.info}</td>
-                                <td><Button style={{marginRight:10}} onClick={()=>{handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
+                                <td><Button style={{marginRight:10}} onClick={()=>{setModalTitle('Update Customer');handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
                                     <Button onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
 
                     </tr>

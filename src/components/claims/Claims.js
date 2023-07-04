@@ -252,8 +252,10 @@ export default function Claims() {
                 'Content-Type':'application/json'
               },
               body:JSON.stringify(item)
-            })
-              
+            }).then((result) => {
+              if (result.ok){
+                getClaims();
+              }})
             }catch (err){
               console.log(err)
             }
@@ -488,8 +490,8 @@ export default function Claims() {
                               <td>{item.claim_details}</td>
                               <td>{item.def_mode}</td>
                               <td>{item.nbr_claimed_parts}</td>
-                              <td><Dot color={item.status==='not started'?'orange':'green'} size={60}/></td>
-                              <td><Button onClick={()=>updateStatus(item)} variant='success'>Finaliser</Button></td>
+                              <td><Dot color={item.status==='on going'?'orange': 'done'?'green' : 'red'} size={60}/></td>
+                              <td>{item.status==='done'?'':<Button onClick={()=>updateStatus(item)} variant='success'>Finaliser</Button>}</td>
                               <td><Button onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                               <td><Button onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
                               <td><Button  variant='success'> <Link to={`/Report/${item.id}`} ><TicketDetailed color='orange'  size={25}/></Link></Button></td>

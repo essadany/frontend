@@ -326,7 +326,7 @@ export default function Actions() {
                         <td className='text-center' >{item.fonction}</td>
                         <td className='text-center' >{item.planned_date}</td>
                         <td className='text-center' >{item.start_date}</td>
-                        <td className='text-center' >{item.status}</td>
+                        <td className='text-center'  style={{color:item.status==='done'? 'green': 'not started'? 'brown':'on going'? 'orange' : 'red'}} ><b>{item.status}</b></td>
                         <td className='text-center'>
                           {comments
                             .filter((comm) => comm.action_id === item.id)
