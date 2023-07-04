@@ -17,11 +17,15 @@ export default function MyActions() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const [modalTitle,setModalTitle]= useState('Add new Meeting');
+  const [show1, setShow1] = useState(false);
+  const handleShow1 = () => setShow1(true);
+const handleClose1 = () =>  setShow1(false);
+  const [modalTitle,setModalTitle]= useState('Add new Comment');
   const [addB,setAddB] = useState('');
   const [editB,setEditB] = useState(true);
   const [actions, setActions] = useState([]);
+  const [comment, setComment] = useState('');
+  const [comment_date, setComment_date] = useState('');
 
 
   const actions_status = [
@@ -50,10 +54,31 @@ export default function MyActions() {
           }
         )
     }
+
+    // Get Comments of action-----------------------------------------------------
+    const [comments,setComments]=useState([]);
+     function getComments(){
+      fetch(`http://127.0.0.1:8000/api/action_comments`)
+        .then(res => res.json())
+        .then(
+          (result) => {
+            setIsLoaded(true);
+            setComments(result);
+          },
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          }
+        )
+        console.log(actions);
+    }
     useEffect(()=>{
       getActions_join_Claims()
     }
       ,[user_id]);
+      useEffect(() => {
+        getComments();
+      }, []);
 
   //Begin Action-------------------------------------------------------------
   const currentDate = new Date();
@@ -141,7 +166,29 @@ export default function MyActions() {
     console.log(err);
   }
   }
-  //-----------------------------------------------------------------------------------
+  
+  // Add Comment-----------------------------------------------------------------------------------
+  const [action_id,setAction_id]= useState("");
+  let handleSubmit1 = async (e) => {
+    e.preventDefault();
+    try {
+      let res = await fetch("http://127.0.0.1:8000/api/action_comment", {
+        method: "POST",
+        headers: {
+            'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({action_id : action_id ,comment : comment  , comment_date : formattedDate}), })      
+      if (res.status === 200) {
+        setComment("");
+        handleClose1();
+        getComments();
+      } else {
+        alert("Some error occured, try again!");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   // Filter Users --------------------------------------------------------------------------------------------------------------------------
   const [filter, setFilter] = useState("");
   const handleChange = (e) => {
@@ -182,7 +229,7 @@ export default function MyActions() {
                 <Modal.Body>
                   <form class="container row g-3">
                     <div class="col-12">
-                      <label class="form-label">Commentaire : </label>
+                      <label class="form-label">Comment : </label>
                       <textarea type="text" class="form-control"  />
                     </div>
                     <div class="col-12">
@@ -241,7 +288,39 @@ export default function MyActions() {
                                   <td>{item.planned_date}</td>
                                   <td>{item.start_date}</td>
                                   <td>{item.done_date}</td>
-                                  <td>Exemple commentaire  <Button  className='circle-button' variant='secondary' ><AddComment /></Button></td>
+                                  <td>
+                                  {comments
+                                  .filter((comm) => comm.action_id === item.id)
+                                  .map((comm) => (
+                                    <p key={comm.id}>{comm.comment};</p>
+                                  ))}
+                                  <Button onClick={(e)=>{setAction_id(item.id);handleShow1()}}  className='circle-button' variant='secondary' ><AddComment /></Button>
+                                  <Modal
+                                    size='md'
+                                    show={show1}
+                                    onHide={handleClose1}
+                                    backdrop="static"
+                                    keyboard={false}
+                                    >
+                                    <Modal.Header closeButton>
+                                    <Modal.Title>{modalTitle}</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <form className='container'>
+                                            <div>
+                                              <label>Comment :</label>
+                                              <textarea  className='form-control form-control-sm' value={comment} onChange={(e)=>setComment(e.target.value)}/>
+                                            </div> 
+                                          </form>
+                                        </Modal.Body>
+                                      <Modal.Footer>
+                                      <Button variant="secondary" onClick={handleClose1}>
+                                          Annuler
+                                      </Button>
+                                      <Button onClick={handleSubmit1}  variant='primary'>Save</Button>                    
+                                      </Modal.Footer>
+                                  </Modal>
+                                  </td>
                                   <td>{item.status === 'done' ? (
                                     <b style={{ color: 'green' }}>Done</b>
                                   ) : item.status === 'not started' ? (
