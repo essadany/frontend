@@ -165,6 +165,20 @@ export default function Report() {
   useEffect(() => {
     getPotentialActions();
   }, [report_id])
+  //Get Images ----------------------------------------------------------------------------
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/report/${report_id}/images`)
+      .then(response => response.json())
+      .then(data => {
+        const images = data.filter(item => item.isGood === null);
+        setSelectedFiles(images.map(obj=>obj['path']));
+        console.warn(data);
+      })
+      .catch(error => {
+        // Handle error
+        console.error(error);
+      });
+  }, [report_id]);
  // Import images code ----------------------------------------------
   const fileInputRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -188,6 +202,25 @@ export default function Report() {
         }
       };
       reader.readAsDataURL(file);
+        //-------------------------------------------------------------------
+        const formData = new FormData();
+        formData.append('report_id', report_id); 
+        formData.append('path', file);
+  
+        fetch('http://127.0.0.1:8000/api/add_image', {
+          method: 'POST',
+          body: formData,
+        })
+          .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              ;
+          })
+          .catch(error => {
+            // Handle error
+            console.error(error);
+          });
+          ///////////////////////////////////////////////////////////////////////////////////////////
     });
   };
 

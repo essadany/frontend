@@ -19,6 +19,7 @@ export default function Label_Check() {
   const [isEditing, setIsEditing] = useState(false);
   const [label_check,setLabel_check] = useState('');
   const [label_check_id,setLabel_check_id] = useState('');
+  const [image1_id,setImage1_id] = useState('');
 
   const [bontaz_plant,setBontaz_plant] = useState('');
   const [sorting_method,setSorting_method] = useState('');
@@ -36,13 +37,50 @@ export default function Label_Check() {
   const handleImageChange1 = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
-  
+
     reader.onload = () => {
       setImage1(reader.result);
     };
-  
+    
     if (file) {
       reader.readAsDataURL(file);
+    }
+    if (!image1){
+      const formData = new FormData();
+      formData.append('label_checking_id', label_check_id); 
+      formData.append('path', file);
+
+      fetch('http://127.0.0.1:8000/api/add_image', {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            ;
+        })
+        .catch(error => {
+          // Handle error
+          console.error(error);
+        });
+    }else{
+      const formData = new FormData();
+      formData.append('path', file);
+      
+      fetch(`http://127.0.0.1:8000/api/image/${image1_id}`, {
+        method: 'PUT',
+        body: formData,
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          // Perform any additional actions after successful update
+        })
+        .catch(error => {
+          // Handle error
+          console.error(error);
+        });
+
     }
   };
   
@@ -50,55 +88,13 @@ export default function Label_Check() {
     setIsEditing(true);
     const fileInput = document.getElementById('file-input1');
     fileInput.click();
-    const formData = new FormData();
-    formData.append('image', image1);
-  
-    fetch('http://127.0.0.1:8000/api/upload-image', {
-      method: 'POST',
-      body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Image uploaded successfully:', data);
-      // Save the received image path in your application state or perform any additional actions
-      setImage1(data.imagePath);
-    })
-    .catch(error => {
-      console.error('Error uploading image:', error);
-      // Handle any errors
-    });
-
+    
   };
   
-  /*const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const formData = new FormData();
-    formData.append('image', image1);
-
-    fetch('http://127.0.0.1:8000/api/upload-image', {
-      method: 'POST',
-      body: formData,
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Image uploaded successfully:', data);
-        // Perform any additional actions after successful upload
-      })
-      .catch(error => {
-        console.error('Error uploading image:', error);
-        // Handle any errors
-      });
-    }*/
-  
-  /*const handleEditClick1 = () => {
-    setIsEditing(true);
-    const fileInput = document.getElementById('file-input1');
-    fileInput.click();
-  };*/
+ 
   
 
- //Get Label Checking
+ //Get Label Checking ------------------------------------------------------------------------------------
  function getLabelCheck(){
   fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/label_checking_join`)
     .then(res => res.json())
@@ -118,13 +114,26 @@ export default function Label_Check() {
       }
     )
 };
-
 useEffect(() => {
   getLabelCheck();
   
 }, [claim_id]);
+//Get Image of Label Checking ---------------------------------------------------------------------------------------------
 
-  //Update Label Checking
+useEffect(() => {
+  fetch(`http://127.0.0.1:8000/api/label_checking/${label_check_id}/image`)
+    .then(response => response.json())
+    .then(data => {
+      setImage1(data.path);
+      setImage1_id(data.id);
+    })
+    .catch(error => {
+      // Handle error
+      console.error(error);
+    });
+}, [label_check_id]);
+
+  //Update Label Checking--------------------------------------------------------------------------------------------
     function updateLabelCheck(){
       try{
           fetch(`http://127.0.0.1:8000/api/label_checking/${label_check_id}`, {

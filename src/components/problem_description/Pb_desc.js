@@ -86,10 +86,31 @@ export default function Pb_desc() {
     reader.onload = () => {
       setImage1(reader.result);
     };
-
+    
     if (file) {
       reader.readAsDataURL(file);
     }
+    if (!image1){
+      const formData = new FormData();
+      formData.append('isGood', 1); // Example value
+      formData.append('problem_id', id); // Example value
+      formData.append('path', file);
+
+      fetch('http://127.0.0.1:8000/api/add_image', {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            ;
+        })
+        .catch(error => {
+          // Handle error
+          console.error(error);
+        });
+    }
+    
   };
   const handleImageChange2 = (event) => {
     const file = event.target.files[0];
@@ -102,12 +123,34 @@ export default function Pb_desc() {
     if (file) {
       reader.readAsDataURL(file);
     }
+    if (!image2){
+      const formData = new FormData();
+      formData.append('isGood', 0); // Example value
+      formData.append('problem_id', id); // Example value
+      formData.append('path', file);
+
+      fetch('http://127.0.0.1:8000/api/add_image', {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            ;
+        })
+        .catch(error => {
+          // Handle error
+          console.error(error);
+        });
+    }
+    
   };
 
   const handleEditClick1 = () => {
     setIsEditing(true);
     const fileInput = document.getElementById('file-input1');
     fileInput.click();
+  
   };
   const handleEditClick2 = () => {
     setIsEditing(true);
@@ -137,6 +180,25 @@ export default function Pb_desc() {
         }
       };
       reader.readAsDataURL(file);
+      //-------------------------------------------------------------------
+      const formData = new FormData();
+      formData.append('problem_id', id); 
+      formData.append('path', file);
+
+      fetch('http://127.0.0.1:8000/api/add_image', {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            ;
+        })
+        .catch(error => {
+          // Handle error
+          console.error(error);
+        });
+        ///////////////////////////////////////////////////////////////////////////////////////////
     });
   };
 
@@ -166,6 +228,7 @@ export default function Pb_desc() {
     const updatedFiles = [...selectedFiles];
     updatedFiles.splice(index, 1);
     setSelectedFiles(updatedFiles);
+    
   };
   
 //Update Problem description
@@ -201,6 +264,41 @@ function updateProblem_desc(){
       
     }) 
   }
+
+  //Get Images -------------------------------------------------------------------------------
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/problem_description/${id}/images`)
+      .then(response => response.json())
+      .then(data => {
+        const goodPart = data.find(item => item.isGood === 1);
+        const badPart = data.find(item => item.isGood === 0);
+          setImage1(goodPart.path);
+          setImage2(badPart.path);
+        
+      })
+      .catch(error => {
+        // Handle error
+        console.error(error);
+      });
+  }, [id]);
+  //Get Image of Defective analyses ---------------------------------------------------------------------------------------------
+
+useEffect(() => {
+  fetch(`http://127.0.0.1:8000/api/problem_description/${id}/images`)
+    .then(response => response.json())
+    .then(data => {
+      const images = data.filter(item => item.isGood === null);
+      setSelectedFiles(images.map(obj=>obj['path']));
+      console.warn(data);
+    })
+    .catch(error => {
+      // Handle error
+      console.error(error);
+    });
+}, [id]);
+  
+    
+ 
   return (
       <div className='main'>
         <Tab />
@@ -274,6 +372,7 @@ function updateProblem_desc(){
                 <input
                   type="file"
                   id="file-input1"
+                  name='file-input1'
                   accept="image/*"
                   onChange={handleImageChange1}
                   style={{ display: 'none' }}
@@ -328,7 +427,6 @@ function updateProblem_desc(){
               <div className='col-md-4'>
                 <img key={index} src={file} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
                 <div>
-                <Button style={{marginRight:5}} variant='secondary' onClick={() => handleReplaceClick(index)}><Edit /></Button>
                 <Button variant='danger' onClick={() => handleDeleteClick(index)}><Delete /></Button>
                 </div>
                 
