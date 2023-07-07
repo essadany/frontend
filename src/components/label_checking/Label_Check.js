@@ -6,7 +6,7 @@ import { AddAPhoto, Delete, Edit } from '@material-ui/icons';
 import { useParams } from 'react-router';
 import { useEffect, useRef, useState } from 'react'
 import moment from "moment";
-export default function Label_Check() {
+export default function Label_Check({haveAccess}) {
   const {claim_id} = useParams();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -214,12 +214,12 @@ useEffect(() => {
                 style={{ display: 'none' }}
               />
               <div>
-                <Button onClick={handleEditClick1}><Edit /></Button>
+                <Button disabled={haveAccess===true? false : true}  onClick={handleEditClick1}><Edit /></Button>
               </div>
             </div>        
           </div>
           <div className='col-6'>
-            <Button onClick={updateLabelCheck}  variant='success'>Save</Button>
+            <Button disabled={haveAccess===true? false : true}  onClick={updateLabelCheck}  variant='success'>Save</Button>
           </div>
         </div>
         

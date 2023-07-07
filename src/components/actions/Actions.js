@@ -10,7 +10,7 @@ import Tab from '../tabs/Tab';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { Edit } from '@material-ui/icons';
-export default function Actions() {
+export default function Actions({haveAccess}) {
 
   const {claim_id} = useParams();
   const [error, setError] = useState(null);
@@ -233,7 +233,7 @@ export default function Actions() {
         <h2 ><img className='report_icon' src='../icons/action-plan.png'/>  Actions</h2>
         <div className='border'>
         <div>
-        <Button onClick={()=>{handleShow();setModalTitle("Add New Action");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Action</Button>
+        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Add New Action");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Action</Button>
 
         <Modal
                 size='md'
@@ -326,7 +326,7 @@ export default function Actions() {
                         <td className='text-center' >{item.fonction}</td>
                         <td className='text-center' >{item.planned_date}</td>
                         <td className='text-center' >{item.start_date}</td>
-                        <td className='text-center'  style={{color:item.status==='done'? 'green': 'not started'? 'brown':'on going'? 'orange' : 'red'}} ><b>{item.status}</b></td>
+                        <td className='text-center'  style={{color:item.status==='done'? 'green': item.status==='not started'? 'brown':item.status==='on going'? 'orange' : 'red'}} ><b>{item.status}</b></td>
                         <td className='text-center'>
                           {comments
                             .filter((comm) => comm.action_id === item.id)
@@ -342,7 +342,7 @@ export default function Actions() {
                             ))}
                         </td>
                         <td className='text-center' >{item.done_date}</td>
-                        <td className='text-center' ><Button style={{marginRight:10}} onClick={()=>{setModalTitle("Update Action");handleShow();setAddB(true);setEditB(false);selectAction(item)}} variant='primary'><Edit /></Button></td>
+                        <td className='text-center' ><Button disabled={haveAccess===true? false : true}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Action");handleShow();setAddB(true);setEditB(false);selectAction(item)}} variant='primary'><Edit /></Button></td>
             </tr>
                     ))}
                             

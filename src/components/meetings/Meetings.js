@@ -9,7 +9,7 @@ import  Modal  from 'react-bootstrap/Modal'
 import Tab from '../tabs/Tab';
 import { useParams } from 'react-router';
 import { Add } from '@material-ui/icons';
-export default function Meetings() {
+export default function Meetings({haveAccess}) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [show, setShow] = useState(false);
@@ -217,6 +217,8 @@ export default function Meetings() {
     if (res.status === 200) {
       alert("User Added successfully as an absent");
     } else {
+      getMeetings();
+
       console.log(error);
       console.log(res.status);
 
@@ -231,7 +233,7 @@ export default function Meetings() {
         <h2 ><img className='report_icon' src='../../icons/meeting.png'/>  Meetings</h2>
         <div className='border'>
         <div>
-        <Button onClick={()=>{handleShow();setModalTitle("Add New Meeting");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Meeting</Button>
+        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Add New Meeting");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Meeting</Button>
 
         <Modal
                 size='md'
@@ -266,8 +268,8 @@ export default function Meetings() {
                           <Button variant="secondary" onClick={handleClose}>
                               Annuler
                           </Button>
-                          <Button type='submit'   hidden={addB} variant='primary'>Save</Button>
-                          <Button onClick={updateMeeting} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>          
+                          <Button disabled={haveAccess===true? false : true}  type='submit'   hidden={addB} variant='primary'>Save</Button>
+                          <Button disabled={haveAccess===true? false : true}  onClick={updateMeeting} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>          
                         </div>
                         
                     </form>
@@ -292,7 +294,7 @@ export default function Meetings() {
                       </select>
                     </div>
                     <div className='col-3'>
-                      <Button onClick={AddAbsence} variant='danger'><PlusCircle />  Add Absence</Button>
+                      <Button disabled={haveAccess===true? false : true}  onClick={AddAbsence} variant='danger'><PlusCircle />  Add Absence</Button>
                     </div>                               
                   </form></div>
                 <div className='row md-4 filter'>
@@ -326,7 +328,7 @@ export default function Meetings() {
                               <div key={abs.id}>{abs.name}</div>
                             ))}
                         </td>
-                            <td><Button style={{marginRight:10}} onClick={()=>{selectMeeting(item);setModalTitle("Update Meeting");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                            <td><Button disabled={haveAccess===true? false : true} style={{marginRight:10}} onClick={()=>{selectMeeting(item);setModalTitle("Update Meeting");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                         </tr>
                         ))}
                               

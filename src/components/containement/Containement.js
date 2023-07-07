@@ -6,7 +6,7 @@ import { Add, Edit } from '@material-ui/icons'
 import { useParams } from 'react-router'
 import { useState, useEffect } from 'react'
 import moment from "moment";
-export default function Containement() {
+export default function Containement({haveAccess}) {
 
   const {claim_id} = useParams();
   const handleClose = () => setShow(false);
@@ -209,7 +209,7 @@ export default function Containement() {
         </div>
       </div>
       <div>
-            <Button variant='primary'onClick={()=>{setIsEditing(!isEditing);updateContainement();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button disabled={haveAccess===true? false : true}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateContainement();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
       </div>
       
       <div>
@@ -234,14 +234,14 @@ export default function Containement() {
                 <td>{item.qty_sorted}</td>
                 <td>{item.qty_NOK}</td>
                 <td>{item.scrap}</td>
-                <td><Button onClick={()=>{handleShow();setModalTitle("Update Sorting");selectSorting(item);setAddB(true);setEditB(false)}}><Edit /></Button></td>
+                <td><Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Update Sorting");selectSorting(item);setAddB(true);setEditB(false)}}><Edit /></Button></td>
               </tr>
             ))}
             </tbody>
           </table>
         </div>
         <div>
-        <Button onClick={()=>{handleShow();setAddB(false);setEditB(true)}} variant='success'> <Add /></Button>
+        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setAddB(false);setEditB(true)}} variant='success'> <Add /></Button>
 
         <Modal
                 size='md'

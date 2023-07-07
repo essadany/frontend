@@ -7,7 +7,7 @@ import { AddAPhoto, Delete, Edit } from '@material-ui/icons';
 import { useParams } from 'react-router';
 import moment from "moment";
 
-export default function Report() {
+export default function Report({haveAccess}) {
   const {claim_id} = useParams();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -526,7 +526,7 @@ function updateReport(){
             </div>
           </div>
           <div>
-            <Button variant='primary'onClick={()=>{updateReport();setIsEditing(!isEditing);setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button disabled={haveAccess===true? false : true}  variant='primary'onClick={()=>{updateReport();setIsEditing(!isEditing);setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
         </div>
     </div>

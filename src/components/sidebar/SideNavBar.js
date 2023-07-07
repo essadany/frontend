@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SideNavBar.css";
 import  { Link,BrowserRouter }  from 'react-router-dom';
 import { useAuth } from "../Login/AuthProvider";
+import { Badge } from "@material-ui/core";
+import { NotificationImportantOutlined } from "@material-ui/icons";
 
 
 
@@ -9,7 +11,8 @@ const SideNavBar = ({isAuthentificated}) => {
 	const auth = useAuth()
 
 	const [notificationMessage, setNotificationMessage] = useState('');
-
+	const [error, setError] = useState(null);
+	const [isLoaded, setIsLoaded] = useState(false);
 	const handleClick = () => {
 		setNotificationMessage('This is a notification!');
 		Notification.notify({
@@ -62,6 +65,28 @@ const SideNavBar = ({isAuthentificated}) => {
 	if (isAuthentificated){
 		
 	}
+	//Get Number of Actions
+	const [number,setNumber] = useState('0')
+	useEffect(()=>{
+		fetch(`http://127.0.0.1:8000/api/user/${auth.user.id}/actions_not_started`)
+		  .then(res => res.json())
+		  .then(
+			(result) => {
+			  setIsLoaded(true);
+			  setNumber(result);
+
+			},
+			// Note: it's important to handle errors here
+			// instead of a catch() block so that we don't swallow
+			// exceptions from actual bugs in components.
+			(error) => {
+			  setIsLoaded(true);
+			  setError(error);
+			}
+		  )
+	  }
+	,[auth.user.id])
+		
 	return (
 		<div
 			className={
@@ -92,13 +117,22 @@ const SideNavBar = ({isAuthentificated}) => {
 				<div className="nav-menu">
 					{menuItems.map(({ text, icon, path }) => (
 						<Link
-							className={isExpanded ? "menu-item" : "menu-item menu-item-NX"}
-							to={path}
-						>
-							<img className={isExpanded ? "menu-item-icon" : "menu-item-icon-NX"} src={icon} alt="" srcset=""/>
+						className={isExpanded ? "menu-item" : "menu-item menu-item-NX"}
+						to={path}
+					  >
+						{path === '/MyActions' ? (
+						  <Badge badgeContent={number} color="error">
+							<img className={isExpanded ? "menu-item-icon" : "menu-item-icon-NX"} src={icon} alt="" srcSet="" />
 							{isExpanded && <p>{text}</p>}
-							
-						</Link>
+						  </Badge>
+						) : (
+						  <>
+							<img className={isExpanded ? "menu-item-icon" : "menu-item-icon-NX"} src={icon} alt="" srcSet="" />
+							{isExpanded && <p>{text}</p>}
+						  </>
+						)}
+					  </Link>
+					  
 						
 					))}
 					<br/><br />

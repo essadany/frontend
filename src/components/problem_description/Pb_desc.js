@@ -7,7 +7,7 @@ import { AddAPhoto, Delete, Done, Edit } from '@material-ui/icons';
 import { useParams } from 'react-router'
 import { useState, useEffect, useRef } from 'react'
 import moment from "moment";
-export default function Pb_desc() {
+export default function Pb_desc({haveAccess}) {
 
   const {claim_id} = useParams();
 
@@ -223,12 +223,28 @@ export default function Pb_desc() {
       reader.readAsDataURL(file);
     }
   };
+  // Delete Image ----------------------------------------------------------------------------
+  function deleteImage(imageId) {
+    fetch(`http://127.0.0.1:8000/api/image/${imageId}`, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Image deleted:', data);
+        // Refresh the image state by fetching the updated images from the database
+        getImages();
+      })
+      .catch(error => {
+        console.error('Error deleting image:', error);
+      });
+  }
 
-  const handleDeleteClick = (index) => {
+  const handleDeleteClick = (index, imageId) => {
+    deleteImage(imageId);
+
     const updatedFiles = [...selectedFiles];
     updatedFiles.splice(index, 1);
     setSelectedFiles(updatedFiles);
-    
   };
   
 //Update Problem description
@@ -266,6 +282,7 @@ function updateProblem_desc(){
   }
 
   //Get Images -------------------------------------------------------------------------------
+  
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/api/problem_description/${id}/images`)
       .then(response => response.json())
@@ -282,9 +299,8 @@ function updateProblem_desc(){
       });
   }, [id]);
   //Get Image of Defective analyses ---------------------------------------------------------------------------------------------
-
-useEffect(() => {
-  fetch(`http://127.0.0.1:8000/api/problem_description/${id}/images`)
+  function getImages(){
+    fetch(`http://127.0.0.1:8000/api/problem_description/${id}/images`)
     .then(response => response.json())
     .then(data => {
       const images = data.filter(item => item.isGood === null);
@@ -295,7 +311,10 @@ useEffect(() => {
       // Handle error
       console.error(error);
     });
-}, [id]);
+  }
+  useEffect(() => {
+    getImages();
+  }, [id]);
   
     
  
@@ -378,7 +397,7 @@ useEffect(() => {
                   style={{ display: 'none' }}
                 />
                 <div>
-                  <Button onClick={handleEditClick1}><Edit /></Button>
+                  <Button disabled={haveAccess===true? false : true}  onClick={handleEditClick1}><Edit /></Button>
                 </div>
               </div>
 
@@ -397,7 +416,7 @@ useEffect(() => {
                   style={{ display: 'none' }}
                 />
                 <div>
-                  <Button onClick={handleEditClick2}><Edit /></Button>
+                  <Button disabled={haveAccess===true? false : true} onClick={handleEditClick2}><Edit /></Button>
                 </div>               
               </div>
             </div>
@@ -427,7 +446,7 @@ useEffect(() => {
               <div className='col-md-4'>
                 <img key={index} src={file} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
                 <div>
-                <Button variant='danger' onClick={() => handleDeleteClick(index)}><Delete /></Button>
+                <Button disabled={haveAccess===true? false : true} variant='danger' onClick={() => handleDeleteClick(index, file.id)}><Delete /></Button>
                 </div>
                 
                 </div>
@@ -435,7 +454,7 @@ useEffect(() => {
               
               <div className='col-md-4'>
                 <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
-                <Button onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
+                <Button disabled={haveAccess===true? false : true} onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
               </div>
             </div>
           </div>
@@ -464,7 +483,7 @@ useEffect(() => {
             
           </div>
           <div>
-            <Button variant='primary'onClick={()=>{setIsEditing(!isEditing);updateProblem_desc();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button disabled={haveAccess===true? false : true}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateProblem_desc();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
 
         </div>

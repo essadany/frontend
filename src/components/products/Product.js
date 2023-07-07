@@ -8,7 +8,7 @@ import  Modal  from 'react-bootstrap/Modal'
 
 import { Button } from 'react-bootstrap';
 
-export default function Product() {
+export default function Product({haveAccess}) {
         const [show, setShow] = useState(false);
 
         const handleClose = () => setShow(false);
@@ -226,7 +226,7 @@ export default function Product() {
         
         <div className='border'>
         <div>
-        <Button onClick={()=>{handleShow();setModalTitle("Add New Product");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Product</Button>
+        <Button disabled={haveAccess? false : true}  onClick={()=>{handleShow();setModalTitle("Add New Product");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Product</Button>
 
         <Modal
                 size='md'
@@ -329,8 +329,8 @@ export default function Product() {
                                 <td>{item.product_name}</td>
                                 <td>{item.zone}</td>
                                 <td>{item.uap}</td>
-                                <td><Button style={{marginRight:10}} onClick={()=>{selectProduct(item);setModalTitle("Update Product");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button onClick={()=>deleteProduct(item)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
+                                <td><Button disabled={haveAccess===true? false : true} style={{marginRight:10}} onClick={()=>{selectProduct(item);setModalTitle("Update Product");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button disabled={haveAccess===true? false : true}  onClick={()=>deleteProduct(item)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
                                 
 
                     </tr>

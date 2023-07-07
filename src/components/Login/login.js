@@ -1,12 +1,16 @@
 
-import React, { useEffect, useState} from 'react';
+import React, { createContext, useContext, useEffect, useState} from 'react';
 import { Button } from 'react-bootstrap';
 import { useLocation, useNavigate } from "react-router-dom";
  import './login.css'
 import { useAuth } from './AuthProvider';
 import Device_demensions from '../../Device_demensions';
+import App from '../../App';
+// Create a context
+export const MyContext =React.createContext();
 const Login = () => {
- 
+  
+
   
   
   //----------------
@@ -19,8 +23,8 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [accessToken, setAccessToken] = useState('');
-  const [user, setUser] = useState(null);
-
+  const [user, setUser] = useState({name :'', email : '',role :''});
+  let haveAccess= true;
   
 
   const handleEmailChange = (e) => {
@@ -48,8 +52,13 @@ const Login = () => {
       console.log(user, access_token);
             
             auth.login(user)
+            if (user.role === 'user') {
+              haveAccess = false;
+              console.log(haveAccess);
+            }
             navigate(redirectPath, '/dashboard', {replace : true}); // Redirect to the dashboard page
           console.log('Login successful');
+          console.log(user.role);
 
         } else {
           // Authentication failed, display error message
@@ -60,9 +69,10 @@ const Login = () => {
       }
   };
  
-
+ 
 
   return (
+    <MyContext.Provider value={haveAccess}>
     <div  className='container login'>
       <h1>Login Page</h1>
 
@@ -82,7 +92,8 @@ const Login = () => {
             {error && <p style={{color:'red'}}>{error}</p>}
 
     </div>
+    
+    </MyContext.Provider>
   );
 };
-
 export default Login;

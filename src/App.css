@@ -115,17 +115,23 @@ text-align: center;
   justify-content: space-between;
   z-index: 2;
   color: white;
-  
-
 }
+ .message{
+  color: black;
+ width: 400px;
+  margin-top: 5px;
+  margin-right: 20px;
+  
+}
+.message section{
+  margin-top: 5px;
+}
+
 .notif{
   display: flex;
   align-items: center;
 }
-.notif div{
-  display: block;
-  
-}
+
 
 .header{
   position: absolute;

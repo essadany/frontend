@@ -9,7 +9,9 @@ import {Button, FormSelect} from 'react-bootstrap';
 import './Claims.css';
 import { Details, Done } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
-export default function Claims() {
+import moment from 'moment';
+
+export default function Claims({haveAccess}) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -240,9 +242,13 @@ export default function Claims() {
         }
 
         //update Status
+        const currentDate = new Date();
+  const formattedDate =  moment(currentDate.toDateString()).format("YYYY-MM-DD");
+
         function updateStatus(claim){
           let item = {
             status : "done",
+            done_date : formattedDate
           }
           try{
             fetch(`http://127.0.0.1:8000/api/claim_status/${claim.id}`, {
@@ -320,7 +326,7 @@ export default function Claims() {
         <h2 >Claims</h2>
         <div className='border '>
         <div>
-        <Button onClick={()=>{handleShow();setModalTitle("Add New Claim");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Claim</Button>
+        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Add New Claim");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Claim</Button>
         <Modal
         size='md'
         show={show}
@@ -491,9 +497,9 @@ export default function Claims() {
                               <td>{item.def_mode}</td>
                               <td>{item.nbr_claimed_parts}</td>
                               <td><Dot color={item.status==='on going'?'orange': 'done'?'green' : 'red'} size={60}/></td>
-                              <td>{item.status==='done'?'':<Button onClick={()=>updateStatus(item)} variant='success'>Finaliser</Button>}</td>
-                              <td><Button onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
-                              <td><Button onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
+                              <td>{item.status==='done'?'':<Button disabled={haveAccess===true? false : true}  onClick={()=>updateStatus(item)} variant='success'>Finaliser</Button>}</td>
+                              <td><Button disabled={haveAccess===true? false : true}  onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                              <td><Button disabled={haveAccess===true? false : true}  onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
                               <td><Button  variant='success'> <Link to={`/Report/${item.id}`} ><TicketDetailed color='orange'  size={25}/></Link></Button></td>
                             
                     </tr>

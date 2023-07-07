@@ -6,7 +6,7 @@ import Select from 'react-select';
 import { Button } from 'react-bootstrap';
 import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";
 import  Modal  from 'react-bootstrap/Modal'
-export default function Claim_track() {
+export default function Claim_track({haveAccess}) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -149,7 +149,7 @@ export default function Claim_track() {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><Button style={{marginRight:10}} onClick={()=>{setModalTitle("Update Claim Tracking");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                                <td><Button disabled={haveAccess===true? false : true}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Claim Tracking");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                     </tr>
                     </tbody>
                   </table>

@@ -8,7 +8,7 @@ import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi }
 import  Modal  from 'react-bootstrap/Modal'
 
 
-export default function Customer() {
+export default function Customer({haveAccess}) {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
@@ -171,7 +171,7 @@ export default function Customer() {
         <h2>Customers</h2>
         <div className='border'>
           <div>
-        <Button onClick={()=>{handleShow();setModalTitle("Add New Customer");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Customer</Button>
+        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Add New Customer");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Customer</Button>
 
         <Modal
                 size='md'
@@ -243,8 +243,8 @@ export default function Customer() {
                                 <td>{item.name}</td>
                                 <td>{item.category}</td>
                                 <td>{item.info}</td>
-                                <td><Button style={{marginRight:10}} onClick={()=>{setModalTitle('Update Customer');handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
+                                <td><Button disabled={haveAccess===true? false : true} style={{marginRight:10}} onClick={()=>{setModalTitle('Update Customer');handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button disabled={haveAccess===true? false : true} onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
 
                     </tr>
                     ))}

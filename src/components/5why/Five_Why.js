@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import { Add, Delete } from '@material-ui/icons';
 import { useParams } from 'react-router';
 import  Modal  from 'react-bootstrap/Modal'
-export default function () {
+export default function ({haveAccess}) {
 
   const { claim_id } = useParams();
 
@@ -324,7 +324,7 @@ export default function () {
           <div>
             <legend>Failure Occurence Analysis</legend>
             <div>
-            <Button onClick={()=>handleShow1()} variant='success'> <Add /></Button>
+            <Button disabled={haveAccess===true? false : true}  onClick={()=>handleShow1()} variant='success'> <Add /></Button>
 
             <Modal
                 size='md'
@@ -384,7 +384,7 @@ export default function () {
           <div>
             <legend>Failure Detection Analysis</legend>
             <div>
-            <Button onClick={()=>handleShow2()} variant='success'> <Add /></Button>
+            <Button disabled={haveAccess===true? false : true} onClick={()=>handleShow2()} variant='success'> <Add /></Button>
 
             <Modal
                 size='md'
@@ -441,7 +441,7 @@ export default function () {
           <div>
             <legend>Failure System Analysis</legend>
             <div>
-            <Button onClick={()=>handleShow3()} variant='success'> <Add /></Button>
+            <Button disabled={haveAccess===true? false : true}  onClick={()=>handleShow3()} variant='success'> <Add /></Button>
 
             <Modal
                 size='md'
@@ -497,7 +497,7 @@ export default function () {
           </div>
         
           <div>
-            <Button variant='primary'onClick={()=>{setIsEditing(!isEditing);updateResults();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button disabled={haveAccess===true? false : true}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateResults();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
       </div>
     </div>

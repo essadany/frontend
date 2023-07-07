@@ -38,7 +38,7 @@ const handleClose1 = () =>  setShow1(false);
     //Get Actions join Claims
     const user_id = auth.user.id;
     function getActions_join_Claims(){
-      fetch(`http://127.0.0.1:8000/api/user/${user_id}{/actions_join_claims`)
+      fetch(`http://127.0.0.1:8000/api/user/${user_id}/actions_join_claims`)
         .then(res => res.json())
         .then(
           (result) => {
@@ -110,7 +110,7 @@ const handleClose1 = () =>  setShow1(false);
       } catch (err) {
       console.log(err);
     }
-    } else if (item.status==="on going") {
+    } else {
       try{
         fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
           method: 'PUT',
@@ -189,6 +189,21 @@ const handleClose1 = () =>  setShow1(false);
       console.log(err);
     }
   };
+  
+  //Get User Claims ---------------------------------------------------------------------------
+  // Step 1: Iterate over the objects in the JSON object
+const uniqueNames = new Set();
+for (const obj of Object.values(actions)) {
+  // Step 2: Get the value of the specific attribute ("name" in this case)
+  const att = obj.internal_ID;
+
+  // Add the name to the Set
+  uniqueNames.add(att);
+}
+
+// Step 3: Convert the Set to an array
+const claims_user = Array.from(uniqueNames);
+console.warn('claim_users',claims_user);
   // Filter Users --------------------------------------------------------------------------------------------------------------------------
   const [filter, setFilter] = useState("");
   const handleChange = (e) => {
@@ -255,7 +270,7 @@ const handleClose1 = () =>  setShow1(false);
                       <label>Claim reference : </label>
                       <select className='form-select selectpicker'  label={filter1} onChange={handleChange1}>
                       <option  selected disabled >--- Select Claim ---</option>
-                      {actions.map((item)=>(<option value={item.internal_ID} >{item.internal_ID}</option>))}
+                      {claims_user.map((item,index)=>(<option key={index} value={item} >{item}</option>))}
                       </select>    
                     </div>
                     <div  className='col-6'></div>
@@ -276,7 +291,6 @@ const handleClose1 = () =>  setShow1(false);
                               <th >Done date</th>
                               <th>Comment</th>
                               <th>Status</th>
-                              <th></th>
                               
                           </tr>                   
                       </thead>
@@ -327,15 +341,17 @@ const handleClose1 = () =>  setShow1(false);
                                     <Button className='circle-button' variant='none' onClick={() => beginAction(item)}>
                                       <Play color='blue' />
                                     </Button>
+                                  ) :item.status === 'delayed' ? (
+                                    <b style={{ color: 'red' }}>Delayed</b>
                                   ) : (
                                     <>
                                       <b style={{ color: 'orange' }}>On going</b>
-                                      <Button className='circle-button' variant='none' onClick={() => beginAction(item)}>
+                                      <Button className='circle-button' color='green' variant='none' onClick={() => beginAction(item)}>
                                         <Done color='green' />
                                       </Button>
                                     </>
                                   )}</td>
-                                  <td><Button style={{marginRight:10}} onClick={()=>handleShow()} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>                            
+                                  {/*<td><Button style={{marginRight:10}} onClick={()=>handleShow()} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>*/}                            
                               </tr>
                       ))}
                               
