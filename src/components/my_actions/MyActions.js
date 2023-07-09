@@ -73,9 +73,10 @@ const handleClose1 = () =>  setShow1(false);
         console.log(actions);
     }
     useEffect(()=>{
-      getActions_join_Claims()
+      getActions_join_Claims();
     }
-      ,[user_id]);
+    ,[user_id]);
+    
       useEffect(() => {
         getComments();
       }, []);

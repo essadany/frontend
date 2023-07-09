@@ -123,10 +123,13 @@ export default function App() {
       console.log(actions);
   }
   
-
-  useEffect(() => {
+  useEffect(()=>{
     getNotifications();
+  },[])
+  useEffect(()=>{
     getActions();
+  },[])
+  useEffect(() => {
     notifications.forEach(item => {
       const action = actions.find(action => action['id'] === item.action_id);
       const diffInDays = moment(action['planned_date']).diff(moment(currentDate), 'days');
@@ -149,6 +152,7 @@ export default function App() {
     });
 
   }, [currentDate]);
+  
   /*useEffect(() => {
     getActions();
     actions.forEach(item => {

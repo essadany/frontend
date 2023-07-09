@@ -215,13 +215,14 @@ export default function Users() {
                           <input type="checkbox" checked={isAdmin} class="form-check-input" required  onChange={(e)=>checkAdmin()}/>
                         </div>
                         <div class="col-md-6">
-                            <label  class="form-label">Email* :</label>
-                            <input type="text" class="form-control"  required value={email} onChange={(e)=>setEmail(e.target.value)} />
-                        </div>
-                        <div class="col-md-6">
                             <label  class="form-label">Phone :</label>
                             <input type="text" class="form-control"  required value={phone} onChange={(e)=>setPhone(e.target.value)} />
                         </div>
+                        <div class="col-md-6">
+                            <label  class="form-label">Email* :</label>
+                            <input type="email" class="form-control"  required value={email} onChange={(e)=>setEmail(e.target.value)} />
+                        </div>
+                        
                         <div class="col-md-6">
                             <label  class="form-label">Password* :</label>
                             <input type="password" class="form-control"  required value={password} onChange={(e)=>setPassword(e.target.value)} />

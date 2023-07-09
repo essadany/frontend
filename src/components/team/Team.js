@@ -94,7 +94,7 @@ export default function Team() {
   useEffect(() => {
 
     getUsersOfTeam();
-  }, [team_id]);
+  }, [claim_id]);
 
   // Delete User from team ------------------------------------------------------------------------------------------------------------------------
   function deleteUserFromTeam(user_id){

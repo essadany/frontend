@@ -33,7 +33,7 @@ export default function Header() {
   const [notifications,setNotifications] = useState([]);
   const currentDate = new Date().toISOString().split('T')[0];
 
-  const getNotifications = async()=>{
+  const getNotificationsOfUser = async()=>{
     await fetch(`http://127.0.0.1:8000/api/user/${user_id}/notifications`)
       .then(res => res.json())
       .then(
@@ -52,7 +52,7 @@ export default function Header() {
   }
 
   useEffect(()=>{
-    getNotifications();
+    getNotificationsOfUser();
 
   },[user_id])
 

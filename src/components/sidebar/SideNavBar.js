@@ -85,7 +85,7 @@ const SideNavBar = ({isAuthentificated}) => {
 			}
 		  )
 	  }
-	,[auth.user.id])
+	,[])
 		
 	return (
 		<div
