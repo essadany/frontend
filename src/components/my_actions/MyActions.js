@@ -85,70 +85,42 @@ const handleClose1 = () =>  setShow1(false);
   const formattedDate =  moment(currentDate.toDateString()).format("YYYY-MM-DD");
 
   function beginAction(item) {
-    if (item.status==='not started'){
-      try{
-        fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
-          method: 'PUT',
-          headers:{
-            'Accept' : 'application/json',
-            'Content-Type':'application/json'
-          },
-          body:JSON.stringify({status : "on going", start_date : formattedDate, done_date:item.done_date})
-        }).then((result) => {
-            if (result.ok){
-              getActions_join_Claims();
-            }else{
-              result.json().then((resp) => {
-                console.warn(resp)
-                alert("Some error occured!");
-  
-              })
-            }
-            
-          })
-        
-      } catch (err) {
-      console.log(err);
-    }
-    } else {
-      try{
-        fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
-          method: 'PUT',
-          headers:{
-            'Accept' : 'application/json',
-            'Content-Type':'application/json'
-          },
-          body:JSON.stringify({status : "done",start_date :item.start_date, done_date : formattedDate})
-        }).then((result) => {
-            if (result.ok){
-              getActions_join_Claims();
-            }else{
-              result.json().then((resp) => {
-                console.warn(resp)
-                alert("Some error occured!");
-  
-              })
-            }
-            
-          })
-        
-      } catch (err) {
-      console.log(err);
-    }
-    }
-    
-  }
-  //-------------------------------------------------------------------------------------
-  //Action Done --------------------------------------------------------------------------------------------
-  function actionDone(id) {
     try{
-      fetch(`http://127.0.0.1:8000/api/action/${id}/update_status`, {
+      fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
         method: 'PUT',
         headers:{
           'Accept' : 'application/json',
           'Content-Type':'application/json'
         },
-        body:JSON.stringify({status : "done", done_date : formattedDate })
+        body:JSON.stringify({status : "on going", start_date : formattedDate, done_date : item.done_date })
+      }).then((result) => {
+          if (result.ok){
+            getActions_join_Claims();
+          }else{
+            result.json().then((resp) => {
+              console.warn(resp)
+              alert("Some error occured!");
+
+            })
+          }
+          
+        })
+      
+    } catch (err) {
+    console.log(err);
+  }
+  }
+  //-------------------------------------------------------------------------------------
+  //Action Done --------------------------------------------------------------------------------------------
+  function actionDone(item) {
+    try{
+      fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
+        method: 'PUT',
+        headers:{
+          'Accept' : 'application/json',
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({status : "done", done_date : formattedDate , start_date : item.start_date})
       }).then((result) => {
           if (result.ok){
             getActions_join_Claims();
@@ -290,6 +262,7 @@ console.warn('claim_users',claims_user);
                               <th >Started date</th>
                               <th >Done date</th>
                               <th>Comment</th>
+                              <th>Comment date</th>
                               <th>Status</th>
                               
                           </tr>                   
@@ -335,6 +308,13 @@ console.warn('claim_users',claims_user);
                                       </Modal.Footer>
                                   </Modal>
                                   </td>
+                                  <td className='text-center'>
+                                    {comments
+                                      .filter((comm) => comm.action_id === item.id)
+                                      .map((comm) => (
+                                        <div key={comm.id}>{comm.comment_date}</div>
+                                      ))}
+                                  </td>
                                   <td>{item.status === 'done' ? (
                                     <b style={{ color: 'green' }}>Done</b>
                                   ) : item.status === 'not started' ? (
@@ -346,7 +326,7 @@ console.warn('claim_users',claims_user);
                                   ) : (
                                     <>
                                       <b style={{ color: 'orange' }}>On going</b>
-                                      <Button className='circle-button' color='green' variant='none' onClick={() => beginAction(item)}>
+                                      <Button className='circle-button' color='green' variant='none' onClick={() => actionDone(item)}>
                                         <Done color='green' />
                                       </Button>
                                     </>

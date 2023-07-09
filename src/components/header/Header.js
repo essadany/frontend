@@ -56,44 +56,7 @@ export default function Header() {
 
   },[user_id])
 
-  // Update notifications
-  const [actions,setActions]= useState([]);  
-  function getActions(){
-    fetch(`http://127.0.0.1:8000/api/actions`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setActions(result);
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
-      console.log(actions);
-  }
-  
-
-  useEffect(() => {
-    getActions();
-    notifications.forEach(item => {
-      const action = actions.find(action => action['id'] === item.action_id);
-      const diffInDays = moment(action['planned_date']).diff(moment(currentDate), 'days');
-      if (diffInDays == 1 && action['status'] != 'done') {
-        updateNotification(item.id,"You have to do this action  : { " +action['action']+ " } :today the delay is tomorrow");
-        console.warn('planned_date : ', item.planned_date, ' current_date : ', currentDate);
-      }
-      if (diffInDays == -2 && action['status'] != 'done') {
-        deleteNotification(item.id);
-      }
-      console.warn('diff : ',diffInDays);
-
-    });
-  }, [currentDate]);
+ 
   //Get Number of Notifications
 	const [number,setNumber] = useState('0')
 	useEffect(()=>{
@@ -115,44 +78,7 @@ export default function Header() {
 		  )
 	  }
 	,[user_id])
-    //Update Notification
-  const updateNotification = async (id, msg) => {
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/api/notification/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message : msg }), // Replace 'attribute' with the attribute you want to update and 'new value' with the new value
-      });
-
-      if (response.ok) {
-        console.log('Notification updated successfully.');
-      } else {
-        console.error('Notification update failed.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-  //Delete Notification ---------------------------
-  const deleteNotification = async (id) => {
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/api/notification/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        }      });
-
-      if (response.ok) {
-        console.log('Notification deleted successfully.');
-      } else {
-        console.error('Notification delete failed.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+   
   return (
 
     <div className="header ">

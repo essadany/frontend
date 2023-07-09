@@ -23,16 +23,17 @@ import Label_Check from './components/label_checking/Label_Check';
 import Login from './components/Login/login';
 import Annexe from './components/8d_annexe/Annexe';
 import './App.css'
-
 import {useAuth, AuthProvider } from './components/Login/AuthProvider';
 import { RequireAuth } from './components/Login/RequireAuth';
 import Ishikawa from './components/ishikawa/Ishikawa';
 import ExcelDownload from './components/8d_report/ExcelDownload';
 import MyContext from './components/Login/login';
-import { MyContextConsumer } from './components/Login/login';
+import moment from 'moment';
 export default function App() {
   const haveAccess = useContext(MyContext);
   const auth =useAuth();
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
@@ -74,7 +75,149 @@ export default function App() {
   } else {
     document.body.classList.remove('login-page');
   }
-  let test = auth && auth.user && auth.user.role !='role';
+
+  // Auto update notifications and actions
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [notifications,setNotifications] = useState([]);
+  const getNotifications = async()=>{
+    await fetch(`http://127.0.0.1:8000/api/notifications`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setNotifications(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }
+
+ /* useEffect(()=>{
+    getNotifications();
+
+  },[])*/
+
+  // Update notifications
+  const [actions,setActions]= useState([]);  
+  function getActions(){
+    fetch(`http://127.0.0.1:8000/api/actions`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setActions(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+      console.log(actions);
+  }
+  
+
+  useEffect(() => {
+    getNotifications();
+    getActions();
+    notifications.forEach(item => {
+      const action = actions.find(action => action['id'] === item.action_id);
+      const diffInDays = moment(action['planned_date']).diff(moment(currentDate), 'days');
+      if (diffInDays == 1 && action['status'] != 'done') {
+        updateNotification(item.id,"You have an action to do before tomorrow: { " +action['action'] + " }");
+        console.warn('planned_date : ', item.planned_date, ' current_date : ', currentDate);
+      }
+      if ( action['status'] == 'done') {
+        deleteNotification(item.id);
+      }
+      console.warn('diff : ',diffInDays);
+    });
+
+    actions.forEach(item => {
+      const diffInDays = moment(item.planned_date).diff(moment(currentDate), 'days');
+      if (diffInDays == -1 && item.status != 'done') {
+          updateStatus(item);
+      }
+      console.warn('diff : ',diffInDays);
+    });
+
+  }, [currentDate]);
+  /*useEffect(() => {
+    getActions();
+    actions.forEach(item => {
+      const diffInDays = moment(item.planned_date).diff(moment(currentDate), 'days');
+      if (diffInDays == -1 && item.status != 'done') {
+          updateStatus(item);
+      }
+      console.warn('diff : ',diffInDays);
+    });
+
+  }, [currentDate]);*/
+    //Update Notification
+  const updateNotification = async (id, msg) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/notification/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message : msg }), // Replace 'attribute' with the attribute you want to update and 'new value' with the new value
+      });
+
+      if (response.ok) {
+        console.log('Notification updated successfully.');
+      } else {
+        console.error('Notification update failed.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  //Delete Notification ---------------------------
+  const deleteNotification = async (id) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/notification/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }      });
+
+      if (response.ok) {
+        console.log('Notification deleted successfully.');
+      } else {
+        console.error('Notification delete failed.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  //Update Status
+  const updateStatus = async (item) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status : "delayed", start_date : item.start_date, done_date : item.done_date }), // Replace 'attribute' with the attribute you want to update and 'new value' with the new value
+      });
+
+      if (response.ok) {
+        console.log('Status updated successfully.');
+      } else {
+        console.error('Status update failed.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   return (  
     
           <div className='app'>
@@ -88,7 +231,7 @@ export default function App() {
  
            <Route exact path='/Dashboard' element={<RequireAuth>< Dashboard /></RequireAuth>}/>
            <Route exact path='/Claims' element={<RequireAuth>< Claims haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Customer' element={<RequireAuth><Customer haveAccess={test}/></RequireAuth>}/>
+           <Route exact path='/Customer' element={<RequireAuth><Customer haveAccess={true}/></RequireAuth>}/>
            <Route exact path='/Product' element={<RequireAuth><Product haveAccess={true}/></RequireAuth>}/>
            <Route exact path='/Annexe/:claim_id' element={<RequireAuth>< Annexe haveAccess={true}/></RequireAuth>}/>
  
