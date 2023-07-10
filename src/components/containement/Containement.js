@@ -85,19 +85,19 @@ export default function Containement({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded(true);
           setSortings(result);
           
         },
         (error) => {
-          setIsLoaded(true);
+          //setIsLoaded(true);
           setError(error);
         }
       )
   }
   useEffect(() => {
     getContainement();
-  }, [claim_id])
+  }, [claim_id,isLoaded])
   useEffect(() => {
     getSortings();
   }, [containement_id])

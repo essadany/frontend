@@ -62,11 +62,11 @@ const handleClose1 = () =>  setShow1(false);
         .then(res => res.json())
         .then(
           (result) => {
-            setIsLoaded(true);
+            //setIsLoaded(true);
             setComments(result);
           },
           (error) => {
-            setIsLoaded(true);
+            //setIsLoaded(true);
             setError(error);
           }
         )
@@ -75,7 +75,7 @@ const handleClose1 = () =>  setShow1(false);
     useEffect(()=>{
       getActions_join_Claims();
     }
-    ,[user_id]);
+    ,[user_id,isLoaded]);
     
       useEffect(() => {
         getComments();

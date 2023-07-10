@@ -81,7 +81,7 @@ export default function Report({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded(true);
           setUsers_of_team(result);
         },
         // Note: it's important to handle errors here
@@ -104,7 +104,7 @@ export default function Report({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded(true);
           setPreventive_actions(result);
         },
 
@@ -122,7 +122,7 @@ export default function Report({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded(true);
           setImplemented_actions(result);
         },
 
@@ -140,7 +140,7 @@ export default function Report({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded(true);
           setPotential_actions(result);
         },
 
@@ -152,7 +152,7 @@ export default function Report({haveAccess}) {
   }
   useEffect(() => {
     getReport_join();
-  }, [claim_id]);
+  }, [claim_id, isLoaded]);
   useEffect(() => {
     getUsersOfTeam();
   }, [claim_id]);

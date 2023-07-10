@@ -19,7 +19,8 @@ export default function Product({haveAccess}) {
     // Get Product list ---------------------------------------------------------------------------------------------------------------
         const [error, setError] = useState(null);
         const [isLoaded, setIsLoaded] = useState(false);
-        
+        const [isLoaded1, setIsLoaded1] = useState(false);
+
         const [products_customers,setProducts_customers]=useState([]);
           const handleChange = (e) => {
             setFilter(e.target.value);
@@ -32,19 +33,22 @@ export default function Product({haveAccess}) {
             .then(res => res.json())
             .then(
               (result) => {
+                setIsLoaded(true);
                 setProducts_customers(result);
+                
               },
               // Note: it's important to handle errors here
               // instead of a catch() block so that we don't swallow
               // exceptions from actual bugs in components.
               (error) => {
+                setIsLoaded(true);
                 setError(error);
               }
             )
         }
         useEffect(() => {
           getProducts_customers();
-        }, []);
+        }, [isLoaded]);
         // Add Product ------------------------------------------------------------------------------------------------
         const [customers,setCustomers]= useState([]);
         function getCustomers(){
@@ -52,21 +56,21 @@ export default function Product({haveAccess}) {
             .then(res => res.json())
             .then(
               (result) => {
-                setIsLoaded(true);
+                setIsLoaded1(true);
                 setCustomers(result);
               },
               // Note: it's important to handle errors here
               // instead of a catch() block so that we don't swallow
               // exceptions from actual bugs in components.
               (error) => {
-                setIsLoaded(true);
+                setIsLoaded1(true);
                 setError(error);
               }
             )
         }
         useEffect(() => {
           getCustomers();
-        }, []);
+        }, [isLoaded1]);
           // Afficher la liste des clients et des zones des produits dans le formulaire        
         
         const product_zones = [

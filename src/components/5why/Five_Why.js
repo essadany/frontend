@@ -22,6 +22,12 @@ export default function ({haveAccess}) {
   const [modalTitle,setModalTitle]= useState('Add new Why/Answer');
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded1, setIsLoaded1] = useState(false);
+  const [isLoaded2, setIsLoaded2] = useState(false);
+  const [isLoaded3, setIsLoaded3] = useState(false);
+  const [isLoaded4, setIsLoaded4] = useState(false);
+  const [isLoaded5, setIsLoaded5] = useState(false);
+
   const [addB,setAddB] = useState('');
   const [editB,setEditB] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -94,7 +100,7 @@ export default function ({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded2(true);
           setFive_lignes(result);
           
 
@@ -103,7 +109,7 @@ export default function ({haveAccess}) {
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
+          //setIsLoaded2(true);
           setError(error);
         }
       )
@@ -115,7 +121,7 @@ export default function ({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded3(true);
           setFive_lignes_occurence(result);
 
         },
@@ -123,7 +129,7 @@ export default function ({haveAccess}) {
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
+          //setIsLoaded3(true);
           setError(error);
         }
       )
@@ -136,7 +142,7 @@ export default function ({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded4(true);
           setFive_lignes_detection(result);
 
         },
@@ -144,7 +150,7 @@ export default function ({haveAccess}) {
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
+          //setIsLoaded4(true);
           setError(error);
         }
       )
@@ -157,7 +163,7 @@ export default function ({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded5(true);
           setFive_lignes_system(result);
 
         },
@@ -165,7 +171,7 @@ export default function ({haveAccess}) {
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
+          //setIsLoaded5(true);
           setError(error);
         }
       )
@@ -176,7 +182,7 @@ export default function ({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded1(true);
           setResults(result);
           setOccurence_results(result.filter(item=>item.type==="occurence").map(item => item.input)[0]);
           setDetection_results(result.filter(item=>item.type==="detection").map(item => item.input)[0]);
@@ -186,14 +192,14 @@ export default function ({haveAccess}) {
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
+          //setIsLoaded1(true);
           setError(error);
         }
       )
   }
   useEffect(() => {
     getFiveWhy();
-  }, [claim_id])
+  }, [claim_id,isLoaded])
   useEffect(() => {
     getResults();
   }, [claim_id])

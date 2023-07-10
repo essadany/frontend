@@ -12,6 +12,8 @@ import { Add } from '@material-ui/icons';
 export default function Meetings({haveAccess}) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded1, setIsLoaded1] = useState(false);
+  const [isLoaded2, setIsLoaded2] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -46,14 +48,14 @@ export default function Meetings({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          setIsLoaded1(true);
           setUsers_of_team(result);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
+          setIsLoaded1(true);
           setError(error);
         }
       )
@@ -91,14 +93,14 @@ export default function Meetings({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          setIsLoaded2(true);
           setAbsences(result);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
+          setIsLoaded2(true);
           setError(error);
         }
       );
@@ -106,13 +108,13 @@ export default function Meetings({haveAccess}) {
   }
   useEffect(() => {
     getUsersOfTeam();
-  }, [claim_id]);
+  }, [claim_id,isLoaded1]);
   useEffect(() => {
     getMeetings();
-  }, [claim_id]);
+  }, [claim_id,isLoaded]);
   useEffect(() => {
     getAbsences();
-  }, [id]);
+  }, [id,isLoaded2]);
   // Add meeting--------------------------------------------------------
 
   const handleSubmit = async (e) => {

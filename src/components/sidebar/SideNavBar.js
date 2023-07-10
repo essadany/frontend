@@ -4,6 +4,7 @@ import  { Link,BrowserRouter }  from 'react-router-dom';
 import { useAuth } from "../Login/AuthProvider";
 import { Badge } from "@material-ui/core";
 import { NotificationImportantOutlined } from "@material-ui/icons";
+import Actions from "../actions/Actions";
 
 
 
@@ -67,7 +68,7 @@ const SideNavBar = ({isAuthentificated}) => {
 	}
 	//Get Number of Actions
 	const [number,setNumber] = useState('0')
-	useEffect(()=>{
+	const  getActionsNotStarted = ()=>{
 		fetch(`http://127.0.0.1:8000/api/user/${auth.user.id}/actions_not_started`)
 		  .then(res => res.json())
 		  .then(
@@ -84,8 +85,11 @@ const SideNavBar = ({isAuthentificated}) => {
 			  setError(error);
 			}
 		  )
+	}
+	useEffect(()=>{
+		getActionsNotStarted();
 	  }
-	,[])
+	,[isLoaded])
 		
 	return (
 		<div

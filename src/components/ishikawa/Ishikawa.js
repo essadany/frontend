@@ -16,6 +16,7 @@ export default function Ishikawa({haveAccess}) {
   const [editB,setEditB] = useState('');
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded1, setIsLoaded1] = useState(false);
   const [ishikawa_id,setIshikawa_id]= useState('');
   const [category_id,setCategory_id]= useState('');
   const [categories,setCategories]= useState([]);
@@ -35,12 +36,14 @@ export default function Ishikawa({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
+          setIsLoaded(true);
           setIshikawa_id(result.id);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
+          setIsLoaded(true);
           setError(error);
         }
       );
@@ -55,14 +58,14 @@ export default function Ishikawa({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          setIsLoaded1(true);
           setCategories(result);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
+          setIsLoaded1(true);
           setError(error);
         }
       )
@@ -72,11 +75,11 @@ export default function Ishikawa({haveAccess}) {
 
   useEffect(()=>{
     getIshikawa();
-  },[claim_id])
+  },[claim_id,isLoaded])
 
   useEffect(() => {
     getCategories();
-  }, [ishikawa_id]);
+  }, [ishikawa_id,isLoaded1]);
   // Add Category--------------------------------------------------
   let handleSubmit = async (e) => {
     e.preventDefault();

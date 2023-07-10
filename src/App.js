@@ -30,7 +30,6 @@ import ExcelDownload from './components/8d_report/ExcelDownload';
 import MyContext from './components/Login/login';
 import moment from 'moment';
 export default function App() {
-  const haveAccess = useContext(MyContext);
   const auth =useAuth();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -75,12 +74,12 @@ export default function App() {
   } else {
     document.body.classList.remove('login-page');
   }
-
+/*
   // Auto update notifications and actions
   const currentDate = new Date().toISOString().split('T')[0];
   const [notifications,setNotifications] = useState([]);
-  const getNotifications = async()=>{
-    await fetch(`http://127.0.0.1:8000/api/notifications`)
+  const getNotifications = ()=>{
+     fetch(`http://127.0.0.1:8000/api/notifications`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -97,14 +96,10 @@ export default function App() {
       )
   }
 
- /* useEffect(()=>{
-    getNotifications();
-
-  },[])*/
 
   // Update notifications
   const [actions,setActions]= useState([]);  
-  function getActions(){
+  const getActions = ()=>{
     fetch(`http://127.0.0.1:8000/api/actions`)
       .then(res => res.json())
       .then(
@@ -124,50 +119,44 @@ export default function App() {
   }
   
   useEffect(()=>{
-    getNotifications();
+    getActions();
+
   },[])
   useEffect(()=>{
-    getActions();
+    getNotifications();
+
   },[])
   useEffect(() => {
+    actions.forEach(item => {
+      const diffInDays = moment(item.planned_date).diff(moment(currentDate), 'days');
+      if (diffInDays == -1 && item.status != 'done') {
+          updateStatus(item);
+      }
+      console.warn('diff : ',diffInDays);
+    });
+
+  }, []);
+  useEffect(() => {
     notifications.forEach(item => {
-      const action = actions.find(action => action['id'] === item.action_id);
+      const action = actions.find(action => action['id'] == item.action_id);
       const diffInDays = moment(action['planned_date']).diff(moment(currentDate), 'days');
       if (diffInDays == 1 && action['status'] != 'done') {
         updateNotification(item.id,"You have an action to do before tomorrow: { " +action['action'] + " }");
         console.warn('planned_date : ', item.planned_date, ' current_date : ', currentDate);
       }
-      if ( action['status'] == 'done') {
+      if ( action['status'] == 'done' || action['status']=='delayed') {
         deleteNotification(item.id);
       }
       console.warn('diff : ',diffInDays);
     });
 
-    actions.forEach(item => {
-      const diffInDays = moment(item.planned_date).diff(moment(currentDate), 'days');
-      if (diffInDays == -1 && item.status != 'done') {
-          updateStatus(item);
-      }
-      console.warn('diff : ',diffInDays);
-    });
-
-  }, [currentDate]);
+  }, []);
   
-  /*useEffect(() => {
-    getActions();
-    actions.forEach(item => {
-      const diffInDays = moment(item.planned_date).diff(moment(currentDate), 'days');
-      if (diffInDays == -1 && item.status != 'done') {
-          updateStatus(item);
-      }
-      console.warn('diff : ',diffInDays);
-    });
-
-  }, [currentDate]);*/
+ 
     //Update Notification
-  const updateNotification = async (id, msg) => {
+  function  updateNotification(id, msg){
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/notification/${id}`, {
+      const response =  fetch(`http://127.0.0.1:8000/api/notification/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -185,9 +174,9 @@ export default function App() {
     }
   };
   //Delete Notification ---------------------------
-  const deleteNotification = async (id) => {
+  function deleteNotification(id){
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/notification/${id}`, {
+      const response = fetch(`http://127.0.0.1:8000/api/notification/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -203,9 +192,9 @@ export default function App() {
     }
   };
   //Update Status
-  const updateStatus = async (item) => {
+  function updateStatus(item) {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
+      const response = fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -221,7 +210,9 @@ export default function App() {
     } catch (error) {
       console.error('Error:', error);
     }
-  };
+  };*/
+  
+  
   return (  
     
           <div className='app'>

@@ -48,7 +48,7 @@ export default function Claims({haveAccess}) {
     }
     useEffect(() => {
       getClaims();
-    }, [])
+    }, [isLoaded])
     // Add Claim ------------------------------------------------------------------------------------------------
     
     const [internal_ID, setInternal_ID] = useState(" ");
@@ -76,7 +76,7 @@ export default function Claims({haveAccess}) {
             .then(res => res.json())
             .then(
               (result) => {
-                setIsLoaded(true);
+                //setIsLoaded(true);
                 setCustomers(result);
               },
               // Note: it's important to handle errors here
@@ -100,7 +100,7 @@ export default function Claims({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
+          //setIsLoaded(true);
           setProducts(result);       
         },
         // Note: it's important to handle errors here

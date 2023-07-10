@@ -15,6 +15,9 @@ export default function Actions({haveAccess}) {
   const {claim_id} = useParams();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded1, setIsLoaded1] = useState(false);
+  const [isLoaded2, setIsLoaded2] = useState(false);
+  const [isLoaded3, setIsLoaded3] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -51,14 +54,14 @@ export default function Actions({haveAccess}) {
         .then(res => res.json())
         .then(
           (result) => {
-            setIsLoaded(true);
+            //setIsLoaded1(true);
             setUsers_of_team(result);
           },
           // Note: it's important to handle errors here
           // instead of a catch() block so that we don't swallow
           // exceptions from actual bugs in components.
           (error) => {
-            setIsLoaded(true);
+            //setIsLoaded1(true);
             setError(error);
           }
         )
@@ -70,12 +73,13 @@ export default function Actions({haveAccess}) {
       .then(res => res.json())
       .then(
         (result) => {
+          //setIsLoaded2(true);
           setReport_id(result.id);
 
         },
 
         (error) => {
-          setIsLoaded(true);
+          //setIsLoaded2(true);
           setError(error);
         }
       )
@@ -110,11 +114,11 @@ export default function Actions({haveAccess}) {
         .then(res => res.json())
         .then(
           (result) => {
-            setIsLoaded(true);
+            //setIsLoaded3(true);
             setComments(result);
           },
           (error) => {
-            setIsLoaded(true);
+            //setIsLoaded3(true);
             setError(error);
           }
         )
@@ -128,7 +132,7 @@ export default function Actions({haveAccess}) {
     }, [claim_id])
     useEffect(() => {
       getActions();
-    }, [report_id]);
+    }, [report_id, isLoaded]);
     useEffect(() => {
       getComments();
     }, []);
