@@ -291,6 +291,22 @@ function updateReport(){
     console.error(err)
   }
   }
+
+  const downloadExcel = () => {
+    fetch('http://127.0.0.1:8000/api/populate-excel')
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'data.xlsx');
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
   return (
     <div className='main'>
       <Tab />
@@ -302,7 +318,7 @@ function updateReport(){
                   <label  className="col-form-label">opening date :</label>
                   <input  type="date" class="form-control form-control-sm" value={report.opening_date}   required />     
               </div>
-              <div className='col-4'><Button variant='success'><Download /></Button></div>
+              <div className='col-4'><Button variant='success' onClick={downloadExcel}><Download /></Button></div>
               <div class="col-4">
                   <label  class="form-label">Reported by :</label>
                   <textarea class="form-control form-control-sm" disabled={!isEditing} value={reported_by} onChange={(e)=>setReported_by(e.target.value)} required />
