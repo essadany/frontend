@@ -77,7 +77,7 @@ export default function Users() {
                 headers: {
                     'Content-Type' : 'application/json'
                 },
-                body: JSON.stringify({name ,fonction ,email ,password,phone,role }),
+                body: JSON.stringify({name : name,fonction : fonction ,email : email ,password : password ,phone:phone,role:role }),
               })
               let resJson = await res.json();
               
@@ -87,7 +87,8 @@ export default function Users() {
                 setEmail("");
                 setPassword("");
                 setPhone("");
-                setRole("");
+                setRole("user");
+                setIsAdmin(false);
                 alert("User Added successfully");
                 handleClose();
                 getUsers();
@@ -129,6 +130,7 @@ export default function Users() {
                   setPassword("");
                   setPhone("");
                   setRole("user");
+                  setIsAdmin(false);
                   setEditB(true);
                   handleClose();
                   setIsAdmin(false);
@@ -212,11 +214,11 @@ export default function Users() {
                         </div>
                         <div className="form-check col-md-6">
                           <label  className="form-check-label">Admin ?</label>
-                          <input type="checkbox" checked={isAdmin} class="form-check-input" required  onChange={(e)=>checkAdmin()}/>
+                          <input type="checkbox" checked={isAdmin} class="form-check-input"   onChange={(e)=>checkAdmin()}/>
                         </div>
                         <div class="col-md-6">
                             <label  class="form-label">Phone :</label>
-                            <input type="text" class="form-control"  required value={phone} onChange={(e)=>setPhone(e.target.value)} />
+                            <input type="text" class="form-control"  value={phone} onChange={(e)=>setPhone(e.target.value)} />
                         </div>
                         <div class="col-md-6">
                             <label  class="form-label">Email* :</label>

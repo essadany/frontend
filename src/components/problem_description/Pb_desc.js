@@ -27,7 +27,7 @@ export default function Pb_desc({haveAccess}) {
   const [received,setReceived ] = useState(false);
   const [date_reception,setDate_reception ] = useState('');
   const [date_done,setDate_done ] = useState('');
-  const [bontaz_fault,setBontaz_fault ] = useState(false);
+  const [bontaz_fault,setBontaz_fault ] = useState('NOT CONFIRMED');
   const [description, setDescription ] = useState('');
   const [opening_date,setOpening_date]= useState('');
   const [update_date,setUpdate_date]= useState('');
@@ -426,11 +426,13 @@ function updateProblem_desc(){
             <legend>Analyse Of The Defective Part(s)</legend>
             <div>
             <form className='form-group g-3 container row'>
+            <div className='col-md-1'></div>
+
               <div className="form-check col-md-4">
                   <label  className="form-check-label">Has Bontaz received the detective parts ?</label>
                   <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={received} onChange={(e)=>setReceived(!received)} required />
               </div>
-              <div className='col-md-5'></div>
+              <div className='col-md-4'></div>
               <div className="col-md-3">
                   <label className=" col-form-label">Date of reception :</label>
                   <input type="date" class="form-control form-control-sm" disabled={!isEditing} value={date_reception} onChange={(e)=>setDate_reception(e.target.value)} required />
@@ -463,16 +465,16 @@ function updateProblem_desc(){
             <legend>Bontaz Fault</legend>
             <div>
               <form className='g-3 container row'>
-                <div className="form-check col-md-1">
-                    <label  className="form-check-label">YES</label>
-                    <input type="radio" name='radio'  class="form-check-input"  checked={bontaz_fault} onChange={(e)=>setBontaz_fault(!bontaz_fault)} disabled={!isEditing} required />
+              <div className='col-md-1'></div>
+                <div className="col-4">
+                    <label  className="form-label">Is it Bontaz Fault :</label>
+                    <select disabled={!isEditing} data-live-search="true"  className='selectpicker form-select form-select-sm' onChange={(e)=>setBontaz_fault(e.target.value)} required >
+                    <option selected={bontaz_fault==="YES"} >YES</option>
+                    <option selected={bontaz_fault==="NO"}>NO</option>
+                    <option selected>NOT CONFIRMED</option>
+                    </select>
                 </div>
                 <div className='col-md-2'></div>
-                <div className="form-check col-md-1">
-                    <label  className="form-check-label">NO</label>
-                    <input type="radio" name='radio' class="form-check-input" disabled={!isEditing}  required />
-                </div>
-                <div className='col-md-5'></div>
                 <div className="col-md-3">
                     <label   className=" col-form-label">Done date :</label>
                     <input type="date"  class="form-control form-control-sm" disabled={!isEditing} value={date_done} onChange={(e)=>setDate_done(e.target.value)} required />

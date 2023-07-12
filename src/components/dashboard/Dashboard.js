@@ -19,7 +19,6 @@ import Pb_desc from '../problem_description/Pb_desc';
 import Containement from '../containement/Containement';
 import Five_Why from '../5why/Five_Why';
 import Label_Check from '../label_checking/Label_Check';
-import Login from '../authenification/Login';
 import Annexe from '../8d_annexe/Annexe';
 
 export default function Dashboard() {

@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { Add, Delete } from '@material-ui/icons';
 import { useParams } from 'react-router';
 import  Modal  from 'react-bootstrap/Modal'
+import moment from 'moment'
 export default function ({haveAccess}) {
 
   const { claim_id } = useParams();
@@ -27,6 +28,7 @@ export default function ({haveAccess}) {
   const [isLoaded3, setIsLoaded3] = useState(false);
   const [isLoaded4, setIsLoaded4] = useState(false);
   const [isLoaded5, setIsLoaded5] = useState(false);
+  const [update_date,setUpdate_date] = useState('');
 
   const [addB,setAddB] = useState('');
   const [editB,setEditB] = useState('');
@@ -83,6 +85,8 @@ export default function ({haveAccess}) {
         (result) => {
           setIsLoaded(true);
           setFive_why_id(result.id);
+          const date = moment(result.updated_at).format("YYYY-MM-DD");
+          setUpdate_date(date);
 
         },
         // Note: it's important to handle errors here
@@ -318,7 +322,7 @@ export default function ({haveAccess}) {
             <form className='row container'>
               <div className='col-2'>
                 <label >Update date : </label>
-                <input type='date' className='form-control form-control-sm' />
+                <input type='date' className='form-control form-control-sm' value={update_date} />
               </div>
               <div className='col-1'></div>
             <div className='col-6'>

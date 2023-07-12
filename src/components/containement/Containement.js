@@ -173,7 +173,7 @@ export default function Containement({haveAccess}) {
         <form className='row container'>
           <div className='col-2'>
             <label >Update date : </label>
-            <input type='date'  className='form-control form-control-sm'  value={update_date} disabled />
+            <input type='date'  className='form-control form-control-sm'  value={update_date}  />
           </div>
           <div className='col-1'></div>
         <div className='col-6'>

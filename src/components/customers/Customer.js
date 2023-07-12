@@ -77,6 +77,7 @@ export default function Customer({haveAccess}) {
                 setInfo("");
                 alert("Customer Added successfully");
                 handleClose();
+                getCustomers();
               } else {
                 alert("Some error occured, try again!");
               }
@@ -98,7 +99,8 @@ export default function Customer({haveAccess}) {
           function updateCustomer(){
             let item={customer_ref ,name ,category ,info }
             console.warn("item",item)
-            fetch(`http://127.0.0.1:8000/api/customer/${customer.id}`, {
+            try{
+              fetch(`http://127.0.0.1:8000/api/customer/${customer.id}`, {
               method: 'PUT',
               headers:{
                 'Accept' : 'application/json',
@@ -122,6 +124,9 @@ export default function Customer({haveAccess}) {
                 }
                 
               })
+            }catch (e){
+                console.error("Error",e);
+            }
               
 
             }
@@ -195,10 +200,10 @@ export default function Customer({haveAccess}) {
                         </div>
                         <div className="col-md-6">
                             <label for="validationCustom02" className="form-label">Category* :</label>
-                            <select data-live-search="true"  className='selectpicker form-select' value={category} onChange={(e)=>setCategory(e.target.value)}  required >
+                            <select data-live-search="true"  className='selectpicker form-select'  onChange={(e)=>setCategory(e.target.value)}  required >
                             <option disabled selected>--- Select Category ---</option>
-                            <option>Intern</option>
-                            <option>Extern</option>
+                            <option selected={category==='Intern'}>Intern</option>
+                            <option selected={category==='Extern'}>Extern</option>
                         </select>
                         </div>
                         <div className="col-md-6">

@@ -11,19 +11,9 @@ import Actions from "../actions/Actions";
 const SideNavBar = ({isAuthentificated}) => {
 	const auth = useAuth()
 
-	const [notificationMessage, setNotificationMessage] = useState('');
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
-	const handleClick = () => {
-		setNotificationMessage('This is a notification!');
-		Notification.notify({
-		title: 'Notification',
-		message: notificationMessage,
-		type: 'success',
-		position: 'top',
-		autoDismiss: false,
-		});
-	};
+
 	const [isExpanded, setExpendState] = useState(false);
 	const menuItems = [
 		{
@@ -63,11 +53,9 @@ const SideNavBar = ({isAuthentificated}) => {
 		},
 	];
 
-	if (isAuthentificated){
-		
-	}
+	
 	//Get Number of Actions
-	const [number,setNumber] = useState('0')
+	const [number,setNumber] = useState(0)
 	const  getActionsNotStarted = ()=>{
 		fetch(`http://127.0.0.1:8000/api/user/${auth.user.id}/actions_not_started`)
 		  .then(res => res.json())
@@ -86,10 +74,10 @@ const SideNavBar = ({isAuthentificated}) => {
 			}
 		  )
 	}
-	useEffect(()=>{
+	/*useEffect(()=>{
 		getActionsNotStarted();
 	  }
-	,[isLoaded])
+	,[])*/
 		
 	return (
 		<div

@@ -293,7 +293,7 @@ function updateReport(){
   }
 
   const downloadExcel = () => {
-    fetch('http://127.0.0.1:8000/api/populate-excel')
+    fetch(`http://127.0.0.1:8000/api/populate-excel/${claim_id}`)
       .then(response => response.blob())
       .then(blob => {
         const url = window.URL.createObjectURL(blob);
@@ -406,7 +406,7 @@ function updateReport(){
               </div>
               <div className="form-check col-md-4">
                 <label  className="form-check-label">Is Bontaz Responsible for this issue </label>
-                <input type="checkbox" class="form-check-input" checked={report.bontaz_fault} required />
+                <input type="checkbox" class="form-check-input" checked={report.bontaz_fault==="YES"}  />
               </div>
               <div className='col-md-4'></div>
               <div className="col-md-3">
@@ -435,7 +435,7 @@ function updateReport(){
                           <td>{item.action}</td>
                           <td>{item.name}</td>
                           <td>{item.planned_date}</td>
-                          <td>{item.status}</td>
+                          <td style={{color:item.status==='done'? 'green': item.status==='not started'? 'brown':item.status==='on going'? 'orange' : 'red'}} >{item.status}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -480,7 +480,7 @@ function updateReport(){
                           <td>{item.action}</td>
                           <td>{item.name}</td>
                           <td>{item.planned_date}</td>
-                          <td>{item.status}</td>
+                          <td style={{color:item.status==='done'? 'green': item.status==='not started'? 'brown':item.status==='on going'? 'orange' : 'red'}} >{item.status}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -514,7 +514,7 @@ function updateReport(){
                           <td>{item.action}</td>
                           <td>{item.name}</td>
                           <td>{item.planned_date}</td>
-                          <td>{item.status}</td>
+                          <td style={{color:item.status==='done'? 'green': item.status==='not started'? 'brown':item.status==='on going'? 'orange' : 'red'}} >{item.status}</td>
                         </tr>
                       ))}
                     </tbody>

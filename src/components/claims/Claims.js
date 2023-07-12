@@ -24,8 +24,6 @@ export default function Claims({haveAccess}) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [claims, setClaims] = useState([]);
-    
-  
     // Note: the empty deps array [] means
     // this useEffect will run once
     // similar to componentDidMount()
@@ -61,15 +59,14 @@ export default function Claims({haveAccess}) {
     const [opening_date, setOpening_date] = useState("");
     const [direct_customer, setDirect_customer] = useState("");
     const [final_cusomer, setFinal_cusomer] = useState("");
-    const [claim_details, setClaim_details] = useState("");
     const [def_mode, setDef_mode] = useState("");
     const [prod_designation, setProd_designation] = useState("");
     const [nbr_claimed_parts, setNbr_claimed_parts] = useState("");
     const [deleted,setDeleted]= useState(false);
     const [products,setProducts]= useState([]);
     const [customers,setCustomers]= useState([]);
-    const [status, setStatus] = useState("not started");
-
+    const [status, setStatus] = useState("on going");
+    const [category, setCategory] = useState("");
     const [customer_id,setCustomer_id]= useState('');
         function getCustomers(){
           fetch("http://127.0.0.1:8000/api/customers")
@@ -132,10 +129,17 @@ export default function Claims({haveAccess}) {
               'Accept' : 'application/json',
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({ internal_ID , refRecClient , product_ref, engraving , prod_date , object , opening_date , final_cusomer ,
-              claim_details ,
-              def_mode ,
-              nbr_claimed_parts,
+            body: JSON.stringify({ internal_ID : internal_ID ,
+              refRecClient : refRecClient ,
+              category : category ,
+              product_ref : product_ref,
+              engraving : engraving,
+              prod_date : prod_date,
+              object : object,
+              opening_date : opening_date ,
+              final_cusomer : final_cusomer ,
+              def_mode : def_mode,
+              nbr_claimed_parts : nbr_claimed_parts,
             }),
           })
           let resJson = await res.json();
@@ -146,10 +150,11 @@ export default function Claims({haveAccess}) {
             setProduct_name("");
             setEngraving('');
             setProd_date('');
+            setCategory('');
+            setCustomer_name("");
             setObject('');
             setOpening_date('');
             setFinal_cusomer('');
-            setClaim_details('');
             setDef_mode('');
             setNbr_claimed_parts('');
             alert("Claim Added successfully");
@@ -170,6 +175,7 @@ export default function Claims({haveAccess}) {
         console.log(claim)
         setInternal_ID(claim.internal_ID);
           setRefRecClient(claim.refRecClient);
+          setCategory(claim.category);
           setProduct_name(claim.product_name);
           setCustomer_name(claim.customer_name);
           setCustomer_id(claim.customer_id);
@@ -179,7 +185,6 @@ export default function Claims({haveAccess}) {
           setObject(claim.object);
           setOpening_date(claim.opening_date);
           setFinal_cusomer(claim.final_cusomer);
-          setClaim_details(claim.claim_details);
           setDef_mode(claim.def_mode);
           setNbr_claimed_parts(claim.nbr_claimed_parts);
           setId(claim.id);
@@ -188,13 +193,13 @@ export default function Claims({haveAccess}) {
         let item = {
           internal_ID : internal_ID ,
           refRecClient : refRecClient ,
+          category : category ,
           product_ref : product_ref,
           engraving : engraving,
           prod_date : prod_date,
           object : object,
           opening_date : opening_date ,
           final_cusomer : final_cusomer ,
-          claim_details : claim_details,
           def_mode : def_mode,
           nbr_claimed_parts : nbr_claimed_parts,
           
@@ -215,12 +220,12 @@ export default function Claims({haveAccess}) {
                 setRefRecClient('');
                 setEngraving('');
                 setProduct_ref('');
+                setCategory('');
                 setCustomer_name('');
                 setProd_date('');
                 setObject('');
                 setOpening_date('');
                 setFinal_cusomer('');
-                setClaim_details('');
                 setDef_mode('');
                 setNbr_claimed_parts('');
                 alert("Claim Updated successfully");
@@ -342,16 +347,20 @@ export default function Claims({haveAccess}) {
                 <div class="col-md-6">
                     <label for="validationCustom01" class="form-label">Intern ID* :</label>
                     <input type="text" class="form-control" id="validationCustom01" onChange={(e)=>setInternal_ID(e.target.value)} value={internal_ID} required />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
                 </div>
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Customer Claim ref* :</label>
                     <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setRefRecClient(e.target.value)}  value={refRecClient} required />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
+
+                </div>
+                <div class="col-md-6">
+                  <label  class="form-label">Category* :</label>
+                  <select data-live-search="true"   className='selectpicker form-select' onChange={(e)=>{setCategory(e.label);setCategory(e.target.value)}} required >
+                    <option disabled selected>--- Select Category ---</option>
+                    <option selected={category==="AQI"}>AQI</option>
+                    <option selected={category==="CC"}>CC</option>
+                    <option selected={category==="Field"}>Field</option>
+                  </select>
                 </div>
                 <div class="col-md-6">
                   <label  class="form-label">Customer* :</label>
@@ -398,30 +407,15 @@ export default function Claims({haveAccess}) {
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Final customer :</label>
                     <input type="text" class="form-control" id="validationCustom02"  onChange={(e)=>setFinal_cusomer(e.target.value)}  value={final_cusomer}  />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
                 </div>
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Defaillance mode :</label>
                     <textarea  class="form-control" id="validationCustom02"  onChange={(e)=>setDef_mode(e.target.value)}  value={def_mode}  />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Claim details* :</label>
-                    <textarea  class="form-control" id="validationCustom02"  onChange={(e)=>setClaim_details(e.target.value)}  value={claim_details} required />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
                 </div>
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Number of Claimed parts* :</label>
                     <input type='number'  class="form-control" id="validationCustom02"  onChange={(e)=>setNbr_claimed_parts(e.target.value)}  value={nbr_claimed_parts} required />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
+
                 </div>
             </form>
             </Modal.Body>
@@ -442,8 +436,9 @@ export default function Claims({haveAccess}) {
                       <label>Type : </label>
                       <select data-live-search="true"  className='selectpicker form-select' label={filter1} onChange={handleSelectChange1} required >
                       <option disabled selected>--- Select Type ---</option>
-                      <option>Intern</option>
-                      <option>Extern</option>
+                      <option>AQI</option>
+                      <option>CC</option>
+                      <option>Field</option>
                   </select>
                     </div>
                     <div  className='col-2'></div>
@@ -467,7 +462,7 @@ export default function Claims({haveAccess}) {
                     <thead>
                         <tr>
                             <th >internal ID</th>
-                            <th >Type</th>
+                            <th >Category</th>
                             <th >Customer ref</th>
                             <th>Product ref</th>
                             <th >Engraving</th>

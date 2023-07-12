@@ -85,7 +85,8 @@ const handleClose1 = () =>  setShow1(false);
   const currentDate = new Date();
   const formattedDate =  moment(currentDate.toDateString()).format("YYYY-MM-DD");
 
-  function beginAction(item) {
+  const beginAction = (item)=> {
+   
     try{
       fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
         method: 'PUT',
@@ -93,7 +94,7 @@ const handleClose1 = () =>  setShow1(false);
           'Accept' : 'application/json',
           'Content-Type':'application/json'
         },
-        body:JSON.stringify({status : "on going", start_date : formattedDate, done_date : item.done_date })
+        body:JSON.stringify({status:'on going', start_date : formattedDate, done_date : item.done_date})
       }).then((result) => {
           if (result.ok){
             getActions_join_Claims();
@@ -114,6 +115,23 @@ const handleClose1 = () =>  setShow1(false);
   //-------------------------------------------------------------------------------------
   //Action Done --------------------------------------------------------------------------------------------
   function actionDone(item) {
+     //Delete Notification ---------------------------
+     try {
+      const response = fetch(`http://127.0.0.1:8000/api/action/${item.id}/notification`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }      });
+
+      if (response.ok) {
+        console.log('Notification deleted successfully.');
+      } else {
+        console.error('Notification delete failed or notification already deleted');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+    // Update status to done
     try{
       fetch(`http://127.0.0.1:8000/api/action/${item.id}/update_status`, {
         method: 'PUT',
@@ -137,7 +155,8 @@ const handleClose1 = () =>  setShow1(false);
       
     } catch (err) {
     console.log(err);
-  }
+    }
+
   }
   
   // Add Comment-----------------------------------------------------------------------------------
