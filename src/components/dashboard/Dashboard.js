@@ -4,6 +4,7 @@ import Chart from 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
 
 import { useState } from 'react';
+import { Button } from 'react-bootstrap';
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
@@ -87,12 +88,111 @@ export default function Dashboard() {
       },
     },
   };
+
+  //PPM--------------------------------------------------------------------------------------------------------------------------
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [week, setWeek] = useState(getCurrentWeekNumber());
+  const [shippedParts, setShippedParts] = useState('');
+  const [ppm, setPpm] = useState('');
+
+  const [objectif, setObjectif] = useState(3);
+
+  // Function to get the current week number
+  function getCurrentWeekNumber() {
+    const today = new Date();
+    const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+    const pastDaysOfYear = (today - firstDayOfYear) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+  }
+
+   // Add PPM ------------------------------------------------------------------------------------------------
+   const [PPM, setPPM] = useState("");
+   const [name, setName] = useState("");
+   const [category, setCategory] = useState("");
+   const [info, setInfo] = useState("");
+   const [deleted, setDeleted] = useState(false);
+   const [message, setMessage] = useState("");
+   const [editB,setEditB] = useState(true);
+
+   let handleSubmit = async (e) => {
+       e.preventDefault();
+       try {
+         let res = await fetch("http://127.0.0.1:8000/api/ppm", {
+           method: "POST",
+           headers: {
+               'Content-Type' : 'application/json'
+           },
+           body: JSON.stringify({
+              year : year,
+              month : month, 
+              week : week,
+             shipped_parts : shippedParts,
+             objectif: objectif,
+             ppm: ppm,
+           }),
+         })
+         let resJson = await res.json();
+         
+         if (res.status === 200) {
+           setShippedParts('');
+         } else {
+           alert("Some error occured, try again!");
+         }
+       } catch (err) {
+         console.log(err);
+       }
+     };
   return (
     <>
         
         <div className='main'>
         <h2 >Dashboard</h2>
         <div  className='border'>
+          <div className='ppm'>
+          <form style={{width:'500px'}} className='row container' onSubmit={handleSubmit}>
+          <div className='col-4'>
+            <label>Year:
+          <select className='selectpicker form-select form-select-sm' value={year} onChange={(e) => setYear(e.target.value)}>
+            <option value={new Date().getFullYear()}>{new Date().getFullYear()}</option>
+          </select></label>
+          </div>
+          <div className='col-4'>
+                <label>
+              Month:
+              <select className='selectpicker form-select form-select-sm' value={month} onChange={(e) => setMonth(e.target.value)}>
+                <option value={new Date().getMonth() + 1}>{new Date().toLocaleString('default', { month: 'long' })}</option>
+              </select>
+            </label>
+          </div>
+          <div className='col-4'>
+              <label>
+            Week :
+            <select className='selectpicker form-select form-select-sm' value={week} onChange={(e) => setWeek(e.target.value)}>
+            <option disabled={week===1}  value={getCurrentWeekNumber()-1}>{getCurrentWeekNumber()-1}</option>
+              <option disabled={week===1} value={getCurrentWeekNumber()}>{getCurrentWeekNumber()}</option>
+            </select>
+          </label>
+          </div>
+          <div className='col-4'>
+            <label>
+              Shipped Parts:
+              <input type="number" className="form-control form-control-sm" value={shippedParts} onChange={(e) => setShippedParts(e.target.value)} />
+            </label>
+          </div>
+          <div className='col-4'>
+          <label>
+            Objectif:
+            <input type="number" className="form-control form-control-sm" value={objectif} onChange={(e) => setObjectif(e.target.value)} />
+          </label>
+          </div>
+          <div className='col-4' style={{textAlign:'center'}}>
+          <Button variant='success' className='btn btn-sm' type="submit">Add PPM</Button>
+          </div>
+        
+    </form>
+          </div>
+        
           <div className='histogram'>
             <div>
               {data && <Bar  width={500} height={400} data={data} options={options}/>}
