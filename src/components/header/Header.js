@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import './Header.css';
-import Notification, { NotificationContainer }  from  'react-notifications';
-import  FontAwesomeIcon  from 'react-fontawesome';
-import { NotificationImportant, NotificationsOffTwoTone, SupervisedUserCircle, SupervisedUserCircleOutlined, SupervisedUserCircleRounded } from '@material-ui/icons';
+
 import {  Button } from 'react-bootstrap';
 import { Person, PersonFill, PersonFillGear, PersonFillLock } from 'react-bootstrap-icons';
 import { useAuth } from '../Login/AuthProvider';
@@ -62,10 +60,7 @@ export default function Header() {
     }
     )
   }
-	/*useEffect(()=>{
-    getNumber();
-	  }
-	,[])*/
+
   
 
   const  getNotificationsOfUser = ()=>{
@@ -87,8 +82,10 @@ export default function Header() {
  }
 
   /*useEffect(()=>{
+    getNumber();
       getNotificationsOfUser();
-  },[]);*/
+      
+  },[notificationsOfUser]);*/
 
  
  

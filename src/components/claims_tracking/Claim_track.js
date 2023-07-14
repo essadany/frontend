@@ -90,27 +90,33 @@ export default function Claim_track({haveAccess}) {
   function selectClaim(item){
     SetClaim_tracking(item);
     setProgress_rate(item.progress_rate);
-    setSub_date(item.report_sub_date);
     setBontaz_fault(item.bontaz_fault);
+    setStatus(item.report_status);
+    setSub_date(item.report_sub_date);
+    setDate_reception(item.date_reception);
+    setClaim_details(item.claim_details)
   }
   const updateTracking = ()=>{
-    let item={sub_date ,progress_rate }
-    console.warn("item",item)
     try{
-      fetch(`http://127.0.0.1:8000/api/report/${claim_tracking.report_id}`, {
+      fetch(`http://127.0.0.1:8000/api/claim_tracking/${claim_tracking.id}`, {
       method: 'PUT',
       headers:{
         'Accept' : 'application/json',
         'Content-Type':'application/json'
       },
-      body:JSON.stringify(item)
+      body:JSON.stringify({sub_date:sub_date, progress_rate : progress_rate, status : status,
+         claim_details : claim_details, date_reception : date_reception, bontaz_fault : bontaz_fault})
     }).then((result) => {
         if(result.ok){
-          getClaims_tracking()
-          //alert("Claims Tracking Updated successfully");
+         // alert("Claims Tracking Updated successfully");
           setProgress_rate("");
           setSub_date("");
+          setStatus('');
+          setDate_reception('');
           setBontaz_fault("");
+          setClaim_details('');
+          getClaims_tracking();
+          handleClose();
         }else{
           result.json().then((resp) => {
             console.warn(resp)
@@ -141,8 +147,8 @@ export default function Claim_track({haveAccess}) {
                 <Modal.Title>Update Tracking Claim</Modal.Title>
                   </Modal.Header>
                     <Modal.Body>
-                    <form class="row g-3">
-                    <div className="col-12">
+                    <form class="row container g-3">
+                    <div className="col-md-6 ">
                     <label  className="form-label">Progress rate :</label>
                     <select  data-live-search="true"  className='selectpicker form-select form-select-sm' onChange={(e)=>setProgress_rate(e.target.value)} required >
                     <option selected>0%</option>
@@ -152,21 +158,33 @@ export default function Claim_track({haveAccess}) {
                     <option selected={progress_rate==="100%"}>100%</option>
                     </select>
                 </div>
-                      <div className="col-12">
-                          <label  className="form-label">bMCA Responsiblity:</label>
+                      <div className="col-md-6 col-sm-12">
+                          <label  className="form-label">BMCA Responsiblity:</label>
                           <select data-live-search="true"  className='selectpicker form-select form-select-sm' onChange={(e)=>setBontaz_fault(e.target.value)} required >
                           <option selected={bontaz_fault==="YES"} >YES</option>
                           <option selected={bontaz_fault==="NO"}>NO</option>
                           <option selected>NOT CONFIRMED</option>
                           </select>
                       </div>
-                      <div class="col-12">
-                        <label for="inputAddress" class="form-label">8D Submission date</label>
+                      <div class="col-md-6 col-sm-12">
+                        <label for="inputAddress" class="form-label">Returned parts</label>
+                        <input type="date" class="form-control"  value={date_reception} onChange={(e)=>setDate_reception(e.target.value)} required/>
+                      </div>
+                      <div className="col-md-6 col-sm-12">
+                          <label  className="form-label">8D Status:</label>
+                          <select data-live-search="true"  className='selectpicker form-select form-select-sm' onChange={(e)=>setStatus(e.target.value)} required >
+                          <option >On going</option>
+                          <option selected={status==="Submitted"}>Submitted</option>
+                          <option selected={status==="No 8D Required"}>No 8D Required</option>
+                          </select>
+                      </div>
+                      <div class="col-md-6 col-sm-12">
+                        <label for="inputAddress" class="form-label">8D Submission Date</label>
                         <input type="date" class="form-control"  value={sub_date} onChange={(e)=>setSub_date(e.target.value)}/>
                       </div>
                       <div class="col-12">
                         <label class="form-label">Details</label>
-                        <textarea type="text" class="form-control" value={claim_details}  />
+                        <textarea type="text" class="form-control" value={claim_details} onChange={(e)=>setClaim_details(e.target.value)}  />
                       </div>
                     </form>
                     </Modal.Body>
@@ -174,7 +192,7 @@ export default function Claim_track({haveAccess}) {
                   <Button variant="secondary" onClick={handleClose}>
                       Annuler
                   </Button>
-                  <Button onClick={updateTracking()} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                  <Button onClick={()=>updateTracking()} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
                             
                   </Modal.Footer>
             </Modal> 

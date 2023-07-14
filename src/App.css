@@ -22,7 +22,14 @@
   color: #ffffff;
 }
 
+/* Dashboard -------------------------------*/
+.histogram div{
+  display: inline-block;
+  width: 500px;
+  height: 300px;
+  margin: auto auto;
   
+}
 /*  login page -----------------------*/
 
 .login{

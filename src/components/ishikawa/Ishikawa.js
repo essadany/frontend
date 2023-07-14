@@ -136,6 +136,7 @@ export default function Ishikawa({haveAccess}) {
           setStatus("");
           setIsPrincipale(false);
           setEditB(true);
+          getCategories();
           handleClose();
         }else{
           result.json().then((resp) => {
