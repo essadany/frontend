@@ -56,28 +56,26 @@ const SideNavBar = ({isAuthentificated}) => {
 	
 	//Get Number of Actions
 	const [number,setNumber] = useState(0)
-	const  getActionsNotStarted = ()=>{
-		fetch(`http://127.0.0.1:8000/api/user/${auth.user.id}/actions_not_started`)
-		  .then(res => res.json())
-		  .then(
-			(result) => {
-			  setIsLoaded(true);
-			  setNumber(result);
-
-			},
-			// Note: it's important to handle errors here
-			// instead of a catch() block so that we don't swallow
-			// exceptions from actual bugs in components.
-			(error) => {
-			  setIsLoaded(true);
-			  setError(error);
-			}
-		  )
-	}
-	/*useEffect(()=>{
-		getActionsNotStarted();
-	  }
-	,[])*/
+	
+	useEffect(()=>{
+			fetch(`http://127.0.0.1:8000/api/user/${auth.user.id}/actions_not_started`)
+			  .then(res => res.json())
+			  .then(
+				(result) => {
+				  setIsLoaded(true);
+				  setNumber(result);
+	
+				},
+				// Note: it's important to handle errors here
+				// instead of a catch() block so that we don't swallow
+				// exceptions from actual bugs in components.
+				(error) => {
+				  setIsLoaded(true);
+				  setError(error);
+				}
+			  )
+		}	  
+	,[isLoaded,number,auth.user.id]);
 		
 	return (
 		<div

@@ -24,12 +24,12 @@
 
 /* Dashboard -------------------------------*/
 .histogram div{
-  display: inline-block;
-  width: 500px;
+  width: 1000px;
   height: 300px;
   margin: auto auto;
   
 }
+
 .ppm{
   margin: auto auto;
 }

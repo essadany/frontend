@@ -41,8 +41,8 @@ export default function Header() {
 
  
   //Get Number of Notifications
-	const [number,setNumber] = useState('0');
-  function getNumber(){
+	const [number,setNumber] = useState(0);
+  useEffect(()=>{
     fetch(`http://127.0.0.1:8000/api/user/${user_id}/notifications_number`)
     .then(res => res.json())
     .then(
@@ -58,12 +58,11 @@ export default function Header() {
       setIsLoaded(true);
       setError(error);
     }
-    )
-  }
-
+    )      //getNotificationsOfUser();
+      
+  },[isLoaded,number,user_id]);
   
-
-  const  getNotificationsOfUser = ()=>{
+  useEffect(()=>{
     fetch(`http://127.0.0.1:8000/api/user/${user_id}/notifications`)
      .then(res => res.json())
      .then(
@@ -79,16 +78,9 @@ export default function Header() {
          setError(error);
        }
      )
- }
-
-  /*useEffect(()=>{
-    getNumber();
-      getNotificationsOfUser();
       
-  },[notificationsOfUser]);*/
-
- 
- 
+  },[isLoaded,number,user_id]);
+  
 
 
   return (
