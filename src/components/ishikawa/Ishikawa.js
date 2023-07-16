@@ -165,7 +165,7 @@ export default function Ishikawa({haveAccess}) {
         <h2 >Ishikawa</h2>
         <div className='border'>
         <div>
-        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Add New Cause");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Cause</Button>
+        <Button  disabled={!haveAccess}  onClick={()=>{handleShow();setModalTitle("Add New Cause");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Cause</Button>
 
         <Modal
                 size='md'
@@ -271,7 +271,7 @@ export default function Ishikawa({haveAccess}) {
                         <td className='text-center' >{item.comment}</td>
                         <td className='text-center' style={{color:item.status==='confirmed'? 'green': 'on going'? 'orange' : 'red'}}><b>{item.status}</b></td>
                         <td className='text-center' >{item.isPrincipale===1? <b>X</b>: ""}</td>
-                        <td className='text-center' ><Button disabled={haveAccess===true? false : true}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Cause");handleShow();setAddB(true);setEditB(false);selectCategorie(item)}} variant='primary'><Edit /></Button></td>
+                        <td className='text-center' ><Button  disabled={!haveAccess}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Cause");handleShow();setAddB(true);setEditB(false);selectCategorie(item)}} variant='primary'><Edit /></Button></td>
             </tr>
                     ))}
                             

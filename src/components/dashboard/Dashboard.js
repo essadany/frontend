@@ -6,7 +6,7 @@ import { Bar } from 'react-chartjs-2';
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 
-export default function Dashboard() {
+export default function Dashboard({haveAccess}) {
   const [data, setData] = useState(null);
 
   const [error, setError] = useState(null);
@@ -398,35 +398,8 @@ export default function Dashboard() {
     };
 
   // Show the choosen histogram------------------------------------------------------------------------------------------------------
-  const [display_css1, setDisplay_css1] = useState('disabled');
-  const [display_css2, setDisplay_css2] = useState('none');
-  const [display_css3, setDisplay_css3] = useState('none');
-  const [display_css4, setDisplay_css4] = useState('none');
   const [histogram, setHistogram] = useState('1');
   
-  /*const ShowHistogram = () => {
-    if (histogram === '1') {
-      setDisplay_css1('disabled');
-      setDisplay_css2('none');
-      setDisplay_css3('none');
-      setDisplay_css4('none');
-    } else if (histogram === '2') {
-      setDisplay_css1('none');
-      setDisplay_css2('disabled');
-      setDisplay_css3('none');
-      setDisplay_css4('none');
-    } else if (histogram === '3') {
-      setDisplay_css1('none');
-      setDisplay_css2('none');
-      setDisplay_css3('disabled');
-      setDisplay_css4('none');
-    } else if (histogram === '4') {
-      setDisplay_css1('none');
-      setDisplay_css2('none');
-      setDisplay_css3('none');
-      setDisplay_css4('disabled');
-    }
-  };*/
 
   return (
     <>
@@ -561,7 +534,7 @@ export default function Dashboard() {
                   </label>
                 </div>
                 <div className='col-4' style={{ textAlign: 'center' }}>
-                  <Button variant='success' className='btn btn-sm' type='submit'>
+                  <Button  disabled={!haveAccess} variant='success' className='btn btn-sm' type='submit'>
                     Add PPM
                   </Button>
                 </div>
@@ -582,7 +555,7 @@ export default function Dashboard() {
               </select>
             </label>
           </form>
-          <div>{data3 && <Bar width={500} height={400} data={data3} options={options3} />}</div>
+          <div>{data3 && <Bar width={500} height={200} data={data3} options={options3} />}</div>
           </div>
           }
           

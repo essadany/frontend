@@ -82,7 +82,7 @@ export default function Effectiveness({haveAccess}) {
               <textarea rows={10} className='form-control ' value={description} onChange={(e)=>setDescription(e.target.value)}/>
             </div>
             <div  style={{textAlign:'center'}}>
-            <Button disabled={haveAccess===true? false : true}  onClick={()=>{setAddB(false);setEditB(true);UpdateEffectiveness()}} variant='success'> Save</Button>
+            <Button  disabled={!haveAccess} onClick={()=>{setAddB(false);setEditB(true);UpdateEffectiveness()}} variant='success'> Save</Button>
             </div>
 
           </form>

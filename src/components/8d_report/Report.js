@@ -366,7 +366,7 @@ function updateReport(){
                 <img key={index} src={file} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
                 <div>
                 {/*<Button style={{marginRight:5}} variant='secondary' onClick={() => handleReplaceClick(index)}><Edit /></Button>*/}
-                <Button variant='danger' onClick={() => handleDeleteClick(index)}><Delete /></Button>
+                <Button  disabled={!haveAccess} variant='danger' onClick={() => handleDeleteClick(index)}><Delete /></Button>
                 </div>
                 
                 </div>
@@ -374,7 +374,7 @@ function updateReport(){
               
               <div className='col-md-4'>
                 <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
-                <Button onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
+                <Button  disabled={!haveAccess} onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
               </div>
             </div>
             

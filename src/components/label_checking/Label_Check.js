@@ -214,12 +214,12 @@ useEffect(() => {
                 style={{ display: 'none' }}
               />
               <div>
-                <Button disabled={haveAccess===true? false : true}  onClick={handleEditClick1}><Edit /></Button>
+                <Button  disabled={!haveAccess}  onClick={handleEditClick1}><Edit /></Button>
               </div>
             </div>        
           </div>
           <div className='col-6'>
-            <Button disabled={haveAccess===true? false : true}  onClick={updateLabelCheck}  variant='success'>Save</Button>
+            <Button  disabled={!haveAccess}  onClick={updateLabelCheck}  variant='success'>Save</Button>
           </div>
         </div>
         

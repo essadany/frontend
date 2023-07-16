@@ -397,7 +397,7 @@ function updateProblem_desc(){
                   style={{ display: 'none' }}
                 />
                 <div>
-                  <Button disabled={haveAccess===true? false : true}  onClick={handleEditClick1}><Edit /></Button>
+                  <Button  disabled={!haveAccess}  onClick={handleEditClick1}><Edit /></Button>
                 </div>
               </div>
 
@@ -416,7 +416,7 @@ function updateProblem_desc(){
                   style={{ display: 'none' }}
                 />
                 <div>
-                  <Button disabled={haveAccess===true? false : true} onClick={handleEditClick2}><Edit /></Button>
+                  <Button  disabled={!haveAccess} onClick={handleEditClick2}><Edit /></Button>
                 </div>               
               </div>
             </div>
@@ -448,7 +448,7 @@ function updateProblem_desc(){
               <div className='col-md-4'>
                 <img key={index} src={file} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
                 <div>
-                <Button disabled={haveAccess===true? false : true} variant='danger' onClick={() => handleDeleteClick(index, file.id)}><Delete /></Button>
+                <Button  disabled={!haveAccess} variant='danger' onClick={() => handleDeleteClick(index, file.id)}><Delete /></Button>
                 </div>
                 
                 </div>
@@ -456,7 +456,7 @@ function updateProblem_desc(){
               
               <div className='col-md-4'>
                 <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
-                <Button disabled={haveAccess===true? false : true} onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
+                <Button  disabled={!haveAccess} onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
               </div>
             </div>
           </div>
@@ -485,7 +485,7 @@ function updateProblem_desc(){
             
           </div>
           <div>
-            <Button disabled={haveAccess===true? false : true}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateProblem_desc();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button  disabled={!haveAccess}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateProblem_desc();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
 
         </div>

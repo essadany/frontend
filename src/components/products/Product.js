@@ -333,8 +333,8 @@ export default function Product({haveAccess}) {
                                 <td>{item.product_name}</td>
                                 <td>{item.zone}</td>
                                 <td>{item.uap}</td>
-                                <td><Button disabled={haveAccess===true? false : true} style={{marginRight:10}} onClick={()=>{selectProduct(item);setModalTitle("Update Product");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button disabled={haveAccess===true? false : true}  onClick={()=>deleteProduct(item)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
+                                <td><Button  disabled={!haveAccess} style={{marginRight:10}} onClick={()=>{selectProduct(item);setModalTitle("Update Product");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button  disabled={!haveAccess}  onClick={()=>deleteProduct(item)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
                                 
 
                     </tr>

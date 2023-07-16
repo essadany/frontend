@@ -237,7 +237,7 @@ export default function Actions({haveAccess}) {
         <h2 ><img className='report_icon' src='../icons/action-plan.png'/>  Actions</h2>
         <div className='border'>
         <div>
-        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Add New Action");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Action</Button>
+        <Button  disabled={!haveAccess}  onClick={()=>{handleShow();setModalTitle("Add New Action");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Action</Button>
 
         <Modal
                 size='md'
@@ -346,7 +346,7 @@ export default function Actions({haveAccess}) {
                             ))}
                         </td>
                         <td className='text-center' >{item.done_date}</td>
-                        <td className='text-center' ><Button disabled={haveAccess===true? false : true}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Action");handleShow();setAddB(true);setEditB(false);selectAction(item)}} variant='primary'><Edit /></Button></td>
+                        <td className='text-center' ><Button  disabled={!haveAccess}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Action");handleShow();setAddB(true);setEditB(false);selectAction(item)}} variant='primary'><Edit /></Button></td>
             </tr>
                     ))}
                             

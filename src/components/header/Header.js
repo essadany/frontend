@@ -29,7 +29,13 @@ export default function Header() {
   const navigate = useNavigate()
 
   const handlLogout= async()=>{
+    // Clear user and access token from local storage
+    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
+
+    // Logout the user
     auth.logout();
+    navigate('/login', { replace: true });
   }
   
   const [isExpanded, setExpanded] = useState(false)

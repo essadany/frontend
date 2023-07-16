@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 
-export default function Team() {
+export default function Team({haveAccess}) {
   const { claim_id } = useParams();
 
   const [error, setError] = useState(null);
@@ -155,7 +155,6 @@ export default function Team() {
        
       }
     };
-    const [email,setEmail]=useState("");
     //Add a leader to team 
     let handleAddLeader = async (e) => {
       e.preventDefault();
@@ -173,12 +172,7 @@ export default function Team() {
         });
         console.log(res.status);
         if (res.status === 200) {
-          console.warn("leader=", name);
-          // Set the leader name
-          const leaderName = users.find(user => user.id === parseInt(user_id))?.name || '';
-          //const email = users.find(user => user.id === parseInt(user_id))?.email || '';
-          setName(leaderName);
-          setEmail(email);
+            const leaderName = users.find(user => user.id === parseInt(user_id))?.name || '';
           
           // Update the leader name in the database
           fetch(`http://127.0.0.1:8000/api/team/${team_id}`, {
@@ -190,6 +184,7 @@ export default function Team() {
             body: JSON.stringify({ leader: leaderName })
           })
             .then(() => {
+              alert('Leader added successfuly');
               setUser_id("");
               getUsersOfTeam();
             })
@@ -204,7 +199,10 @@ export default function Team() {
         console.log(err);
       }
     };
-    
+    // Set the leader name
+    const leaderEmail = users.find(user => user.name === team.leader)?.email || '';
+    //setName(leaderName);
+   
     
   // Filter Team --------------------------------------------------------------------------------------------------------------------------
   const [filter, setFilter] = useState("");
@@ -229,12 +227,12 @@ export default function Team() {
               <form className='g-3  container' onSubmit={handleAddLeader}>
                   <div class="">
                       <label for="validationCustom02" class="form-label">Leader* :</label>
-                      <select  className='form-select' onChange={(e)=>{setName(e.label);setUser_id(e.target.value);setEmail(users.find(user => user.id === parseInt(e.target.value))?.email || '')}} required >
+                      <select  className='form-select' onChange={(e)=>setUser_id(e.target.value)} required >
                       <option disabled selected>--- Select Leader ---</option>
-                        {users.map((item)=>(<option key={item.id}  value={item.id} >{item.name}</option>))}
+                        {users.map((item)=>(<option selected={item.name===team.leader} key={item.id}  value={item.id} >{item.name}</option>))}
                       </select>
                   </div>     
-                  <Button type='submit' style={{marginTop:10}} variant='primary'>Add</Button>
+                  <Button  disabled={!haveAccess} type='submit' style={{marginTop:10}} variant='primary'>Add</Button>
               </form>
             </div>
             <div className='col-md-4 '>
@@ -247,7 +245,7 @@ export default function Team() {
                         {users.map((item)=>(<option key={item.id} value={item.id} >{item.name}</option>))}
                       </select>
                     </div>
-                    <Button type='submit'  style={{marginTop:10}}  variant='primary'>Add</Button>
+                    <Button  disabled={!haveAccess} type='submit'  style={{marginTop:10}}  variant='primary'>Add</Button>
                   
                 </form>
             </div>
@@ -257,10 +255,10 @@ export default function Team() {
             <legend>Team members</legend>
           <div className='row md-4 filter'>
                 <div  className='col-md-4'>
-                  <h6>Leader : {name} </h6> 
+                  <h6>Leader : {team.leader} </h6> 
                 </div>
                 <div  className='col-md-4'>
-                  <h6>Email : {email}</h6>
+                  <h6>Email : {leaderEmail}</h6>
                 </div>
                 <div  className='col-md-4'>
                   <input  className="form-control " type="text" placeholder="Filter table" onChange={handleChange} />
@@ -280,7 +278,7 @@ export default function Team() {
                             <tr key={i}>
                                 <td>{item.name}</td>
                                 <td>{item.fonction}</td>
-                                <td><Button onClick={()=>deleteUserFromTeam(item.id)}  variant='danger' >Delete</Button></td>
+                                <td><Button  disabled={!haveAccess} onClick={()=>deleteUserFromTeam(item.id)}  variant='danger' >Delete</Button></td>
                         </tr>
                     ))}
                     </tbody>

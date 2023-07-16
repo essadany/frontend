@@ -235,7 +235,7 @@ export default function Meetings({haveAccess}) {
         <h2 ><img className='report_icon' src='../../icons/meeting.png'/>  Meetings</h2>
         <div className='border'>
         <div>
-        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Add New Meeting");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Meeting</Button>
+        <Button  disabled={!haveAccess}  onClick={()=>{handleShow();setModalTitle("Add New Meeting");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Meeting</Button>
 
         <Modal
                 size='md'
@@ -270,8 +270,8 @@ export default function Meetings({haveAccess}) {
                           <Button variant="secondary" onClick={handleClose}>
                               Annuler
                           </Button>
-                          <Button disabled={haveAccess===true? false : true}  type='submit'   hidden={addB} variant='primary'>Save</Button>
-                          <Button disabled={haveAccess===true? false : true}  onClick={updateMeeting} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>          
+                          <Button  disabled={!haveAccess}  type='submit'   hidden={addB} variant='primary'>Save</Button>
+                          <Button  disabled={!haveAccess}  onClick={updateMeeting} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>          
                         </div>
                         
                     </form>
@@ -296,7 +296,7 @@ export default function Meetings({haveAccess}) {
                       </select>
                     </div>
                     <div className='col-3'>
-                      <Button disabled={haveAccess===true? false : true}  onClick={AddAbsence} variant='danger'><PlusCircle />  Add Absence</Button>
+                      <Button  disabled={!haveAccess}  onClick={AddAbsence} variant='danger'><PlusCircle />  Add Absence</Button>
                     </div>                               
                   </form></div>
                 <div className='row md-4 filter'>
@@ -330,7 +330,7 @@ export default function Meetings({haveAccess}) {
                               <div key={abs.id}>{abs.name}</div>
                             ))}
                         </td>
-                            <td><Button disabled={haveAccess===true? false : true} style={{marginRight:10}} onClick={()=>{selectMeeting(item);setModalTitle("Update Meeting");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                            <td><Button  disabled={!haveAccess} style={{marginRight:10}} onClick={()=>{selectMeeting(item);setModalTitle("Update Meeting");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                         </tr>
                         ))}
                               

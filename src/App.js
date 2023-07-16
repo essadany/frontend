@@ -1,5 +1,5 @@
 import React,{useContext, useEffect, useState} from 'react';
-import {  BrowserRouter as Router, Route, Routes,Navigate, useLocation } from 'react-router-dom';
+import {  BrowserRouter as Router, Route, Routes,Navigate, useLocation, useNavigate } from 'react-router-dom';
 import './Interface.css'
 import SideNavBar from './components/sidebar/SideNavBar';
 import Tab from './components/tabs/Tab';
@@ -20,15 +20,16 @@ import Pb_desc from './components/problem_description/Pb_desc';
 import Containement from './components/containement/Containement';
 import Five_Why from './components/5why/Five_Why';
 import Label_Check from './components/label_checking/Label_Check';
-import Login from './components/Login/login';
 import Annexe from './components/8d_annexe/Annexe';
 import './App.css'
 import {useAuth, AuthProvider } from './components/Login/AuthProvider';
 import { RequireAuth } from './components/Login/RequireAuth';
 import Ishikawa from './components/ishikawa/Ishikawa';
-import ExcelDownload from './components/8d_report/ExcelDownload';
-import MyContext from './components/Login/login';
 import moment from 'moment';
+import Login from './components/Login/login';
+
+
+
 export default function App() {
   const auth =useAuth();
   const [error, setError] = useState(null);
@@ -75,7 +76,11 @@ export default function App() {
     document.body.classList.remove('login-page');
   }
 
-  
+  const [haveAccess, setHaveAccess] = useState(true);
+
+  const handleHaveAccessChange = (value) => {
+    setHaveAccess(value);
+  };
   return (  
     
           <div className='app'>
@@ -83,28 +88,28 @@ export default function App() {
           <AuthProvider>
        <Menu />
        <Routes>
-         <Route path="/login" element={<Login />} />
-         <Route exact path='/' element={<RequireAuth>< Dashboard /></RequireAuth>}/>
+         <Route path="/login" element={<Login onHaveAccessChange={handleHaveAccessChange}  />} />
+         <Route exact path='/' element={<RequireAuth>< Dashboard haveAccess={haveAccess} /></RequireAuth>}/>
  
-           <Route exact path='/Dashboard' element={<RequireAuth>< Dashboard /></RequireAuth>}/>
-           <Route exact path='/Claims' element={<RequireAuth>< Claims haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Customer' element={<RequireAuth><Customer haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Product' element={<RequireAuth><Product haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Annexe/:claim_id' element={<RequireAuth>< Annexe haveAccess={true}/></RequireAuth>}/>
+           <Route exact path='/Dashboard' element={<RequireAuth>< Dashboard haveAccess={haveAccess} /></RequireAuth>}/>
+           <Route exact path='/Claims' element={<RequireAuth>< Claims haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Customer' element={<RequireAuth><Customer haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Product' element={<RequireAuth><Product haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Annexe/:claim_id' element={<RequireAuth>< Annexe haveAccess={haveAccess}/></RequireAuth>}/>
  
-           <Route exact path='/Claim_track' element={<RequireAuth><Claim_track haveAccess={true} /></RequireAuth>}/>
+           <Route exact path='/Claim_track' element={<RequireAuth><Claim_track haveAccess={haveAccess} /></RequireAuth>}/>
            <Route exact path='/MyActions' element={<RequireAuth><MyActions /></RequireAuth>}/>
-           <Route exact path='/Users' element={<RequireAuth><Users haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Report/:claim_id' element={<RequireAuth><Report haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Team/:claim_id' element={<RequireAuth><Team haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Meetings/:claim_id' element={<RequireAuth>< Meetings haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Problem_Description/:claim_id' element={<RequireAuth><Pb_desc haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Containement/:claim_id' element={<RequireAuth><Containement haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Ishikawa/:claim_id' element={<RequireAuth><Ishikawa haveAccess={true} /></RequireAuth>}/>
-           <Route exact path='/Five_Why/:claim_id' element={<RequireAuth>< Five_Why haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Label_Checking/:claim_id' element={<RequireAuth><Label_Check haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='/Actions/:claim_id' element={<RequireAuth><Actions haveAccess={true}/></RequireAuth>}/>
-           <Route exact path='Effectiveness/:claim_id' element={<RequireAuth><Effectiveness haveAccess={true}/></RequireAuth>}/>
+           <Route exact path='/Users' element={<RequireAuth><Users haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Report/:claim_id' element={<RequireAuth><Report haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Team/:claim_id' element={<RequireAuth><Team haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Meetings/:claim_id' element={<RequireAuth>< Meetings haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Problem_Description/:claim_id' element={<RequireAuth><Pb_desc haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Containement/:claim_id' element={<RequireAuth><Containement haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Ishikawa/:claim_id' element={<RequireAuth><Ishikawa haveAccess={haveAccess} /></RequireAuth>}/>
+           <Route exact path='/Five_Why/:claim_id' element={<RequireAuth>< Five_Why haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Label_Checking/:claim_id' element={<RequireAuth><Label_Check haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='/Actions/:claim_id' element={<RequireAuth><Actions haveAccess={haveAccess}/></RequireAuth>}/>
+           <Route exact path='Effectiveness/:claim_id' element={<RequireAuth><Effectiveness haveAccess={haveAccess}/></RequireAuth>}/>
            <Route exact path='*' element="error 404"/>
        
        </Routes>

@@ -334,7 +334,7 @@ export default function ({haveAccess}) {
           <div>
             <legend>Failure Occurence Analysis</legend>
             <div>
-            <Button disabled={haveAccess===true? false : true}  onClick={()=>handleShow1()} variant='success'> <Add /></Button>
+            <Button  disabled={!haveAccess}  onClick={()=>handleShow1()} variant='success'> <Add /></Button>
 
             <Modal
                 size='md'
@@ -394,7 +394,7 @@ export default function ({haveAccess}) {
           <div>
             <legend>Failure Detection Analysis</legend>
             <div>
-            <Button disabled={haveAccess===true? false : true} onClick={()=>handleShow2()} variant='success'> <Add /></Button>
+            <Button  disabled={!haveAccess} onClick={()=>handleShow2()} variant='success'> <Add /></Button>
 
             <Modal
                 size='md'
@@ -451,7 +451,7 @@ export default function ({haveAccess}) {
           <div>
             <legend>Failure System Analysis</legend>
             <div>
-            <Button disabled={haveAccess===true? false : true}  onClick={()=>handleShow3()} variant='success'> <Add /></Button>
+            <Button  disabled={!haveAccess}  onClick={()=>handleShow3()} variant='success'> <Add /></Button>
 
             <Modal
                 size='md'
@@ -507,7 +507,7 @@ export default function ({haveAccess}) {
           </div>
         
           <div>
-            <Button disabled={haveAccess===true? false : true}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateResults();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button  disabled={!haveAccess}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateResults();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
       </div>
     </div>
