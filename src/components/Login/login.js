@@ -62,15 +62,19 @@ const Login = ({onHaveAccessChange}) => {
   };
 
   useEffect(() => {
-    // Check if the user is already authenticated
-    const user = localStorage.getItem('user');
+    const user = JSON.parse(localStorage.getItem('user'));
     const access_token = localStorage.getItem('access_token');
 
     if (user && access_token) {
-      auth.login(JSON.parse(user));
+      auth.login(user);
+      navigate(redirectPath, { replace: true });
+      if (user.role === 'user') {
+        onHaveAccessChange(false);
+      } else {
+        onHaveAccessChange(true);
+      }
     }
-  }, []);
-
+  }, [auth, navigate, redirectPath, onHaveAccessChange]);
 
 
   return (

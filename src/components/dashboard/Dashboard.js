@@ -5,10 +5,13 @@ import { Bar } from 'react-chartjs-2';
 
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Login/AuthProvider';
 
 export default function Dashboard({haveAccess}) {
   const [data, setData] = useState(null);
-
+    
+  //----------------------------------------------------------------------------------------------
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
  
@@ -86,12 +89,6 @@ export default function Dashboard({haveAccess}) {
   // Histogram of number of claims by month and status-----------------------------------------------------------------------------------------
   const [year1,setYear1] = useState(2023);
   const [data1,setData1] = useState(null);
-
-  useEffect(() => {
-    // Fetch your JSON data
-    fetch('http://127.0.0.1:8000/api/claims_status_by_month')
-  .then((response) => response.json())
-  .then((jsonData) => {
     // Prepare an array of all months in French
     const allMonths = [
       "Janvier",
@@ -107,6 +104,11 @@ export default function Dashboard({haveAccess}) {
       "Novembre",
       "Décembre",
     ];
+  useEffect(() => {
+    // Fetch your JSON data
+    fetch('http://127.0.0.1:8000/api/claims_status_by_month')
+  .then((response) => response.json())
+  .then((jsonData) => {
 
     // Filter data for the specified year and extract the number_of_claims for existing months
     const filteredData1 = jsonData.filter((item) => item.claim_confirmed === "YES" && item.year === year1);
@@ -137,6 +139,7 @@ export default function Dashboard({haveAccess}) {
           data: sumData1,
           backgroundColor: 'blue',
           barThickness: 15,
+          type : 'line'
         },
         {
           label: 'Nombre de réclamations en cours de confirmation',
@@ -194,21 +197,6 @@ export default function Dashboard({haveAccess}) {
     fetch('http://127.0.0.1:8000/api/claims_confirmed/8d_status_by_month')
   .then((response) => response.json())
   .then((jsonData) => {
-    // Prepare an array of all months in French
-    const allMonths = [
-      "Janvier",
-      "Février",
-      "Mars",
-      "Avril",
-      "Mai",
-      "Juin",
-      "Juillet",
-      "Août",
-      "Septembre",
-      "Octobre",
-      "Novembre",
-      "Décembre",
-    ];
 
     const filteredData3 = jsonData.filter((item) => item['8d_status'] === "Submitted" && item.year === year2);
     const numbers_of_8d_submitted = allMonths.map((month, index) => {
@@ -231,6 +219,7 @@ export default function Dashboard({haveAccess}) {
           data: sumData2,
           backgroundColor: 'blue',
           barThickness: 15,
+          type : 'line'
         },
         {
           label: '8D Soumis',
@@ -341,12 +330,12 @@ export default function Dashboard({haveAccess}) {
         .then((response) => response.json())
         .then((jsonData3) => {
           const filteredData5 = jsonData3.filter((item)=>item.week_ppm)
-          const ppm_values = weeks.map((week, index) => {
+          const week_ppm_values = weeks.map((week, index) => {
             const weekData = filteredData5.find((item) => item.week === index + 1);
             return weekData ? weekData.week_ppm : 0;
           });
           const filteredData6 = jsonData3.filter((item)=>item.objectif)
-          const objectif_values = weeks.map((week, index) => {
+          const week_objectif_values = weeks.map((week, index) => {
             const weekData = filteredData5.find((item) => item.week === index + 1);
             return weekData ? weekData.objectif : objectif;
           });
@@ -356,15 +345,15 @@ export default function Dashboard({haveAccess}) {
             datasets: [
               {
                 label: 'ppm value',
-                data: ppm_values,
+                data: week_ppm_values,
                 backgroundColor: 'blue',
                 barThickness: 15,
                 type : 'bar'
               },
               {
                 label: 'objectif value',
-                data: objectif_values,
-                backgroundColor: 'green',
+                data: week_objectif_values,
+                backgroundColor: 'orange',
                 fill : false,
                 type : 'line',
 
@@ -380,24 +369,56 @@ export default function Dashboard({haveAccess}) {
     }, [year3]);
     
 
-    const options3 = {
-      scales: {
-        x: {
-          beginAtZero: true,
-          title: {
-          },
-        },
-        y: {
-          beginAtZero: true,
-          title: {
-          },
-          suggestedMax: 10,
-          suggestedMin: 0, // Set the minimum value on the Y-axis
-        },
-      },
-    };
+    //Show the ppm_values by month-------------------------------------------------------------------------------------------------
+    const [data4, setData4] = useState(null);
+    
+    useEffect(() => {
+      // Fetch your JSON data
+      fetch(`http://127.0.0.1:8000/api/year/${year3}/month_ppm`)
+        .then((response) => response.json())
+        .then((jsonData3) => {
+          const filteredData5 = jsonData3.filter((item)=>item.month_ppm)
+          const month_ppm_values = allMonths.map((month, index) => {
+            const monthData = filteredData5.find((item) => item.month === index + 1);
+            return monthData ? monthData.month_ppm : 0;
+          });
+          const filteredData6 = jsonData3.filter((item)=>item.objectif)
+          const month_objectif_values = allMonths.map((month, index) => {
+            const monthData = filteredData6.find((item) => item.month === index + 1);
+            return monthData ? monthData.objectif : objectif;
+          });
+         
+          const chartData4 = {
+            labels: allMonths,
+            datasets: [
+              {
+                label: 'ppm value',
+                data: month_ppm_values,
+                backgroundColor: 'green',
+                barThickness: 15,
+                type : 'bar'
+              },
+              {
+                label: 'objectif value',
+                data: month_objectif_values,
+                backgroundColor: 'orange',
+                fill : false,
+                type : 'line',
 
-  // Show the choosen histogram------------------------------------------------------------------------------------------------------
+              },
+            ],
+          };
+    
+          setData4(chartData4);
+        })
+        .catch((error) => {
+          console.error('Error fetching JSON data:', error);
+        });
+    }, [year3]);
+    
+
+  
+  // Show the selected histogram------------------------------------------------------------------------------------------------------
   const [histogram, setHistogram] = useState('1');
   
 
@@ -555,11 +576,12 @@ export default function Dashboard({haveAccess}) {
               </select>
             </label>
           </form>
-          <div>{data3 && <Bar width={500} height={200} data={data3} options={options3} />}</div>
+          <div>{data3 && <Bar width={500} height={200} data={data3}  />}</div>
+          <div>{data4 && <Bar width={500} height={200} data={data4}  />}</div>
           </div>
           }
           
-          
+           
         </div>
       </div>
     </>

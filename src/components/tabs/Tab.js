@@ -14,37 +14,37 @@ export default function Tab() {
     <div className='tab'>
         <ul className="nav nav-tabs">
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "report" ? "active-link" : ""}`} aria-current="page" to={`/Report/${claim_id}`} onClick={() => setActiveLink("report")}>REPORT</Link>
+                <Link className="nav-link " aria-current="page" to={`/Report/${claim_id}`}>REPORT</Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "annexe" ? "active-link" : ""}`} to={`/Annexe/${claim_id}`} onClick={() => setActiveLink("annexe")} >ANNEXE</Link>
+                <Link className="nav-link" to={`/Annexe/${claim_id}`} >ANNEXE</Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "team" ? "active-link" : ""}`} to={`/Team/${claim_id}`} onClick={() => setActiveLink("team")}>TEAM</Link>
+                <Link className="nav-link" to={`/Team/${claim_id}`}>TEAM</Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "meetings" ? "active-link" : ""}`} to={`/Meetings/${claim_id}`} onClick={() => setActiveLink("meetings")}>MEETINGS</Link>
+                <Link className="nav-link" to={`/Meetings/${claim_id}`}>MEETINGS</Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "pb_desc" ? "active-link" : ""}`} to={`/Problem_Description/${claim_id}`} onClick={() => setActiveLink("pb_desc")}>PROBLEM DESCRIPTION</Link>
+                <Link className="nav-link" to={`/Problem_Description/${claim_id}`} >PROBLEM DESCRIPTION</Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "containement" ? "active-link" : ""}`} to={`/Containement/${claim_id}`} onClick={() => setActiveLink("containement")}>CONTAINEMENT</Link>
+                <Link className="nav-link" to={`/Containement/${claim_id}`} >CONTAINEMENT</Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "ishikawa" ? "active-link" : ""}`} to={`/Ishikawa/${claim_id}`} onClick={() => setActiveLink("ishikawa")}>ISHIKAWA </Link>
+                <Link className="nav-link" to={`/Ishikawa/${claim_id}`} >ISHIKAWA </Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "five_why" ? "active-link" : ""}`} to={`/Five_Why/${claim_id}`} onClick={() => setActiveLink("five_why")}>5 WHY</Link>
+                <Link className="nav-link" to={`/Five_Why/${claim_id}`} >5 WHY</Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "label_check" ? "active-link" : ""}`} to={`/Label_Checking/${claim_id}`} onClick={() => setActiveLink("label_check")}>LABEL CHECK</Link>
+                <Link className="nav-link" to={`/Label_Checking/${claim_id}`} >LABEL CHECK</Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "actions" ? "active-link" : ""}`} to={`/Actions/${claim_id}`} onClick={() => setActiveLink("actions")}>ACTIONS</Link>
+                <Link className="nav-link" to={`/Actions/${claim_id}`} ><i>ACTIONS</i></Link>
             </li>
             <li className="nav-item">
-                <Link className={`nav-link ${activeLink === "effectiveness" ? "active-link" : ""}`} to={`/Effectiveness/${claim_id}`} onClick={() => setActiveLink("effectiveness")}>EFFECTIVENESS</Link>
+                <Link className="nav-link" to={`/Effectiveness/${claim_id}`} >EFFECTIVENESS</Link>
             </li>
         </ul>
     

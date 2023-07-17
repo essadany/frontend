@@ -140,7 +140,7 @@ export default function Meetings({haveAccess}) {
         handleClose();
         getMeetings();
       } else {
-        res.data(error);
+        alert('Some error occured! try again!');
       }
     } catch (err) {
       console.log(err);
@@ -251,11 +251,19 @@ export default function Meetings({haveAccess}) {
                 <form class="row container g-3  needs-validation" onSubmit={handleSubmit}>
                         <div class="col-md-6">
                             <label  class="form-label">Type* :</label>
-                            <select className='form-select col-2' onChange={(e)=>setType(e.target.value)}   required>
+                            <select className='form-select col-2'  onChange={(e)=>setType(e.target.value)}   required>
                               <option selected disabled>--- Select Type ---</option>
-                              {meetings_type.map((item)=>(<option selected={item.label===type}>{item.label}</option>))}
+                              {meetings.some(item => item.type === 'Containement')? (
+                                  <option  >Analyse1</option>
+                              ) : meetings.some(item => item.type === 'Containement' && item.type === 'Analyse1' )? (<>
+                                <option value='Analyse2'  >Analyse2</option>
+                                <option value='Analyse3'  >Analyse3</option>
+                                <option value='Closure'  >Closure</option>
+                                </>
+                            ): (
+                              <option value='Containement'  >Containement</option>
+                          )}
                             </select>
-                            
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">date* : </label>
@@ -264,14 +272,14 @@ export default function Meetings({haveAccess}) {
                       
                         <div class="col-md-12">
                             <label class="form-label">Comment :</label>
-                            <textarea className="form-control"  value={comment} onChange={(e)=>setComment(e.target.value)}  required />
+                            <textarea className="form-control"  value={comment} onChange={(e)=>setComment(e.target.value)}  />
                         </div>
                         <div className='modal-footer'>
                           <Button variant="secondary" onClick={handleClose}>
                               Annuler
                           </Button>
-                          <Button  disabled={!haveAccess}  type='submit'   hidden={addB} variant='primary'>Save</Button>
-                          <Button  disabled={!haveAccess}  onClick={updateMeeting} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>          
+                          <Button    type='submit'   hidden={addB} variant='primary'>Save</Button>
+                          <Button    onClick={updateMeeting} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>          
                         </div>
                         
                     </form>

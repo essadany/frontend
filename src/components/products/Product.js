@@ -283,16 +283,17 @@ export default function Product({haveAccess}) {
                             <label className="form-label">UAP Engineer : </label>
                             <input type="text" className="form-control"  onChange={(e)=>setUap(e.target.value)}   value={uap}  />
                         </div>
-                    </form>
-                    </Modal.Body>
-                  <Modal.Footer>
+                        <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                       Annuler
                   </Button>
-                  <Button type='submit' onClick={handleSubmit} hidden={addB} variant='primary'>Save</Button>
-                  <Button  type='submit' onClick={updateProduct} hidden={editB} variant='success'>Update<i className="fa-solid fa-pen-to-square"></i></Button>
+                  <Button type='submit'  hidden={addB} variant='primary'>Save</Button>
+                  <Button   onClick={updateProduct} hidden={editB} variant='success'>Update<i className="fa-solid fa-pen-to-square"></i></Button>
                             
                   </Modal.Footer>
+                    </form>
+                    </Modal.Body>
+                  
               </Modal>  
               </div>
             <div >
