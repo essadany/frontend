@@ -28,7 +28,7 @@ export default function Users() {
         const [password, setPassword] = useState("");
         const [role, setRole] = useState("user");
         const [user_id, setUser_id] = useState("");
-
+        const [isUapEngineer, setIsUapEngineer] = useState(false);
         const [isAdmin, setIsAdmin] = useState(false);
         const [deleted, setDeleted] = useState(false);
 
@@ -41,9 +41,16 @@ export default function Users() {
             setRole('user');
           }
         }
-        // Note: the empty deps array [] means
-        // this useEffect will run once
-        // similar to componentDidMount()
+        function checkUapEngineer() {
+          setIsUapEngineer(!isUapEngineer);
+        
+          if (!isUapEngineer) {
+            setRole('uap engineer');
+          } else {
+            setRole('user');
+          }
+        }
+
         function getUsers(){
           fetch("http://127.0.0.1:8000/api/users_activated")
             .then(res => res.json())
@@ -89,6 +96,7 @@ export default function Users() {
                 setPhone("");
                 setRole("user");
                 setIsAdmin(false);
+                setIsUapEngineer(false);
                 alert("User Added successfully");
                 handleClose();
                 getUsers();
@@ -110,6 +118,8 @@ export default function Users() {
               setRole(user.role);
               setUser_id(user.id);
               setIsAdmin((user.role==='admin'))
+              setIsUapEngineer((user.role==='uap engineer'))
+
           }
           function updateUser(){
             
@@ -134,6 +144,8 @@ export default function Users() {
                   setEditB(true);
                   handleClose();
                   setIsAdmin(false);
+                  setIsUapEngineer(false);
+
                 }else{
                   result.json().then((resp) => {
                     console.warn(resp)
@@ -202,7 +214,7 @@ export default function Users() {
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row g-3  needs-validation">
+                <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
                         <div class="col-md-6">
                             <label  class="form-label">Name* :</label>
                             <input type="text" class="form-control"  required value={name} onChange={(e)=>setName(e.target.value)} />
@@ -215,6 +227,10 @@ export default function Users() {
                         <div className="form-check col-md-6">
                           <label  className="form-check-label">Admin ?</label>
                           <input type="checkbox" checked={isAdmin} class="form-check-input"   onChange={(e)=>checkAdmin()}/>
+                        </div>
+                        <div className="form-check col-md-6">
+                          <label  className="form-check-label">Uap Engineer ?</label>
+                          <input type="checkbox" checked={isUapEngineer} class="form-check-input"   onChange={(e)=>checkUapEngineer()}/>
                         </div>
                         <div class="col-md-6">
                             <label  class="form-label">Phone :</label>
@@ -229,17 +245,16 @@ export default function Users() {
                             <label  class="form-label">Password* :</label>
                             <input type="password" class="form-control"  required value={password} onChange={(e)=>setPassword(e.target.value)} />
                         </div>
-                        <div className='col-md-6'></div>
+                        <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Annuler
+                        </Button>
+                        <Button   hidden={addB} type='submit' variant='primary'>Save</Button>
+                        <Button hidden={editB} variant='success' onClick={updateUser}>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                        </Modal.Footer>
                     </form>
                     </Modal.Body>
-                  <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                      Annuler
-                  </Button>
-                  <Button   hidden={addB} onClick={handleSubmit} variant='primary'>Save</Button>
-                  <Button hidden={editB} variant='success' onClick={updateUser}>Update<i class="fa-solid fa-pen-to-square"></i></Button>
-                            
-                  </Modal.Footer>
+                  
             </Modal>   
             </div>
             <div >

@@ -9,6 +9,7 @@ import  Modal  from 'react-bootstrap/Modal'
 import Tab from '../tabs/Tab';
 import { useParams } from 'react-router';
 import { Add } from '@material-ui/icons';
+import { useAuth } from '../Login/AuthProvider';
 export default function Meetings({haveAccess}) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -41,7 +42,7 @@ export default function Meetings({haveAccess}) {
   { value: 'Closure', label: 'Closure' },
   ]
   const {claim_id} = useParams();
-  
+  const auth = useAuth();
   // Get Users of Team 
   
   function getUsersOfTeam(){
@@ -62,7 +63,23 @@ export default function Meetings({haveAccess}) {
       )
       console.log(users_of_team);
   }
-
+  //Get Team of the Claim selected
+  function getTeam(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setTeam(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setError(error);
+        }
+      );
+      console.log(team);
+  }
 
    // Get Meetings of Team 
   
@@ -82,7 +99,7 @@ export default function Meetings({haveAccess}) {
           setError(error);
         }
       )
-      console.log(meetings);
+      console.warn(meetings);
   }
  
   //Get absences in each meeting
@@ -116,6 +133,9 @@ export default function Meetings({haveAccess}) {
   useEffect(() => {
     getAbsences();
   }, [id,isLoaded2]);
+  useEffect(() => {
+    getTeam();
+  }, [claim_id]);
   // Add meeting--------------------------------------------------------
 
   const handleSubmit = async (e) => {
@@ -238,7 +258,7 @@ export default function Meetings({haveAccess}) {
         <h2 ><img className='report_icon' src='../../icons/meeting.png'/>  Meetings</h2>
         <div className='border'>
         <div>
-        <Button  disabled={!haveAccess}  onClick={()=>{handleShow();setModalTitle("Add New Meeting");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Meeting</Button>
+        <Button  disabled={!haveAccess || (meetings.length === 0 && auth.user.role !== 'admin') || ( auth.user.role !== 'admin' && auth.user.name !== team.leader)}  onClick={()=>{handleShow();setModalTitle("Add New Meeting");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Meeting</Button>
 
         <Modal
                 size='md'
@@ -256,16 +276,16 @@ export default function Meetings({haveAccess}) {
                             <label  class="form-label">Type* :</label>
                             <select className='form-select col-2'  onChange={(e)=>setType(e.target.value)}   required>
                               <option selected disabled>--- Select Type ---</option>
-                              {meetings.every(item => item.type === 'Containement')? (
+                              { meetings.length===0 ?(
+                              <option value='Containement'  >Containement</option>
+                              ) :meetings.every(item => item.type === 'Containement')? (
                                   <option  value='Analyse1'   >Analyse1</option>
-                              ) : meetings.some(item => item.type === 'Analyse1' )? (<>
+                              ) : (<>
                                 <option value='Analyse2'  >Analyse2</option>
                                 <option value='Analyse3'  >Analyse3</option>
                                 <option value='Closure'  >Closure</option>
                                 </>
-                            ): (
-                              <option value='Containement'  >Containement</option>
-                          )}
+                            )}
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -310,7 +330,7 @@ export default function Meetings({haveAccess}) {
                       </select>
                     </div>
                     <div className='col-3'>
-                      <Button  disabled={!haveAccess} type='submit' variant='danger'><PlusCircle />  Add Absence</Button>
+                      <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} type='submit' variant='danger'><PlusCircle />  Add Absence</Button>
                     </div>                               
                   </form></div>
                 <div className='row md-4 filter'>

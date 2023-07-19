@@ -16,6 +16,35 @@ export default function Product({haveAccess}) {
         const [modalTitle,setModalTitle]= useState('Add new Product');
         const [addB,setAddB] = useState('');
         //const [editB,setEditB] = useState('');
+
+    // Get Uap Engineers---------------------------------------------------------------------------------
+    const [isLoaded2, setIsLoaded2] = useState(false);
+
+    const [uapEngineers,setUapEngineers]=useState([]);
+    function getUapEngineers() {
+      fetch("http://127.0.0.1:8000/api/users_activated")
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            setIsLoaded2(true);
+            // Filter users where role is 'uap engineer'
+            const uapEngineerUsers = result.filter((user) => user.role === 'uap engineer');
+            setUapEngineers(uapEngineerUsers);
+          },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          (error) => {
+            setIsLoaded2(true);
+            setError(error);
+          }
+        );
+    }
+    
+    useEffect(() => {
+      getUapEngineers();
+    }, [isLoaded2]);
+    
     // Get Product list ---------------------------------------------------------------------------------------------------------------
         const [error, setError] = useState(null);
         const [isLoaded, setIsLoaded] = useState(false);
@@ -281,7 +310,10 @@ export default function Product({haveAccess}) {
                         </div>
                         <div className="col-md-6">
                             <label className="form-label">UAP Engineer : </label>
-                            <input type="text" className="form-control"  onChange={(e)=>setUap(e.target.value)}   value={uap}  />
+                            <select className='form-select' required onChange={(e)=>setUap(e.target.value)}>
+                              <option  selected disabled >--- Select Uap Engineer ---</option>
+                            {uapEngineers.map((item)=>(<option selected={item.name === uap} value={item.name} >{item.name}</option>))}
+                            </select>
                         </div>
                         <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>

@@ -10,8 +10,9 @@ import Tab from '../tabs/Tab';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { Edit } from '@material-ui/icons';
+import { useAuth } from '../Login/AuthProvider';
 export default function Actions({haveAccess}) {
-
+  const auth = useAuth();
   const {claim_id} = useParams();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -124,6 +125,24 @@ export default function Actions({haveAccess}) {
         )
         console.log(actions);
     }
+     //Get Team of the Claim selected
+     const [team,setTeam]= useState('');
+  function getTeam(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setTeam(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setError(error);
+        }
+      );
+      console.log(team);
+  }
     useEffect(() => {
       getUsersOfTeam();
     }, [claim_id]);
@@ -136,6 +155,9 @@ export default function Actions({haveAccess}) {
     useEffect(() => {
       getComments();
     }, []);
+    useEffect(() => {
+      getTeam();
+    }, [claim_id]);
     
    // Add Action ------------------------------------------------------------------------------------------------
         
@@ -237,7 +259,7 @@ export default function Actions({haveAccess}) {
         <h2 ><img className='report_icon' src='../icons/action-plan.png'/>  Actions</h2>
         <div className='border'>
         <div>
-        <Button  disabled={!haveAccess}  onClick={()=>{handleShow();setModalTitle("Add New Action");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Action</Button>
+        <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  onClick={()=>{handleShow();setModalTitle("Add New Action");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Action</Button>
 
         <Modal
                 size='md'
@@ -347,7 +369,7 @@ export default function Actions({haveAccess}) {
                             ))}
                         </td>
                         <td className='text-center' >{item.done_date}</td>
-                        <td className='text-center' ><Button  disabled={!haveAccess}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Action");handleShow();setAddB(true);setEditB(false);selectAction(item)}} variant='primary'><Edit /></Button></td>
+                        <td  className='text-center' ><Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Action");handleShow();setAddB(true);setEditB(false);selectAction(item)}} variant='primary'><Edit /></Button></td>
             </tr>
                     ))}
                             
