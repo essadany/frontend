@@ -34,6 +34,7 @@ export default function Actions({haveAccess}) {
   const [editB,setEditB] = useState(true);
   const [users_of_team, setUsers_of_team] = useState([]);
   const [action_id,setAction_id] = useState('');
+  const [justify,setJustify] = useState('');
 
 
   const actions_type = [
@@ -202,14 +203,17 @@ export default function Actions({haveAccess}) {
   const [status,setStatus]= useState('');
   function updateAction(){
     console.warn(user_id);
-    try{
+    if (justify==='' && action_obj.planned_date !== planned_date){
+      alert('The field to justify updating planned date is required because the planned date has changed!')
+    }else{
+      try{
         fetch(`http://127.0.0.1:8000/api/action/${action_id}`, {
           method: 'PUT',
           headers:{
             'Accept' : 'application/json',
             'Content-Type':'application/json'
           },
-          body:JSON.stringify({ user_id, action, type , planned_date})
+          body:JSON.stringify({ user_id, action, type , planned_date, justify})
         }).then((result) => {
             if (result.ok){
               getActions();
@@ -233,6 +237,8 @@ export default function Actions({haveAccess}) {
       } catch (err) {
       console.log(err);
     }
+    }
+    
   }
   // Filter Actions --------------------------------------------------------------------------------------------------------------------------
   const [filter, setFilter] = useState("");
@@ -281,22 +287,26 @@ export default function Actions({haveAccess}) {
                             </select>
                             
                         </div>
-                        <div className="col-6">
-                            <label  class="form-label">Planned date* : </label>
-                            <input type="date" class="form-control" value={planned_date}  required onChange={(e)=>setPlanned_date(e.target.value)} />
-                        </div>
-                        <div className="form-check col-6">
-                          <label  className="form-check-label">Type* :</label>
+                        <div className=" col-6">
+                          <label  className="form-label">Type* :</label>
                           <select className='form-select' required onChange={(e)=>setType(e.target.value)}>
                               <option  selected disabled >--- Select Type ---</option>
                             {actions_type.map((item)=>(<option value={item.label} selected={item.label===type} >{item.label}</option>))}
                             </select>
-                        
+                        </div>
+                        <div className="col-6">
+                            <label  class="form-label">Planned date* : </label>
+                            <input type="date" class="form-control" value={planned_date}  required onChange={(e)=>setPlanned_date(e.target.value)} />
                         </div>
                         <div className="col-12">
                             <label class="form-label">Action* :</label>
                             <textarea  class="form-control"   required value={action}  onChange={(e)=>setAction(e.target.value)}/>
                         </div>
+                        <div className="col-12">
+                            <label  class="form-label">If Planned date is changed, Why : </label>
+                            <textarea rows={2} class="form-control" value={justify}  onChange={(e)=>setJustify(e.target.value)} />
+                        </div>
+                        
                         <ModalFooter>
                           <Button variant="secondary" onClick={handleClose}>
                                 Annuler
@@ -337,6 +347,7 @@ export default function Actions({haveAccess}) {
                             <th className='text-center' >Pilot</th>
                             <th className='text-center' >Function</th>
                             <th className='text-center' >Planned date</th>
+                            <th className='text-center' >Justify changing plannd date</th>
                             <th className='text-center' >Start date</th>
                             <th className='text-center' >Status</th>
                             <th className='text-center'>Comments</th>
@@ -352,6 +363,7 @@ export default function Actions({haveAccess}) {
                         <td className='text-center' >{item.name}</td>
                         <td className='text-center' >{item.fonction}</td>
                         <td className='text-center' >{item.planned_date}</td>
+                        <td className='text-center' >{item.justify}</td>
                         <td className='text-center' >{item.start_date}</td>
                         <td className='text-center'  style={{color:item.status==='done'? 'green': item.status==='not started'? 'brown':item.status==='on going'? 'orange' : 'red'}} ><b>{item.status}</b></td>
                         <td className='text-center'>
