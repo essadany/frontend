@@ -23,12 +23,10 @@ export default function Label_Check({haveAccess}) {
 
   const [bontaz_plant,setBontaz_plant] = useState('');
   const [sorting_method,setSorting_method] = useState('');
-  const bontaz_plants =[{value: "'El Jadida", label : 'El Jadida'},{value: "Shanghai", label : 'Shanghai'},{value: "Marnaz", label : 'Marnaz'},
-                        {value: "Fouchana", label : 'Fouchana'},{value: "Velka Dobra", label : 'Velka Dobra'},
-                        {value: "Viana Do Casteo", label : 'Viana Do Casteo'},{value: "Troy", label : 'Troy'},
-                        {value: "Pingamonhangaba-sp", label : 'Pingamonhangaba-sp'}];
-
-   
+  const bontaz_plants =[{value: "Morocco", label : 'Morocco'},{value: "France", label : 'France'},{value: "Italy", label : 'Italy'},
+                        {value: "Germany", label : 'Germany'},{value: "Poland", label : 'Poland'},
+                        {value: "China", label : 'China'},{value: "Mexico", label : 'Mexico'},
+                        {value: "Tunisia", label : 'Tunisia'}];
   
   // Edit image code----------------------------------------------------------
 

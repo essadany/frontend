@@ -1,7 +1,7 @@
 import React from 'react'
 import Tab from '../tabs/Tab'
 import { Download, PlusCircle } from 'react-bootstrap-icons'
-import { Button, Modal } from 'react-bootstrap'
+import { Button, Modal, ModalFooter } from 'react-bootstrap'
 import { Add, Edit } from '@material-ui/icons'
 import { useParams } from 'react-router'
 import { useState, useEffect } from 'react'
@@ -119,7 +119,6 @@ export default function Containement({haveAccess}) {
         setQty_to_sort('');
         setQty_sorted('');
         setQty_NOK('');
-        setScrap('');
         handleClose();
         getSortings();
       } else {
@@ -136,7 +135,6 @@ export default function Containement({haveAccess}) {
     setQty_to_sort(sorting.qty_to_sort);
     setQty_sorted(sorting.qty_sorted);
     setQty_NOK(sorting.qty_NOK);
-    setScrap(sorting.scrap);
   }
   function updateSorting(){
     fetch(`http://127.0.0.1:8000/api/sorting/${sorting_id}`, {
@@ -153,7 +151,6 @@ export default function Containement({haveAccess}) {
                   setQty_to_sort('');
                   setQty_sorted('');
                   setQty_NOK('');
-                  setScrap('');
                   handleClose();
                   getSortings();
                 }else{
@@ -176,9 +173,6 @@ export default function Containement({haveAccess}) {
             <input type='date'  className='form-control form-control-sm'  value={update_date}  />
           </div>
           <div className='col-1'></div>
-        <div className='col-6'>
-          <Button variant='success'><Download /> </Button>
-        </div>
         </form>
       </div>
 
@@ -273,18 +267,14 @@ export default function Containement({haveAccess}) {
                             <label  class="form-label">Qty NOK* :</label>
                             <input type="number" class="form-control"  required value={qty_NOK} onChange={(e)=>setQty_NOK(e.target.value)} />
                         </div>
-                        <div class="col-md-6">
-                            <label  class="form-label">Scrap* :</label>
-                            <input type="text" class="form-control"  required value={scrap} onChange={(e)=>setScrap(e.target.value)} />
-                        </div>
                         <div className='col-md-6'></div>
-                        <div className='modal-footer'>
-                        <Button variant="secondary" onClick={handleClose}>
+                          <ModalFooter>
+                          <Button variant="secondary" onClick={handleClose}>
                             Annuler
                         </Button>
-                        <Button type='submit'   hidden={addB} onClick={handleSubmit} variant='primary'>Save</Button>
+                        <Button type='submit'   hidden={addB} variant='primary'>Save</Button>
                         <Button  hidden={editB} variant='success' onClick={updateSorting}>Update<i class="fa-solid fa-pen-to-square"></i></Button> 
-                        </div>
+                          </ModalFooter>
                     </form>
                     </Modal.Body>
             </Modal>   

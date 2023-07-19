@@ -23,6 +23,7 @@ export default function Meetings({haveAccess}) {
 
   const [type,setType] = useState('');
   const [date,setDate] = useState('');
+  const [hour,setHour] = useState('');
   const [comment,setComment] = useState('');
   const [user_id,setUser_id] = useState('');
   const [team,setTeam] = useState('');
@@ -126,15 +127,15 @@ export default function Meetings({haveAccess}) {
           'Accept' : 'application/json',
             'Content-Type' : 'application/json'
         },
-        body: JSON.stringify({ type, date, comment
+        body: JSON.stringify({ type, date, hour, comment
         }),
       })
       
       if (res.status === 200) {
         setType('');
         setDate('');
+        setHour('');
         setComment("");
-        
         alert("Meeting Added successfully");
         setShow(false);
         handleClose();
@@ -151,13 +152,14 @@ export default function Meetings({haveAccess}) {
    const [meeting_id,setMeeting_id] =useState('');
    function selectMeeting(meeting){
        setDate(meeting.date);
+       setHour(meeting.hour);
        setComment(meeting.comment);
        setType(meeting.type);
        setMeeting_id(meeting.id);
        
    };
    function updateMeeting(){
-     let item={type, date, comment }
+     let item={type, date,hour, comment }
      console.warn("item",item)
      try{
          fetch(`http://127.0.0.1:8000/api/meeting/${meeting_id}`, {
@@ -173,6 +175,7 @@ export default function Meetings({haveAccess}) {
                setComment('');
                setType('');
                setDate('');
+               setHour('');
                alert("Meeting Updated successfully");
                handleClose();
                setEditB(true);
@@ -207,7 +210,7 @@ export default function Meetings({haveAccess}) {
  let AddAbsence = async (e)=>{
   e.preventDefault();
   try {
-    let res = fetch(`http://127.0.0.1:8000/api/meeting_user`, {
+    let res = await fetch(`http://127.0.0.1:8000/api/meeting_user`, {
       method: "POST",
       headers: {
         'Accept' : 'application/json',
@@ -253,9 +256,9 @@ export default function Meetings({haveAccess}) {
                             <label  class="form-label">Type* :</label>
                             <select className='form-select col-2'  onChange={(e)=>setType(e.target.value)}   required>
                               <option selected disabled>--- Select Type ---</option>
-                              {meetings.some(item => item.type === 'Containement')? (
-                                  <option  >Analyse1</option>
-                              ) : meetings.some(item => item.type === 'Containement' && item.type === 'Analyse1' )? (<>
+                              {meetings.every(item => item.type === 'Containement')? (
+                                  <option  value='Analyse1'   >Analyse1</option>
+                              ) : meetings.some(item => item.type === 'Analyse1' )? (<>
                                 <option value='Analyse2'  >Analyse2</option>
                                 <option value='Analyse3'  >Analyse3</option>
                                 <option value='Closure'  >Closure</option>
@@ -266,10 +269,13 @@ export default function Meetings({haveAccess}) {
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">date* : </label>
+                            <label class="form-label">Date* : </label>
                             <input type="date" class="form-control"  value={date} onChange={(e)=>setDate(e.target.value)} required />
                         </div>
-                      
+                        <div class="col-md-6">
+                            <label class="form-label">Hour* : </label>
+                            <input type="time" class="form-control"  value={hour} onChange={(e)=>setHour(e.target.value)} required />
+                        </div>
                         <div class="col-md-12">
                             <label class="form-label">Comment :</label>
                             <textarea className="form-control"  value={comment} onChange={(e)=>setComment(e.target.value)}  />
@@ -290,7 +296,7 @@ export default function Meetings({haveAccess}) {
             <div >
                 <legend >List Of Meetings</legend>
                 <div>
-                  <form className='container row g-3 '>
+                  <form className='container row g-3 ' onSubmit={AddAbsence}>
                     <div className='col-3'>
                       <select className='form-select' required onChange={(e)=>setUser_id(e.target.value)}>
                         <option  selected disabled >--- Select User ---</option>
@@ -304,7 +310,7 @@ export default function Meetings({haveAccess}) {
                       </select>
                     </div>
                     <div className='col-3'>
-                      <Button  disabled={!haveAccess}  onClick={AddAbsence} variant='danger'><PlusCircle />  Add Absence</Button>
+                      <Button  disabled={!haveAccess} type='submit' variant='danger'><PlusCircle />  Add Absence</Button>
                     </div>                               
                   </form></div>
                 <div className='row md-4 filter'>
@@ -319,7 +325,8 @@ export default function Meetings({haveAccess}) {
                       <thead>
                           <tr>
                               <th >Type</th>
-                              <th >Date</th>    
+                              <th >Date</th>   
+                              <th >Hour</th>     
                               <th>Comment</th>
                               <th>Absences </th>
                               <th></th>
@@ -330,6 +337,7 @@ export default function Meetings({haveAccess}) {
                             <tr key={item.id}>
                             <td>{item.type}</td>
                             <td>{item.date}</td>
+                            <td>{item.hour}</td>
                             <td>{item.comment}</td>
                             <td className='text-center'>
                           {absences

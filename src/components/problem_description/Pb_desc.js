@@ -29,7 +29,6 @@ export default function Pb_desc({haveAccess}) {
   const [date_done,setDate_done ] = useState('');
   const [bontaz_fault,setBontaz_fault ] = useState('NOT CONFIRMED');
   const [description, setDescription ] = useState('');
-  const [opening_date,setOpening_date]= useState('');
   const [update_date,setUpdate_date]= useState('');
   const [problem_desc,setProblem_desc] = useState('');
   const [id,setId] = useState('');
@@ -327,12 +326,11 @@ function updateProblem_desc(){
           <div className='col-md-4'>
             <form className='row container g-3'>
               <div className="">
-                  <label className="col-form-label">opening date :</label>
-                  <input  type="date" class="form-control form-control-sm" disabled={!isEditing} value={opening_date}  onChange={(e)=>setOpening_date(e.target.value)} required />      
+                  <label className="col-form-label">Due date :</label>
+                  <input  type="date" class="form-control form-control-sm"  value={problem_desc.due_date}  />      
               </div>
             </form>
           </div>
-          <div className='col-md-4'><Button variant='success'><Download /></Button></div>
           </div>
           <div className='description '>
             <legend>Problem Description</legend>

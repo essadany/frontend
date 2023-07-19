@@ -211,16 +211,17 @@ export default function Customer({haveAccess}) {
                             <textarea type="text" className="form-control" id="validationCustom02" onChange={(e)=>setInfo(e.target.value)}   value={info}  />
                         </div>
                         <div className='col-md-6'></div>
-                    </form>
-                    </Modal.Body>
-                  <Modal.Footer>
+                        <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                       Annuler
                   </Button>
-                  <Button onClick={handleSubmit} hidden={addB} variant='primary'>Save</Button>
+                  <Button type='submit' hidden={addB} variant='primary'>Save</Button>
                   <Button onClick={updateCustomer} hidden={editB} variant='success'>Update<i className="fa-solid fa-pen-to-square"></i></Button>
                             
                   </Modal.Footer>
+                    </form>
+                    </Modal.Body>
+                  
             </Modal>   
             </div>
             <div >

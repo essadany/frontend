@@ -151,7 +151,7 @@ export default function Claims({haveAccess}) {
             setEngraving('');
             setProd_date('');
             setCategory('');
-            setCustomer_name("");
+            //setCustomer_name("");
             setObject('');
             setOpening_date('');
             setFinal_cusomer('');
@@ -177,8 +177,8 @@ export default function Claims({haveAccess}) {
           setRefRecClient(claim.refRecClient);
           setCategory(claim.category);
           setProduct_name(claim.product_name);
-          setCustomer_name(claim.customer_name);
-          setCustomer_id(claim.customer_id);
+         // setCustomer_name(claim.customer_name);
+         // setCustomer_id(claim.customer_id);
           setProduct_ref(claim.product_ref);
           setEngraving(claim.engraving);
           setProd_date(claim.prod_date);
@@ -221,7 +221,7 @@ export default function Claims({haveAccess}) {
                 setEngraving('');
                 setProduct_ref('');
                 setCategory('');
-                setCustomer_name('');
+               // setCustomer_name('');
                 setProd_date('');
                 setObject('');
                 setOpening_date('');
@@ -363,25 +363,12 @@ export default function Claims({haveAccess}) {
                   </select>
                 </div>
                 <div class="col-md-6">
-                  <label  class="form-label">Customer* :</label>
-                  <select data-live-search="true"   className='selectpicker form-select' onChange={(e)=>{setCustomer_name(e.label);setCustomer_id(e.target.value)}} required >
-                    <option disabled selected>--- Select Customer ---</option>
-                    {customers.map((item)=>(<option value={item.id} selected={item.id===customer_id}>{item.name}</option>))}
-                  </select>
-                </div>
-                <div class="col-md-6">
                   <label  class="form-label">Product reference* :</label>
-                  <select data-live-search="true"  className='selectpicker form-select' onChange={(e)=>{setProduct_ref(e.target.value)}}  required >
-                    <option disabled selected>--- Select Product ---</option>
-                    {products.map((item)=>(<option  selected={item.product_ref===product_ref}>{item.product_ref}</option>))}
-                  </select>
+                  <input type="text" class="form-control"  onChange={(e)=>setProduct_ref(e.target.value)}   value={product_ref} required />
                 </div>
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Product engraving* : </label>
                     <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setEngraving(e.target.value)}   value={engraving} required />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
                 </div>
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Date of Production* : </label>
@@ -417,15 +404,16 @@ export default function Claims({haveAccess}) {
                     <input type='number'  class="form-control" id="validationCustom02"  onChange={(e)=>setNbr_claimed_parts(e.target.value)}  value={nbr_claimed_parts} required />
 
                 </div>
-            </form>
-            </Modal.Body>
-          <Modal.Footer>
+                <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
               Annuler
           </Button>
           <Button onClick={updateClaim} hidden={editB} variant="success" >Update</Button>
-          <Button onClick={handleSubmit} hidden={addB} variant="primary" >Save</Button>
+          <Button type='submit'  hidden={addB} variant="primary" >Save</Button>
           </Modal.Footer>
+            </form>
+            </Modal.Body>
+          
       </Modal>     
       </div>
             <div >
@@ -471,7 +459,7 @@ export default function Claims({haveAccess}) {
                             <th >Opening date</th>
                             <th >Final Customer</th>
                             <th >Claim details</th>
-                            <th>Def mode</th>
+                            <th>claimed defect</th>
                             <th>Parts claimed</th>
                             <th>Status</th>
                         </tr>                   

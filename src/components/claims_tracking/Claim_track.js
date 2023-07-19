@@ -186,15 +186,16 @@ export default function Claim_track({haveAccess}) {
                         <label class="form-label">Details</label>
                         <textarea type="text" class="form-control" value={claim_details} onChange={(e)=>setClaim_details(e.target.value)}  />
                       </div>
-                    </form>
-                    </Modal.Body>
-                    <Modal.Footer>
+                      <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                       Annuler
                   </Button>
-                  <Button onClick={()=>updateTracking()} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                  <Button onClick={()=>updateTracking()}  variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
                             
                   </Modal.Footer>
+                    </form>
+                    </Modal.Body>
+                    
             </Modal> 
             </div>
         
@@ -228,11 +229,11 @@ export default function Claim_track({haveAccess}) {
                           <th>BCMA Responsiblity</th>
                           <th>N° Claim/AQI</th>
                           <th>Claim Object (e-mail)</th>
-                          <th>Mode de défaillance</th>
+                          <th>Défaut réclamé</th>
                           <th >BCMA Part number</th>
                           <th>Customer Part number</th>
                           <th >Product designation</th>
-                          <th>UAP</th>
+                          <th>UAP Engineer</th>
                           <th>Number of claimed parts</th>
                           <th >NOK parts after customer  sorting</th>
                           <th>Production date of claimed part</th>

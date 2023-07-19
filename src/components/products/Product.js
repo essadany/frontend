@@ -271,12 +271,12 @@ export default function Product({haveAccess}) {
                             <label  className="form-label">Zone* :</label>
                             <select data-live-search="true"  className='selectpicker form-select' onChange={(e)=>setZone(e.target.value)} required >
                             <option selected disabled>--- Select Zone ---</option>
-                            <option selected={zone==="Module"} >Module</option>
-                            <option selected={zone==="Vanne"}>Vanne</option>
-                            <option selected={zone==="Clapet"}>Clapet</option>
-                            <option selected={zone==="Gicleur"}>Gicleur</option>
-                            <option selected={zone==="Faiscaux"}>Faiscaux</option>
-                            <option selected={zone==="Bobine"}>Bobine</option>
+                            <option selected={zone==="Salle Grise 1"} >Salle Grise 1</option>
+                            <option selected={zone==="Salle Grise 2"}>Salle Grise 2</option>
+                            <option selected={zone==="Salle Grise 3"}>Salle Grise 3</option>
+                            <option selected={zone==="Gicleur & Clapet"}>Gicleur & Clapet</option>
+                            <option selected={zone==="Fx Bobine Injection"}>Fx Bobine Injection</option>
+                            <option selected={zone==="Vanne motorisée"}>Vanne motorisée</option>
                             </select>
                         </div>
                         <div className="col-md-6">

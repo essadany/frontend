@@ -41,7 +41,7 @@ export default function Tab() {
                 <Link className="nav-link" to={`/Label_Checking/${claim_id}`} >LABEL CHECK</Link>
             </li>
             <li className="nav-item">
-                <Link className="nav-link" to={`/Actions/${claim_id}`} ><i>ACTIONS</i></Link>
+                <Link className="nav-link" to={`/Actions/${claim_id}`} >ACTIONS</Link>
             </li>
             <li className="nav-item">
                 <Link className="nav-link" to={`/Effectiveness/${claim_id}`} >EFFECTIVENESS</Link>

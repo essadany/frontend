@@ -2,7 +2,7 @@ import React from 'react'
 import './Actions.css'
 import { useState } from 'react';
 import Select from 'react-select';
-import { Button, FormSelect } from 'react-bootstrap';
+import { Button, FormSelect, ModalFooter } from 'react-bootstrap';
 import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";
 import  Modal  from 'react-bootstrap/Modal'
 import { Skeleton } from '@mui/material';
@@ -250,7 +250,7 @@ export default function Actions({haveAccess}) {
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row g-3  needs-validation" >
+                <form class="row g-3  needs-validation" onSubmit={handleSubmit} >
                         <div className="col-12">
                             <label class="form-label">Pilot* :</label>
                             <select className='form-select' required onChange={(e)=>{setUser_id(e.target.value);setPilot(e.label)}}>
@@ -275,13 +275,14 @@ export default function Actions({haveAccess}) {
                             <label class="form-label">Action* :</label>
                             <textarea  class="form-control"   required value={action}  onChange={(e)=>setAction(e.target.value)}/>
                         </div>
-                        <div className='modal-footer'>
+                        <ModalFooter>
                           <Button variant="secondary" onClick={handleClose}>
-                              Annuler
-                          </Button>
-                          <Button   hidden={addB} onClick={handleSubmit} variant='primary'>Save</Button>
-                          <Button onClick={updateAction} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
-                          </div>
+                                Annuler
+                            </Button>
+                            <Button   hidden={addB} type='submit' variant='primary'>Save</Button>
+                            <Button onClick={updateAction} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                        </ModalFooter>
+                          
                     </form>
                     </Modal.Body>
                   
