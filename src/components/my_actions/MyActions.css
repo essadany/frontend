@@ -1,6 +1,0 @@
-.circle-button {
-  border-radius: 50%;/* Make the button round by setting a border radius of 50% */
-  width: 40px; /* Set the desired width */
-  height: 40px; /* Set the desired height */
-  padding: 0; /* Remove any padding to ensure a perfect circle */
-}

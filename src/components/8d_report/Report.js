@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Tab from '../tabs/Tab'
-import './Report.css';
 import { Button } from 'react-bootstrap';
 import { CloudDownload, Download, Plus } from 'react-bootstrap-icons';
 import { AddAPhoto, Delete, Edit } from '@material-ui/icons';

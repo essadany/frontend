@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react'
-import './Claim_track.css'
-import '../8d_report/Report.css'
 import { useState } from 'react';
 import Select from 'react-select';
 import { Button } from 'react-bootstrap';

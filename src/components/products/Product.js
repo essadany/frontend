@@ -1,5 +1,4 @@
 import React from 'react';
-import './Product.css';
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";

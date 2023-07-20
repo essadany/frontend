@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import  Modal  from 'react-bootstrap/Modal'
 import {Button, FormSelect} from 'react-bootstrap';
-import './Claims.css';
 import { Details, Done } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import moment from 'moment';

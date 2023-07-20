@@ -1,6 +1,5 @@
 import React from 'react'
 import Tab from '../tabs/Tab'
-
 import { Button } from 'react-bootstrap';
 import { CloudDownload, Download, Plus } from 'react-bootstrap-icons';
 import { AddAPhoto, Delete, Done, Edit } from '@material-ui/icons';

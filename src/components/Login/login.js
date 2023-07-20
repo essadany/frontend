@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './login.css';
 import { useAuth } from './AuthProvider';
 import Device_demensions from '../../Device_demensions';
 import App from '../../App';

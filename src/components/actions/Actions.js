@@ -1,5 +1,4 @@
 import React from 'react'
-import './Actions.css'
 import { useState } from 'react';
 import Select from 'react-select';
 import { Button, FormSelect, ModalFooter } from 'react-bootstrap';

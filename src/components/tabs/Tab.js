@@ -1,7 +1,4 @@
 import React, { useState } from 'react'
-import './Tab.css';
-import '../../App.css'
-import Annexe from '../8d_annexe/Annexe';
 import Report from '../8d_report/Report';
 import Team from '../team/Team';
 import { useParams } from 'react-router';
@@ -15,9 +12,6 @@ export default function Tab() {
         <ul className="nav nav-tabs">
             <li className="nav-item">
                 <Link className="nav-link " aria-current="page" to={`/Report/${claim_id}`}>REPORT</Link>
-            </li>
-            <li className="nav-item">
-                <Link className="nav-link" to={`/Annexe/${claim_id}`} >ANNEXE</Link>
             </li>
             <li className="nav-item">
                 <Link className="nav-link" to={`/Team/${claim_id}`}>TEAM</Link>

@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react'
-import './Meetings.css'
-import '../my_actions/MyActions.css'
 import { useState } from 'react';
 import Select from 'react-select';
 import { Button } from 'react-bootstrap';

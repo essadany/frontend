@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import './Users.css'
 import { useState } from 'react';
 import Select from 'react-select';
 import { Button } from 'react-bootstrap';

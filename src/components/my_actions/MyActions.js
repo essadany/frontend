@@ -3,7 +3,6 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { Button, FormSelect } from 'react-bootstrap';
 import { BarChartLineFill, Braces, Dot, Play, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";
-import './MyActions.css';
 import  Modal  from 'react-bootstrap/Modal'
 import { CircularProgress, LinearProgress } from '@material-ui/core';
 import  Select  from 'react-select';

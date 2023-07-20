@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Tab from '../tabs/Tab'
-import '../../App.css'
 import { useParams } from 'react-router';
 import { Button } from 'react-bootstrap'
 import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";

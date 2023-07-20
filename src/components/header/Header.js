@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import './Header.css';
-
 import {  Button } from 'react-bootstrap';
 import { Person, PersonFill, PersonFillGear, PersonFillLock } from 'react-bootstrap-icons';
 import { useAuth } from '../Login/AuthProvider';

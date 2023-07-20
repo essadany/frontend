@@ -1,6 +1,5 @@
 import React,{useContext, useEffect, useState} from 'react';
 import {  BrowserRouter as Router, Route, Routes,Navigate, useLocation, useNavigate } from 'react-router-dom';
-import './Interface.css'
 import SideNavBar from './components/sidebar/SideNavBar';
 import Tab from './components/tabs/Tab';
 import Header from './components/header/Header';
@@ -20,7 +19,6 @@ import Pb_desc from './components/problem_description/Pb_desc';
 import Containement from './components/containement/Containement';
 import Five_Why from './components/5why/Five_Why';
 import Label_Check from './components/label_checking/Label_Check';
-import Annexe from './components/8d_annexe/Annexe';
 import './App.css'
 import {useAuth, AuthProvider } from './components/Login/AuthProvider';
 import { RequireAuth } from './components/Login/RequireAuth';
@@ -94,9 +92,7 @@ export default function App() {
            <Route exact path='/Dashboard' element={<RequireAuth>< Dashboard haveAccess={haveAccess} /></RequireAuth>}/>
            <Route exact path='/Claims' element={<RequireAuth>< Claims haveAccess={haveAccess}/></RequireAuth>}/>
            <Route exact path='/Customer' element={<RequireAuth><Customer haveAccess={haveAccess}/></RequireAuth>}/>
-           <Route exact path='/Product' element={<RequireAuth><Product haveAccess={haveAccess}/></RequireAuth>}/>
-           <Route exact path='/Annexe/:claim_id' element={<RequireAuth>< Annexe haveAccess={haveAccess}/></RequireAuth>}/>
- 
+           <Route exact path='/Product' element={<RequireAuth><Product haveAccess={haveAccess}/></RequireAuth>}/> 
            <Route exact path='/Claim_track' element={<RequireAuth><Claim_track haveAccess={haveAccess} /></RequireAuth>}/>
            <Route exact path='/MyActions' element={<RequireAuth><MyActions /></RequireAuth>}/>
            <Route exact path='/Users' element={<RequireAuth><Users haveAccess={haveAccess}/></RequireAuth>}/>

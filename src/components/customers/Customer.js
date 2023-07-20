@@ -1,5 +1,4 @@
 import React from 'react';
-import './Customer.css';
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { Button } from 'react-bootstrap';

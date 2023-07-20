@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./SideNavBar.css";
 import  { Link,BrowserRouter }  from 'react-router-dom';
 import { useAuth } from "../Login/AuthProvider";
 import { Badge } from "@material-ui/core";
