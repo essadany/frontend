@@ -218,7 +218,7 @@ export default function Team({haveAccess}) {
   return (
     <div className='main'>
         <Tab team_id={team_id} />
-        <h2 >Problem Solving Team {claim_id}</h2>
+        <h2 >Problem Solving Team</h2>
         <div className='border'>
           <div className='row'>
           <div className='col-md-2'></div>

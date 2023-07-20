@@ -6,7 +6,9 @@ import Select from 'react-select';
 import { Button } from 'react-bootstrap';
 import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";
 import  Modal  from 'react-bootstrap/Modal'
+import { useAuth } from '../Login/AuthProvider';
 export default function Claim_track({haveAccess}) {
+  const auth=useAuth();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -284,7 +286,7 @@ export default function Claim_track({haveAccess}) {
                             <td>{item.report_sub_date}</td>
                             <td>{item.ishikawa_principale}</td>
                             <td>{item.claim_details}</td>
-                            <td><Button disabled={haveAccess===true? false : true}  style={{marginRight:10}} onClick={()=>{handleShow();selectClaim(item)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                            <td><Button disabled={!haveAccess || auth.user.role!=='admin' }  style={{marginRight:10}} onClick={()=>{handleShow();selectClaim(item)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                         </tr>
                     ))}
                             

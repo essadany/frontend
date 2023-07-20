@@ -5,7 +5,9 @@ import Select from 'react-select';
 import { Button } from 'react-bootstrap';
 import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";
 import  Modal  from 'react-bootstrap/Modal'
+import { useAuth } from '../Login/AuthProvider';
 export default function Users() {
+  const auth= useAuth();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -201,7 +203,7 @@ export default function Users() {
         <h2 >Users</h2>
         <div className='border'>
         <div>
-        <Button onClick={()=>{handleShow();setModalTitle("Add New User");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New User</Button>
+        <Button disabled={ auth.user.role!=='admin'} onClick={()=>{handleShow();setModalTitle("Add New User");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New User</Button>
 
         <Modal
                 size='md'
@@ -226,11 +228,11 @@ export default function Users() {
                         </div>
                         <div className="form-check col-md-6">
                           <label  className="form-check-label">Admin ?</label>
-                          <input type="checkbox" checked={isAdmin} class="form-check-input"   onChange={(e)=>checkAdmin()}/>
+                          <input type="radio"  name='role' checked={isAdmin} class="form-check-input"   onChange={(e)=>checkAdmin()}/>
                         </div>
                         <div className="form-check col-md-6">
                           <label  className="form-check-label">Uap Engineer ?</label>
-                          <input type="checkbox" checked={isUapEngineer} class="form-check-input"   onChange={(e)=>checkUapEngineer()}/>
+                          <input type="radio" name='role' checked={isUapEngineer} class="form-check-input"   onChange={(e)=>checkUapEngineer()}/>
                         </div>
                         <div class="col-md-6">
                             <label  class="form-label">Phone :</label>
@@ -284,8 +286,8 @@ export default function Users() {
                                 <td>{item.email}</td>
                                 <td>{item.phone}</td>
                                 <td>{item.role}</td>
-                                <td><Button style={{marginRight:10}} onClick={()=>{handleShow();selectUser(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button onClick={()=>deleteUser(item.id)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
+                                <td><Button disabled={ auth.user.role!=='admin'} style={{marginRight:10}} onClick={()=>{handleShow();selectUser(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button  disabled={ auth.user.role!=='admin'}  onClick={()=>deleteUser(item.id)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
 
                     </tr>
                     ))}

@@ -10,10 +10,11 @@ import './Claims.css';
 import { Details, Done } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { useAuth } from '../Login/AuthProvider';
 
 export default function Claims({haveAccess}) {
+  const auth= useAuth();
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [modalTitle,setModalTitle]= useState('Add new Claim');
@@ -480,9 +481,9 @@ export default function Claims({haveAccess}) {
                               <td>{item.def_mode}</td>
                               <td>{item.nbr_claimed_parts}</td>
                               <td><Dot color={item.status==='on going'?'orange': 'done'?'green' : 'red'} size={60}/></td>
-                              <td>{item.status==='done'?'':<Button disabled={haveAccess===true? false : true}  onClick={()=>updateStatus(item)} variant='success'>Finaliser</Button>}</td>
-                              <td><Button disabled={haveAccess===true? false : true}  onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
-                              <td><Button disabled={haveAccess===true? false : true}  onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
+                              <td>{item.status==='done'?'':<Button disabled={!haveAccess || auth.user.role!=='admin'}  onClick={()=>updateStatus(item)} variant='success'>Finaliser</Button>}</td>
+                              <td><Button disabled={!haveAccess || auth.user.role!=='admin'}  onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                              <td><Button disabled={!haveAccess || auth.user.role!=='admin'}  onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
                               <td><Button  variant='success'> <Link to={`/Report/${item.id}`} ><TicketDetailed color='orange'  size={25}/></Link></Button></td>
                             
                     </tr>

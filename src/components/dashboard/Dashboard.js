@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Login/AuthProvider';
 
 export default function Dashboard({haveAccess}) {
+  const auth=useAuth();
   const [data, setData] = useState(null);
     
   //----------------------------------------------------------------------------------------------
@@ -555,7 +556,7 @@ export default function Dashboard({haveAccess}) {
                   </label>
                 </div>
                 <div className='col-4' style={{ textAlign: 'center' }}>
-                  <Button  disabled={!haveAccess} variant='success' className='btn btn-sm' type='submit'>
+                  <Button  disabled={!haveAccess || auth.user.role!=='admin'} variant='success' className='btn btn-sm' type='submit'>
                     Add PPM
                   </Button>
                 </div>

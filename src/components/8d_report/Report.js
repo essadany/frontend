@@ -310,7 +310,7 @@ function updateReport(){
   return (
     <div className='main'>
       <Tab />
-      <h2 ><img className='report_icon' src='../icons/stamp.png'/>  8D Report {claim_id}</h2>
+      <h2 ><img className='report_icon' src='../icons/stamp.png'/>  8D Report </h2>
       <div className='border'>
         <div className=' report_header'>
             <form className='row container g-3'>

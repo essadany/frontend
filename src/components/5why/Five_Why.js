@@ -316,7 +316,7 @@ export default function ({haveAccess}) {
   return (
     <div className='main'>
         <Tab />
-        <h2 >5 Why Analyse {claim_id}</h2>
+        <h2 >5 Why Analyse </h2>
         <div className='border'>
           <div>
             <form className='row container'>
@@ -325,9 +325,7 @@ export default function ({haveAccess}) {
                 <input type='date' className='form-control form-control-sm' value={update_date} />
               </div>
               <div className='col-1'></div>
-            <div className='col-6'>
-              <Button variant='success'><Download /> </Button>
-            </div>
+
             </form>
           </div>
 

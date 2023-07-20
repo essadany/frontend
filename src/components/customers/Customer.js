@@ -6,9 +6,11 @@ import { Button } from 'react-bootstrap';
 import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";
 
 import  Modal  from 'react-bootstrap/Modal'
+import { useAuth } from '../Login/AuthProvider';
 
 
 export default function Customer({haveAccess}) {
+        const auth= useAuth();
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
@@ -176,7 +178,7 @@ export default function Customer({haveAccess}) {
         <h2>Customers</h2>
         <div className='border'>
           <div>
-        <Button  disabled={!haveAccess}  onClick={()=>{handleShow();setModalTitle("Add New Customer");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Customer</Button>
+        <Button  disabled={!haveAccess || auth.user.role!=='admin' }  onClick={()=>{handleShow();setModalTitle("Add New Customer");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Customer</Button>
 
         <Modal
                 size='md'
@@ -249,8 +251,8 @@ export default function Customer({haveAccess}) {
                                 <td>{item.name}</td>
                                 <td>{item.category}</td>
                                 <td>{item.info}</td>
-                                <td><Button disabled={!haveAccess} style={{marginRight:10}} onClick={()=>{setModalTitle('Update Customer');handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button disabled={!haveAccess} onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
+                                <td><Button disabled={!haveAccess || auth.user.role!=='admin' } style={{marginRight:10}} onClick={()=>{setModalTitle('Update Customer');handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button disabled={!haveAccess || auth.user.role!=='admin' } onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
 
                     </tr>
                     ))}
