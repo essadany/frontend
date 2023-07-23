@@ -130,7 +130,26 @@ export default function Claim_track({haveAccess}) {
       
 
     }
+    // get the year and month and week of a date :
+    const getDateInfo = (dateString) => {
+      // Parse the date string to a Date object
+      const parsedDate = new Date(dateString);
 
+      // Get the year
+      const year = parsedDate.getFullYear();
+
+      // Get the week number
+      const firstDayOfYear = new Date(year, 0, 1);
+      const dayOfYear = Math.ceil((parsedDate - firstDayOfYear) / (1000 * 60 * 60 * 24));
+      const weekNumber = Math.ceil(dayOfYear / 7);
+      const monthNumber = parsedDate.getMonth();
+
+      return {
+        year,
+        weekNumber,
+        monthNumber,
+      };
+    };
   return (
     <div className='main'>
         <h2 >Claim Trackings</h2>
@@ -224,8 +243,9 @@ export default function Claim_track({haveAccess}) {
                           <th>Month</th>
                           <th>Week</th>
                           <th>Category</th>
-                          <th >Direct Customer</th>
-                          <th>Final Customer</th>
+                          <th>Customer code</th>
+                          <th >Customer</th>
+                          <th>Zone</th>
                           <th>BCMA Responsiblity</th>
                           <th>N° Claim/AQI</th>
                           <th>Claim Object (e-mail)</th>
@@ -233,7 +253,6 @@ export default function Claim_track({haveAccess}) {
                           <th >BCMA Part number</th>
                           <th>Customer Part number</th>
                           <th >Product designation</th>
-                          <th>UAP Engineer</th>
                           <th>Number of claimed parts</th>
                           <th >NOK parts after customer  sorting</th>
                           <th>Production date of claimed part</th>
@@ -255,20 +274,24 @@ export default function Claim_track({haveAccess}) {
                     {filteredData.map((item)=>(
                           <tr>
                             <td>{item.opening_date}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            {getDateInfo(item.opening_date).year && (
+                            <td>{getDateInfo(item.opening_date).year}</td>
+                              )}
+                              {getDateInfo(item.opening_date).monthNumber && (
+                            <td>{getDateInfo(item.opening_date).monthNumber}</td>)}  
+                            {getDateInfo(item.opening_date).weekNumber && (
+                            <td>{getDateInfo(item.opening_date).weekNumber}</td>)}                          
                             <td>{item.category}</td>
-                            <td>{item.customer_name}</td>
-                            <td>{item.final_cusomer}</td>
+                            <td>{item.customer_code}</td>
+                            <td>{item.customer}</td>
+                            <td>{item.zone}</td>
                             <td>{item.bontaz_fault}</td>
                             <td>{item.internal_ID}</td>
                             <td>{item.object}</td>
                             <td>{item.def_mode}</td>
                             <td>{item.product_ref}</td>
-                            <td>{item.customer_ref}</td>
+                            <td>{item.customer_part_number}</td>
                             <td>{item.product_name}</td>
-                            <td>{item.uap}</td>
                             <td>{item.nbr_claimed_parts}</td>
                             <td>{item.how_many_after}</td>
                             <td>{item.prod_date}</td>

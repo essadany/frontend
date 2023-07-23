@@ -364,7 +364,7 @@ export default function Meetings({haveAccess}) {
                               <div key={abs.id}>{abs.name}</div>
                             ))}
                         </td>
-                            <td><Button  disabled={!haveAccess} style={{marginRight:10}} onClick={()=>{selectMeeting(item);setModalTitle("Update Meeting");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                            <td><Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} style={{marginRight:10}} onClick={()=>{selectMeeting(item);setModalTitle("Update Meeting");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
                         </tr>
                         ))}
                               

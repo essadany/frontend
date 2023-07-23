@@ -58,7 +58,6 @@ export default function Claims({haveAccess}) {
     const [object, setObject] = useState("");
     const [opening_date, setOpening_date] = useState("");
     const [direct_customer, setDirect_customer] = useState("");
-    const [final_cusomer, setFinal_cusomer] = useState("");
     const [def_mode, setDef_mode] = useState("");
     const [prod_designation, setProd_designation] = useState("");
     const [nbr_claimed_parts, setNbr_claimed_parts] = useState("");
@@ -67,54 +66,30 @@ export default function Claims({haveAccess}) {
     const [customers,setCustomers]= useState([]);
     const [status, setStatus] = useState("on going");
     const [category, setCategory] = useState("");
-    const [customer_id,setCustomer_id]= useState('');
-        function getCustomers(){
-          fetch("http://127.0.0.1:8000/api/customers")
-            .then(res => res.json())
-            .then(
-              (result) => {
-                //setIsLoaded(true);
-                setCustomers(result);
-              },
-              // Note: it's important to handle errors here
-              // instead of a catch() block so that we don't swallow
-              // exceptions from actual bugs in components.
-              (error) => {
-                setIsLoaded(true);
-                setError(error);
-              }
-            )
-        }
-        useEffect(() => {
-          getCustomers();
-        }, []);
+    const [customer_part_number,setcustomer_part_number]= useState('');
 
-        
-
-    function getProductsByCustomer(customer_id){
-      
-      fetch(`http://127.0.0.1:8000/api/products_by_customer/${customer_id}`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          //setIsLoaded(true);
-          setProducts(result);       
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
+    const [products_customers,setProducts_customers] = useState([]);
+    function getProducts_customers(){
+      fetch("http://127.0.0.1:8000/api/products_join_customers")
+        .then(res => res.json())
+        .then(
+          (result) => {
+            setIsLoaded(true);
+            setProducts_customers(result);
+            
+          },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          }
+        )
     }
-    useEffect(()=>{
-      if (customer_id !== '') {
-        getProductsByCustomer(customer_id);
-      }
-    },[customer_id])
-    
+    useEffect(() => {
+      getProducts_customers();
+    }, [isLoaded]);
    
     
     const [customer_name,setCustomer_name]= useState("");
@@ -122,51 +97,59 @@ export default function Claims({haveAccess}) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-          let res = await fetch("http://127.0.0.1:8000/api/claim", {
-            method: "POST",
-            headers: {
-              'Accept' : 'application/json',
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify({ internal_ID : internal_ID ,
-              refRecClient : refRecClient ,
-              category : category ,
-              product_ref : product_ref,
-              engraving : engraving,
-              prod_date : prod_date,
-              object : object,
-              opening_date : opening_date ,
-              final_cusomer : final_cusomer ,
-              def_mode : def_mode,
-              nbr_claimed_parts : nbr_claimed_parts,
-            }),
-          })
-          let resJson = await res.json();
-          
-          if (res.status === 200) {
-            setInternal_ID('');
-            setRefRecClient('');
-            setProduct_name("");
-            setEngraving('');
-            setProd_date('');
-            setCategory('');
-            //setCustomer_name("");
-            setObject('');
-            setOpening_date('');
-            setFinal_cusomer('');
-            setDef_mode('');
-            setNbr_claimed_parts('');
-            alert("Claim Added successfully");
-            setShow(false);
-            handleClose();
-            getClaims();
-          } else {
-            alert("Some error occured, Verify that : - All fields required are typed -The claim reference is not duplicated! - The product reference exists in products table (if not than add it in product interface)");
-          }
-        } catch (err) {
-          console.log(err);
-        }
+        const hasProduct_ref = products_customers.some((item) => item.product_ref === product_ref);
+        if (hasProduct_ref) {
+            try {
+              let res = await fetch("http://127.0.0.1:8000/api/claim", {
+                method: "POST",
+                headers: {
+                  'Accept' : 'application/json',
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify({ internal_ID : internal_ID ,
+                  refRecClient : refRecClient ,
+                  category : category ,
+                  product_ref : product_ref,
+                  customer_part_number : customer_part_number,
+                  engraving : engraving,
+                  prod_date : prod_date,
+                  object : object,
+                  opening_date : opening_date ,
+                  customer : category==='AQI'? direct_customer : products_customers.find(
+                    (item) => item.product_ref === product_ref
+                  ).customer_name ,
+                  def_mode : def_mode,
+                  nbr_claimed_parts : nbr_claimed_parts,
+                }),
+              })              
+              if (res.status === 200) {
+                setInternal_ID('');
+                setRefRecClient('');
+                setProduct_ref("");
+                setEngraving('');
+                setProd_date('');
+                setCategory('');
+                setcustomer_part_number("");
+                setObject('');
+                setOpening_date('');
+                setDirect_customer('');
+                setDef_mode('');
+                setNbr_claimed_parts('');
+                alert("Claim Added successfully");
+                setShow(false);
+                handleClose();
+                getClaims();
+              } else {
+                alert("Some error occured, Verify that : - All fields required are typed -The claim reference is not duplicated!");
+              }
+            
+            } catch (err) {
+              console.log(err);
+            }
+          }else{
+            alert("The Product reference you have entered doesn't exist in database");
+          }    
+        
       };
       //Update Claim -------------------------------------------------------------------------------------------------
       const [id,setId] = useState("");
@@ -177,78 +160,83 @@ export default function Claims({haveAccess}) {
           setRefRecClient(claim.refRecClient);
           setCategory(claim.category);
           setProduct_name(claim.product_name);
-         // setCustomer_name(claim.customer_name);
-         // setCustomer_id(claim.customer_id);
           setProduct_ref(claim.product_ref);
+          setcustomer_part_number(claim.customer_part_number);
           setEngraving(claim.engraving);
           setProd_date(claim.prod_date);
           setObject(claim.object);
           setOpening_date(claim.opening_date);
-          setFinal_cusomer(claim.final_cusomer);
+          setDirect_customer(claim.customer);
           setDef_mode(claim.def_mode);
           setNbr_claimed_parts(claim.nbr_claimed_parts);
           setId(claim.id);
       }
-      function updateClaim(){
-        let item = {
-          internal_ID : internal_ID ,
-          refRecClient : refRecClient ,
-          category : category ,
-          product_ref : product_ref,
-          engraving : engraving,
-          prod_date : prod_date,
-          object : object,
-          opening_date : opening_date ,
-          final_cusomer : final_cusomer ,
-          def_mode : def_mode,
-          nbr_claimed_parts : nbr_claimed_parts,
-          
-        }
-        console.warn("item",item)
-        try{
-          fetch(`http://127.0.0.1:8000/api/claim/${id}`, {
-            method: 'PUT',
-            headers:{
-              'Accept' : 'application/json',
-              'Content-Type':'application/json'
-            },
-            body:JSON.stringify(item)
-          }).then((result) => {
-              if (result.ok){
-                getClaims()
-                setInternal_ID('');
-                setRefRecClient('');
-                setEngraving('');
-                setProduct_ref('');
-                setCategory('');
-               // setCustomer_name('');
-                setProd_date('');
-                setObject('');
-                setOpening_date('');
-                setFinal_cusomer('');
-                setDef_mode('');
-                setNbr_claimed_parts('');
-                alert("Claim Updated successfully");
-                setShow(false);
-                handleClose();
-              }else{
-                result.json().then((resp) => {
-                  console.warn(resp);
-                  alert("Some error occured, Verify that : - All fields required are typed -The claim reference is not duplicated! - The product reference exists in products table (if not than add it in product interface)");
-
+      function updateClaim(e){
+        e.preventDefault();
+        const hasProduct_ref = products_customers.some((item) => item.product_ref === product_ref);
+        if (hasProduct_ref) {
+          try{
+            fetch(`http://127.0.0.1:8000/api/claim/${id}`, {
+              method: 'PUT',
+              headers:{
+                'Accept' : 'application/json',
+                'Content-Type':'application/json'
+              },
+              body:JSON.stringify({internal_ID : internal_ID ,
+                refRecClient : refRecClient ,
+                category : category ,
+                product_ref : product_ref,
+                customer_part_number : customer_part_number,
+                engraving : engraving,
+                prod_date : prod_date,
+                object : object,
+                opening_date : opening_date ,
+                customer : category==='AQI'? direct_customer : products_customers.find(
+                  (item) => item.product_ref === product_ref
+                ).customer_name ,
+                def_mode : def_mode,
+                nbr_claimed_parts : nbr_claimed_parts})
+            }).then((result) => {
+                if (result.ok){
+                  getClaims()
+                  setInternal_ID('');
+                  setRefRecClient('');
+                  setEngraving('');
+                  setProduct_ref('');
+                  setCategory('');
+                  setcustomer_part_number('');
+                  setProd_date('');
+                  setObject('');
+                  setOpening_date('');
+                  setDirect_customer('');
+                  setDef_mode('');
+                  setNbr_claimed_parts('');
+                  alert("Claim Updated successfully");
+                  setShow(false);
+                  handleClose();
+                }else{
+                  result.json().then((resp) => {
+                    console.warn(resp);
+                    alert("Some error occured, Verify that : - All fields required are typed -The claim reference is not duplicated! - The product reference exists in products table (if not than add it in product interface)");
+  
+                })
+                }
+                
               })
-              }
               
-            })
-            
-          }catch (err){
-            console.log(err)
-          }
+            }catch (err){
+              console.log(err)
+            }
+
+        } else{
+          alert("The Product reference you have entered doesn't exist in database");
+        }
+        
         }
 
         //update Status
         const currentDate = new Date();
-  const formattedDate =  moment(currentDate.toDateString()).format("YYYY-MM-DD");
+        const formattedDate =  moment(currentDate.toDateString()).format("YYYY-MM-DD");
 
         function updateStatus(claim){
           let item = {
@@ -331,7 +319,7 @@ export default function Claims({haveAccess}) {
         <h2 >Claims</h2>
         <div className='border '>
         <div>
-        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Add New Claim");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Claim</Button>
+        <Button disabled={auth.user.role!=='admin'}  onClick={()=>{handleShow();setModalTitle("Add New Claim");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Claim</Button>
         <Modal
         size='md'
         show={show}
@@ -355,16 +343,30 @@ export default function Claims({haveAccess}) {
                 </div>
                 <div class="col-md-6">
                   <label  class="form-label">Category* :</label>
-                  <select data-live-search="true"   className='selectpicker form-select' onChange={(e)=>{setCategory(e.label);setCategory(e.target.value)}} required >
+                  <select data-live-search="true"   className='selectpicker form-select' onChange={(e)=>setCategory(e.target.value)} required >
                     <option disabled selected>--- Select Category ---</option>
                     <option selected={category==="AQI"}>AQI</option>
                     <option selected={category==="CC"}>CC</option>
                     <option selected={category==="Field"}>Field</option>
                   </select>
                 </div>
+                { category==="AQI" && <div  class="col-md-6">
+                  <label  class="form-label">Customer* :</label>
+                  <select data-live-search="true"   className='selectpicker form-select' onChange={(e)=>setDirect_customer(e.target.value)} required >
+                    <option disabled selected>--- Select Customer ---</option>
+                    <option selected={direct_customer==="BNF"}>BNF</option>
+                    <option selected={direct_customer==="BNT"}>BNT</option>
+                    <option selected={direct_customer==="BNS"}>BNS</option>
+                    <option selected={direct_customer==="BNC"}>BNC</option>
+                  </select>
+                </div>}
                 <div class="col-md-6">
                   <label  class="form-label">Product reference* :</label>
                   <input type="text" class="form-control"  onChange={(e)=>setProduct_ref(e.target.value)}   value={product_ref} required />
+                </div>
+                <div class="col-md-6">
+                  <label  class="form-label">Customer Part number* :</label>
+                  <input type="text" class="form-control"  onChange={(e)=>setcustomer_part_number(e.target.value)}   value={customer_part_number} required />
                 </div>
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Product engraving* : </label>
@@ -387,16 +389,10 @@ export default function Claims({haveAccess}) {
                 <div class="col-md-6">
                     <label for="validationCustom02" class="form-label">Opening date* :</label>
                     <input type="date" class="form-control" id="validationCustom02"  onChange={(e)=>setOpening_date(e.target.value)}  value={opening_date} required />
-                    <div class="valid-feedback">
-                    Looks good!
-                    </div>
+
                 </div>
                 <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Final customer :</label>
-                    <input type="text" class="form-control" id="validationCustom02"  onChange={(e)=>setFinal_cusomer(e.target.value)}  value={final_cusomer}  />
-                </div>
-                <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Defaillance mode :</label>
+                    <label for="validationCustom02" class="form-label">Defect claimed :</label>
                     <textarea  class="form-control" id="validationCustom02"  onChange={(e)=>setDef_mode(e.target.value)}  value={def_mode}  />
                 </div>
                 <div class="col-md-6">
@@ -408,7 +404,7 @@ export default function Claims({haveAccess}) {
           <Button variant="secondary" onClick={handleClose}>
               Annuler
           </Button>
-          <Button onClick={updateClaim} hidden={editB} variant="success" >Update</Button>
+          <Button onClick={(e)=>updateClaim(e)} hidden={editB} variant="success" >Update</Button>
           <Button type='submit'  hidden={addB} variant="primary" >Save</Button>
           </Modal.Footer>
             </form>
@@ -457,7 +453,7 @@ export default function Claims({haveAccess}) {
                             <th>Production date</th>
                             <th>Object</th>
                             <th >Opening date</th>
-                            <th >Final Customer</th>
+                            <th >Customer</th>
                             <th >Claim details</th>
                             <th>claimed defect</th>
                             <th>Parts claimed</th>
@@ -475,7 +471,7 @@ export default function Claims({haveAccess}) {
                               <td>{item.prod_date}</td>
                               <td>{item.object}</td>
                               <td>{item.opening_date}</td>
-                              <td>{item.final_cusomer}</td>
+                              <td>{item.customer}</td>
                               <td>{item.claim_details}</td>
                               <td>{item.def_mode}</td>
                               <td>{item.nbr_claimed_parts}</td>

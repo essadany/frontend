@@ -5,6 +5,7 @@ import { Button } from 'react-bootstrap'
 import { BarChartLineFill, Braces, Dot, Plus, PlusCircle, TicketDetailed, Wifi } from "react-bootstrap-icons";
 import  Modal  from 'react-bootstrap/Modal'
 import { Edit } from '@material-ui/icons';
+import { useAuth } from '../Login/AuthProvider';
 export default function Ishikawa({haveAccess}) {
   const {claim_id} = useParams();
   const [show, setShow] = useState(false);
@@ -27,7 +28,29 @@ export default function Ishikawa({haveAccess}) {
   const [isPrincipale,setIsPrincipale]= useState(false);
 
 
+  const auth = useAuth();
+  const [team,setTeam] = useState('');
 
+  //Get Team of the Claim selected
+    function getTeam(){
+      fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team`)
+        .then(res => res.json())
+        .then(
+          (result) => {
+            setTeam(result);
+          },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          (error) => {
+            setError(error);
+          }
+        );
+        console.log(team);
+    }
+  useEffect(() => {
+      getTeam();
+    }, [claim_id]);
 
   //Get Team of the Claim selected
   function getIshikawa(){
@@ -164,7 +187,7 @@ export default function Ishikawa({haveAccess}) {
         <h2 >Ishikawa</h2>
         <div className='border'>
         <div>
-        <Button  disabled={!haveAccess}  onClick={()=>{handleShow();setModalTitle("Add New Cause");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Cause</Button>
+        <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  onClick={()=>{handleShow();setModalTitle("Add New Cause");setAddB(false);setEditB(true)}} variant='success'> <PlusCircle /> New Cause</Button>
 
         <Modal
                 size='md'
@@ -270,7 +293,7 @@ export default function Ishikawa({haveAccess}) {
                         <td className='text-center' >{item.comment}</td>
                         <td className='text-center' style={{color:item.status==='confirmed'? 'green': 'on going'? 'orange' : 'red'}}><b>{item.status}</b></td>
                         <td className='text-center' >{item.isPrincipale===1? <b>X</b>: ""}</td>
-                        <td className='text-center' ><Button  disabled={!haveAccess}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Cause");handleShow();setAddB(true);setEditB(false);selectCategorie(item)}} variant='primary'><Edit /></Button></td>
+                        <td className='text-center' ><Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  style={{marginRight:10}} onClick={()=>{setModalTitle("Update Cause");handleShow();setAddB(true);setEditB(false);selectCategorie(item)}} variant='primary'><Edit /></Button></td>
             </tr>
                     ))}
                             

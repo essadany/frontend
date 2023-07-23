@@ -5,10 +5,11 @@ import Select from 'react-select';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
+import { useAuth } from '../Login/AuthProvider';
 
 export default function Team({haveAccess}) {
   const { claim_id } = useParams();
-
+  const auth = useAuth();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [team,setTeam] = useState("");
@@ -26,7 +27,8 @@ export default function Team({haveAccess}) {
       .then(
         (result) => {
           setIsLoaded(true);
-          setUsers(result);
+          const users = result.filter((user) => user.role !== 'uap engineer');
+          setUsers(users);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -82,7 +84,33 @@ export default function Team({haveAccess}) {
       )
       console.log(users_of_team);
   }
+  // Get Uap Engineers---------------------------------------------------------------------------------
+  const [isLoaded2, setIsLoaded2] = useState(false);
+
+  const [uapEngineers,setUapEngineers]=useState([]);
+  function getUapEngineers() {
+    fetch("http://127.0.0.1:8000/api/users_activated")
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded2(true);
+          // Filter users where role is 'uap engineer'
+          const uapEngineerUsers = result.filter((user) => user.role === 'uap engineer');
+          setUapEngineers(uapEngineerUsers);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded2(true);
+          setError(error);
+        }
+      );
+  }
   
+  useEffect(() => {
+    getUapEngineers();
+  }, [isLoaded2]);
 
   useEffect(() => {
     getUsers();
@@ -229,10 +257,10 @@ export default function Team({haveAccess}) {
                       <label for="validationCustom02" class="form-label">Leader* :</label>
                       <select  className='form-select' onChange={(e)=>setUser_id(e.target.value)} required >
                       <option disabled selected>--- Select Leader ---</option>
-                        {users.map((item)=>(<option selected={item.name===team.leader} key={item.id}  value={item.id} >{item.name}</option>))}
+                        {uapEngineers.map((item)=>(<option selected={item.name===team.leader} key={item.id}  value={item.id} >{item.name}</option>))}
                       </select>
                   </div>     
-                  <Button  disabled={!haveAccess} type='submit' style={{marginTop:10}} variant='primary'>Add</Button>
+                  <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} type='submit' style={{marginTop:10}} variant='primary'>Add</Button>
               </form>
             </div>
             <div className='col-md-4 '>
@@ -245,7 +273,7 @@ export default function Team({haveAccess}) {
                         {users.map((item)=>(<option key={item.id} value={item.id} >{item.name}</option>))}
                       </select>
                     </div>
-                    <Button  disabled={!haveAccess} type='submit'  style={{marginTop:10}}  variant='primary'>Add</Button>
+                    <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} type='submit'  style={{marginTop:10}}  variant='primary'>Add</Button>
                   
                 </form>
             </div>
@@ -278,7 +306,7 @@ export default function Team({haveAccess}) {
                             <tr key={i}>
                                 <td>{item.name}</td>
                                 <td>{item.fonction}</td>
-                                <td><Button  disabled={!haveAccess} onClick={()=>deleteUserFromTeam(item.id)}  variant='danger' >Delete</Button></td>
+                                <td><Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} onClick={()=>deleteUserFromTeam(item.id)}  variant='danger' >Delete</Button></td>
                         </tr>
                     ))}
                     </tbody>

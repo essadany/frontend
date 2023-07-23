@@ -7,6 +7,7 @@ import { Add, Delete } from '@material-ui/icons';
 import { useParams } from 'react-router';
 import  Modal  from 'react-bootstrap/Modal'
 import moment from 'moment'
+import { useAuth } from '../Login/AuthProvider'
 export default function ({haveAccess}) {
 
   const { claim_id } = useParams();
@@ -42,6 +43,30 @@ export default function ({haveAccess}) {
   const [five_why_id	,setFive_why_id] = useState('');
   const [why	,setWhy] = useState('');
   const [answer	,setAnswer] = useState('');
+
+  const auth = useAuth();
+  const [team,setTeam] = useState('');
+
+//Get Team of the Claim selected
+  function getTeam(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setTeam(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setError(error);
+        }
+      );
+      console.log(team);
+  }
+useEffect(() => {
+    getTeam();
+  }, [claim_id]);
   //--------------------------------------------------------------
   const [occurenceArea, setOccurenceArea] = useState([]);
   const [detectionArea, setDetectionArea] = useState([]);
@@ -332,7 +357,7 @@ export default function ({haveAccess}) {
           <div>
             <legend>Failure Occurence Analysis</legend>
             <div>
-            <Button  disabled={!haveAccess}  onClick={()=>handleShow1()} variant='success'> <Add /></Button>
+            <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  onClick={()=>handleShow1()} variant='success'> <Add /></Button>
 
             <Modal
                 size='md'
@@ -392,7 +417,7 @@ export default function ({haveAccess}) {
           <div>
             <legend>Failure Detection Analysis</legend>
             <div>
-            <Button  disabled={!haveAccess} onClick={()=>handleShow2()} variant='success'> <Add /></Button>
+            <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} onClick={()=>handleShow2()} variant='success'> <Add /></Button>
 
             <Modal
                 size='md'
@@ -449,7 +474,7 @@ export default function ({haveAccess}) {
           <div>
             <legend>Failure System Analysis</legend>
             <div>
-            <Button  disabled={!haveAccess}  onClick={()=>handleShow3()} variant='success'> <Add /></Button>
+            <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  onClick={()=>handleShow3()} variant='success'> <Add /></Button>
 
             <Modal
                 size='md'
@@ -505,7 +530,7 @@ export default function ({haveAccess}) {
           </div>
         
           <div>
-            <Button  disabled={!haveAccess}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateResults();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateResults();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
       </div>
     </div>

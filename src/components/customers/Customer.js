@@ -46,9 +46,7 @@ export default function Customer({haveAccess}) {
           getCustomers();
         }, [])
         // Add Customer ------------------------------------------------------------------------------------------------
-        const [customer_ref, setCustomer_ref] = useState("");
         const [name, setName] = useState("");
-        const [category, setCategory] = useState("");
         const [info, setInfo] = useState("");
         const [deleted, setDeleted] = useState(false);
         const [message, setMessage] = useState("");
@@ -63,17 +61,13 @@ export default function Customer({haveAccess}) {
                     'Content-Type' : 'application/json'
                 },
                 body: JSON.stringify({
-                  customer_ref : customer_ref,
                   name: name,
-                  category: category,
                   info: info
                 }),
               })
               let resJson = await res.json();
               
               if (res.status === 200) {
-                setCustomer_ref("");
-                setCategory("");
                 setName("");
                 setInfo("");
                 alert("Customer Added successfully");
@@ -89,16 +83,12 @@ export default function Customer({haveAccess}) {
           //Update Customer -------------------------------------------------------------------------------------------------
           const [customer,setCustomer] = useState([]);
           function selectCustomer(customer){
-            
-           
-                setCustomer_ref(customer.customer_ref);
                 setName(customer.name);
-                setCategory(customer.category);
                 setInfo(customer.info);
                 setCustomer(customer)
           }
           function updateCustomer(){
-            let item={customer_ref ,name ,category ,info }
+            let item={ name  ,info }
             console.warn("item",item)
             try{
               fetch(`http://127.0.0.1:8000/api/customer/${customer.id}`, {
@@ -112,8 +102,6 @@ export default function Customer({haveAccess}) {
                 if(result.ok){
                   getCustomers()
                   alert("Customer Updated successfully");
-                  setCustomer_ref("");
-                  setCategory("");
                   setName("");
                   setInfo("");
                   setEditB(true);
@@ -192,20 +180,8 @@ export default function Customer({haveAccess}) {
                 <Modal.Body>
                 <form className="row container g-3  needs-validation" onSubmit={handleSubmit}>
                         <div className="col-md-6">
-                            <label for="validationCustom02" className="form-label">Reference* :</label>
-                            <input type="text" className="form-control" id="validationCustom02" onChange={(e)=>setCustomer_ref(e.target.value)}  value={customer_ref} required />
-                        </div>
-                        <div className="col-md-6">
                             <label for="validationCustom02" className="form-label">Customer name* : </label>
                             <input type="text" className="form-control" id="validationCustom02" onChange={(e)=>setName(e.target.value)}   value={name} required />
-                        </div>
-                        <div className="col-md-6">
-                            <label for="validationCustom02" className="form-label">Category* :</label>
-                            <select data-live-search="true"  className='selectpicker form-select'  onChange={(e)=>setCategory(e.target.value)}  required >
-                            <option disabled selected>--- Select Category ---</option>
-                            <option selected={category==='Intern'}>Intern</option>
-                            <option selected={category==='Extern'}>Extern</option>
-                        </select>
                         </div>
                         <div className="col-md-6">
                             <label for="validationCustom02" className="form-label">About : </label>
@@ -237,9 +213,7 @@ export default function Customer({haveAccess}) {
                 <table className="table table-striped" >
                     <thead>
                         <tr>
-                            <th >Customer ref</th>
                             <th >Name</th>
-                            <th>category</th>
                             <th>info</th>
                         </tr>                   
                     </thead>

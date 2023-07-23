@@ -6,6 +6,7 @@ import { AddAPhoto, Delete, Edit } from '@material-ui/icons';
 import { useParams } from 'react-router';
 import { useEffect, useRef, useState } from 'react'
 import moment from "moment";
+import { useAuth } from '../Login/AuthProvider';
 export default function Label_Check({haveAccess}) {
   const {claim_id} = useParams();
   const handleClose = () => setShow(false);
@@ -27,6 +28,30 @@ export default function Label_Check({haveAccess}) {
                         {value: "Germany", label : 'Germany'},{value: "Poland", label : 'Poland'},
                         {value: "China", label : 'China'},{value: "Mexico", label : 'Mexico'},
                         {value: "Tunisia", label : 'Tunisia'}];
+
+const auth = useAuth();
+const [team,setTeam] = useState('');
+
+//Get Team of the Claim selected
+  function getTeam(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setTeam(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setError(error);
+        }
+      );
+      console.log(team);
+  }
+useEffect(() => {
+    getTeam();
+  }, [claim_id]);
   
   // Edit image code----------------------------------------------------------
 
@@ -212,12 +237,12 @@ useEffect(() => {
                 style={{ display: 'none' }}
               />
               <div>
-                <Button  disabled={!haveAccess}  onClick={handleEditClick1}><Edit /></Button>
+                <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  onClick={handleEditClick1}><Edit /></Button>
               </div>
             </div>        
           </div>
           <div className='col-6'>
-            <Button  disabled={!haveAccess}  onClick={updateLabelCheck}  variant='success'>Save</Button>
+            <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  onClick={updateLabelCheck}  variant='success'>Save</Button>
           </div>
         </div>
         

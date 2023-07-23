@@ -6,6 +6,7 @@ import { AddAPhoto, Delete, Done, Edit } from '@material-ui/icons';
 import { useParams } from 'react-router'
 import { useState, useEffect, useRef } from 'react'
 import moment from "moment";
+import { useAuth } from '../Login/AuthProvider';
 export default function Pb_desc({haveAccess}) {
 
   const {claim_id} = useParams();
@@ -32,6 +33,29 @@ export default function Pb_desc({haveAccess}) {
   const [problem_desc,setProblem_desc] = useState('');
   const [id,setId] = useState('');
 
+  const [team,setTeam] = useState('');
+
+  const auth = useAuth();
+//Get Team of the Claim selected
+  function getTeam(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setTeam(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setError(error);
+        }
+      );
+      console.log(team);
+  }
+useEffect(() => {
+    getTeam();
+  }, [claim_id]);
    //Get Problem description
    function getProbDesc(){
     fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/problem_description`)
@@ -394,7 +418,7 @@ function updateProblem_desc(){
                   style={{ display: 'none' }}
                 />
                 <div>
-                  <Button  disabled={!haveAccess}  onClick={handleEditClick1}><Edit /></Button>
+                  <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  onClick={handleEditClick1}><Edit /></Button>
                 </div>
               </div>
 
@@ -413,7 +437,7 @@ function updateProblem_desc(){
                   style={{ display: 'none' }}
                 />
                 <div>
-                  <Button  disabled={!haveAccess} onClick={handleEditClick2}><Edit /></Button>
+                  <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} onClick={handleEditClick2}><Edit /></Button>
                 </div>               
               </div>
             </div>
@@ -445,7 +469,7 @@ function updateProblem_desc(){
               <div className='col-md-4'>
                 <img key={index} src={file} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
                 <div>
-                <Button  disabled={!haveAccess} variant='danger' onClick={() => handleDeleteClick(index, file.id)}><Delete /></Button>
+                <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} variant='danger' onClick={() => handleDeleteClick(index, file.id)}><Delete /></Button>
                 </div>
                 
                 </div>
@@ -453,7 +477,7 @@ function updateProblem_desc(){
               
               <div className='col-md-4'>
                 <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
-                <Button  disabled={!haveAccess} onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
+                <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
               </div>
             </div>
           </div>
@@ -482,7 +506,7 @@ function updateProblem_desc(){
             
           </div>
           <div>
-            <Button  disabled={!haveAccess}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateProblem_desc();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateProblem_desc();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
           </div>
 
         </div>

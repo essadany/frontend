@@ -17,34 +17,6 @@ export default function Product({haveAccess}) {
         const [modalTitle,setModalTitle]= useState('Add new Product');
         const [addB,setAddB] = useState('');
         //const [editB,setEditB] = useState('');
-
-    // Get Uap Engineers---------------------------------------------------------------------------------
-    const [isLoaded2, setIsLoaded2] = useState(false);
-
-    const [uapEngineers,setUapEngineers]=useState([]);
-    function getUapEngineers() {
-      fetch("http://127.0.0.1:8000/api/users_activated")
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            setIsLoaded2(true);
-            // Filter users where role is 'uap engineer'
-            const uapEngineerUsers = result.filter((user) => user.role === 'uap engineer');
-            setUapEngineers(uapEngineerUsers);
-          },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
-          (error) => {
-            setIsLoaded2(true);
-            setError(error);
-          }
-        );
-    }
-    
-    useEffect(() => {
-      getUapEngineers();
-    }, [isLoaded2]);
     
     // Get Product list ---------------------------------------------------------------------------------------------------------------
         const [error, setError] = useState(null);
@@ -115,11 +87,10 @@ export default function Product({haveAccess}) {
       
         const [product_ref, setProduct_ref] = useState("");
         const [customer_id, setCustomer_id] = useState("");
-        const [customer_ref, setCustomer_ref] = useState("");
+        const [customer_code, setcustomer_code] = useState("");
         const [customer_name, setCustomer_name] = useState("");
         const [name, setName] = useState('');
         const [zone, setZone] = useState('');
-        const [uap, setUap] = useState("");
         const [deleted, setDeleted] = useState(false);
         const [message, setMessage] = useState("");
         const [editB,setEditB] = useState(true);
@@ -135,21 +106,19 @@ export default function Product({haveAccess}) {
                 },
                 body: JSON.stringify({
                   product_ref : product_ref,
-                  customer_ref : customer_ref,
+                  customer_code : customer_code,
                   customer_id : customer_id,
                   name: name,
                   zone: zone,
-                  uap: uap
                 }),
               })
               let resJson = await res.json();
               console.log(res.status);
               if (res.status === 200) {
                 setProduct_ref("");
-                setCustomer_ref("");
+                setcustomer_code("");
                 setZone("");
                 setName("");
-                setUap("");
                 alert("Product Added successfully");
                 handleClose();
                 getProducts_customers();
@@ -164,17 +133,16 @@ export default function Product({haveAccess}) {
           const [product,setProduct] = useState([]);
           function selectProduct(product){
               setProduct(product);
-              setCustomer_ref(product.customer_ref);
+              setcustomer_code(product.customer_code);
               setCustomer_name(product.customer_name);
               setCustomer_id(product.customer_id)
               setName(product.product_name);
               setZone(product.zone);
-              setUap(product.uap);
               setProduct_ref(product.product_ref);
               
           };
           function updateProduct(){
-            let item={product_ref ,customer_ref , customer_id,name ,zone ,uap }
+            let item={product_ref ,customer_code , customer_id,name ,zone }
             console.warn("item",item)
             try{
                 fetch(`http://127.0.0.1:8000/api/product/${product.product_id}`, {
@@ -188,12 +156,11 @@ export default function Product({haveAccess}) {
                     if (result.ok){
                       getProducts_customers();
                       setProduct_ref("");
-                      setCustomer_ref("");
+                      setcustomer_code("");
                       setCustomer_id("");
                       setCustomer_name("");
                       setZone("");
                       setName("");
-                      setUap("");
                       alert("Product Updated successfully");
                       handleClose();
                       setEditB(true);
@@ -276,20 +243,13 @@ export default function Product({haveAccess}) {
                 <form className="row g-3 container  needs-validation" onSubmit={handleSubmit}>
                         
                         <div className="col-md-6">
-                            <label  className="form-label">Intern reference* :</label>
+                            <label  className="form-label">Bontaz Part Number* :</label>
                             <input type="text" className="form-control" onChange={(e)=>setProduct_ref(e.target.value)} value={product_ref} required />
                         </div>
                         <div className="col-md-6">
-                            <label  className="form-label">Customer reference* :</label>
-                            <input type="text" className="form-control" onChange={(e)=>setCustomer_ref(e.target.value)}  value={customer_ref} required />
+                            <label  className="form-label">Customer code* :</label>
+                            <input type="text" className="form-control" onChange={(e)=>setcustomer_code(e.target.value)}  value={customer_code} required />
                             
-                        </div>
-                        <div className="col-md-6">
-                          <label  className="form-label">Customer name* :</label>
-                          <select data-live-search="true"  className='selectpicker form-select' onChange={(e)=>{setCustomer_name(e.label);setCustomer_id(e.target.value)}} required >
-                            <option disabled selected>--- Select User ---</option>
-                            {customers.map((item)=>(<option value={item.id} selected={item.id === customer_id}>{item.name}</option> ))}
-                          </select>
                         </div>
                         
                         <div className="col-md-6">
@@ -307,13 +267,6 @@ export default function Product({haveAccess}) {
                             <option selected={zone==="Gicleur & Clapet"}>Gicleur & Clapet</option>
                             <option selected={zone==="Fx Bobine Injection"}>Fx Bobine Injection</option>
                             <option selected={zone==="Vanne motorisée"}>Vanne motorisée</option>
-                            </select>
-                        </div>
-                        <div className="col-md-6">
-                            <label className="form-label">UAP Engineer : </label>
-                            <select className='form-select' required onChange={(e)=>setUap(e.target.value)}>
-                              <option  selected disabled >--- Select Uap Engineer ---</option>
-                            {uapEngineers.map((item)=>(<option selected={item.name === uap} value={item.name} >{item.name}</option>))}
                             </select>
                         </div>
                         <Modal.Footer>
@@ -351,22 +304,20 @@ export default function Product({haveAccess}) {
                     <thead>
                         <tr>
                             <th >Interne ref</th>
-                            <th >Customer ref</th>
+                            <th >Customer code</th>
                             <th>Customer name</th>
                             <th >Product name</th>
                             <th>Zone</th>
-                            <th>UAP Engineer</th>
                         </tr>                   
                     </thead>
                     <tbody>
                     {filteredData.map((item, i) => (
                             <tr key={i}>
                                 <td>{item.product_ref}</td>
-                                <td>{item.customer_ref}</td>
+                                <td>{item.customer_code}</td>
                                 <td>{item.customer_name}</td>
                                 <td>{item.product_name}</td>
                                 <td>{item.zone}</td>
-                                <td>{item.uap}</td>
                                 <td><Button  disabled={!haveAccess || auth.user.role!=='admin' } style={{marginRight:10}} onClick={()=>{selectProduct(item);setModalTitle("Update Product");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
                                     <Button  disabled={!haveAccess || auth.user.role!=='admin'}  onClick={()=>deleteProduct(item)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>
                                 

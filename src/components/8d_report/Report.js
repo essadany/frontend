@@ -5,6 +5,7 @@ import { CloudDownload, Download, Plus } from 'react-bootstrap-icons';
 import { AddAPhoto, Delete, Edit } from '@material-ui/icons';
 import { useParams } from 'react-router';
 import moment from "moment";
+import { useAuth } from '../Login/AuthProvider';
 
 export default function Report({haveAccess}) {
   const {claim_id} = useParams();
@@ -39,6 +40,30 @@ export default function Report({haveAccess}) {
   const [progress_rate	,setProgress_rate] = useState(0);
 
 
+
+  const auth = useAuth();
+  const [team,setTeam] = useState('');
+
+//Get Team of the Claim selected
+  function getTeam(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setTeam(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setError(error);
+        }
+      );
+      console.log(team);
+  }
+useEffect(() => {
+    getTeam();
+  }, [claim_id]);
   //Get report
   function getReport_join(){
     fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/report_join`)
@@ -365,7 +390,7 @@ function updateReport(){
                 <img key={index} src={file} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
                 <div>
                 {/*<Button style={{marginRight:5}} variant='secondary' onClick={() => handleReplaceClick(index)}><Edit /></Button>*/}
-                <Button  disabled={!haveAccess} variant='danger' onClick={() => handleDeleteClick(index)}><Delete /></Button>
+                <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} variant='danger' onClick={() => handleDeleteClick(index)}><Delete /></Button>
                 </div>
                 
                 </div>
@@ -373,7 +398,7 @@ function updateReport(){
               
               <div className='col-md-4'>
                 <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
-                <Button  disabled={!haveAccess} onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
+                <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} onClick={handleImportClick}  ><AddAPhoto  size={30}  /></Button>
               </div>
             </div>
             

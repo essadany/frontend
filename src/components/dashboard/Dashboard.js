@@ -264,9 +264,24 @@ export default function Dashboard({haveAccess}) {
   };
 
   //PPM-----------------------------------------------------------------------------------------------------------------------------------------
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
-  const [week, setWeek] = useState(getCurrentWeekNumber());
+  const [year, setYear] = useState(2023);
+  const [month, setMonth] = useState(1);
+  const [weeksInMonth, setWeeksInMonth] = useState(4); // Default to 4 weeks in January 2023
+  const [selectedWeek, setSelectedWeek] = useState(1);
+
+  // Function to update the weeks in the selected month
+  const updateWeekOptions = () => {
+    const weeks = new Date(year, month, 0).getDate() / 7;
+    const startingWeek = month * 4 - 3; // Calculate starting week for the selected month
+    setWeeksInMonth(Math.ceil(weeks));
+    setSelectedWeek(startingWeek); // Set the selected week to the starting week of the month
+  };
+
+  // Update weeks whenever month or year changes
+  useEffect(() => {
+    updateWeekOptions();
+  }, [month, year]);
+
   const [shippedParts, setShippedParts] = useState('');
   const [ppm, setPpm] = useState('');
 
@@ -300,7 +315,7 @@ export default function Dashboard({haveAccess}) {
            body: JSON.stringify({
               year : year,
               month : month, 
-              week : week,
+              week : selectedWeek,
              shipped_parts : shippedParts,
              objectif: objectif,
            }),
@@ -497,41 +512,58 @@ export default function Dashboard({haveAccess}) {
             <div className='ppm'>
               <form style={{ width: '500px' }} className='row container' onSubmit={handleSubmit}>
                 <div className='col-4'>
-                  <label>
-                    Year:
-                    <select
-                      className='selectpicker form-select form-select-sm'
-                      value={year}
-                      onChange={(e) => setYear(e.target.value)}
-                    >
-                      <option value={new Date().getFullYear()}>{new Date().getFullYear()}</option>
-                    </select>
-                  </label>
+                <label htmlFor="year">Year:</label>
+        <select className='selectpicker form-select form-select-sm'
+          id="year"
+          name="year"
+          value={year}
+          onChange={(e) => setYear(Number(e.target.value))}
+        >
+          <option value={2023}>2023</option>
+          <option value={2024}>2024</option>
+          <option value={2025}>2025</option>
+          <option value={2026}>2026</option>
+        </select>
                 </div>
                 <div className='col-4'>
-                  <label>
-                    Month:
-                    <select
-                      className='selectpicker form-select form-select-sm'
-                      value={month}
-                      onChange={(e) => setMonth(e.target.value)}
-                    >
-                      <option value={new Date().getMonth() + 1}>{new Date().toLocaleString('default', { month: 'long' })}</option>
-                    </select>
-                  </label>
-                </div>
-                <div className='col-4'>
-                  <label>
-                    Week:
-                    <select className='selectpicker form-select form-select-sm' value={week} onChange={(e) => setWeek(e.target.value)}>
-                      <option disabled={week === 1} value={getCurrentWeekNumber() - 1}>
-                        {getCurrentWeekNumber() - 1}
-                      </option>
-                      <option disabled={week === 1} value={getCurrentWeekNumber()}>
-                        {getCurrentWeekNumber()}
-                      </option>
-                    </select>
-                  </label>
+                <label htmlFor="month">Month:</label>
+        <select className='selectpicker form-select form-select-sm'
+          id="month"
+          name="month"
+          value={month}
+          onChange={(e) => setMonth(Number(e.target.value))}
+        >
+          <option value={1}>January</option>
+          <option value={2}>February</option>
+          <option value={3}>March</option>
+          <option value={4}>April</option>
+          <option value={5}>May</option>
+          <option value={6}>June</option>
+          <option value={7}>July</option>
+          <option value={8}>August</option>
+          <option value={9}>September</option>
+          <option value={10}>October</option>
+          <option value={11}>November</option>
+          <option value={12}>December</option>
+        </select>
+      </div>
+        <div className='col-4'>
+        <label htmlFor="week">Week:</label>
+        <select className='selectpicker form-select form-select-sm'
+          id="week"
+          name="week"
+          value={selectedWeek}
+          onChange={(e) => setSelectedWeek(Number(e.target.value))}
+        >
+          {Array.from({ length: weeksInMonth }, (_, i) => i + 1).map((_, index) => {
+            const weekNum = month * 4 - 3 + index;
+            return (
+              <option key={weekNum} value={weekNum}>
+                 S{weekNum}
+              </option>
+            );
+          })}
+        </select>
                 </div>
                 <div className='col-4'>
                   <label>
@@ -555,7 +587,7 @@ export default function Dashboard({haveAccess}) {
                     />
                   </label>
                 </div>
-                <div className='col-4' style={{ textAlign: 'center' }}>
+                <div disabled={auth.user.role!=='admin'} className='col-4' style={{ textAlign: 'center' }}>
                   <Button  disabled={!haveAccess || auth.user.role!=='admin'} variant='success' className='btn btn-sm' type='submit'>
                     Add PPM
                   </Button>

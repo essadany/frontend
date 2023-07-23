@@ -5,6 +5,7 @@ import { Button } from 'react-bootstrap';
 import { Add } from '@material-ui/icons';
 import moment from 'moment';
 import { useEffect } from 'react';
+import { useAuth } from '../Login/AuthProvider';
 
 export default function Effectiveness({haveAccess}) {
   const {claim_id} = useParams();
@@ -18,6 +19,29 @@ export default function Effectiveness({haveAccess}) {
   const [update_date,setUpdate_date] = useState('');
   const [id,setId] = useState('');
 
+  const auth = useAuth();
+  const [team,setTeam] = useState('');
+
+//Get Team of the Claim selected
+  function getTeam(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setTeam(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setError(error);
+        }
+      );
+      console.log(team);
+  }
+useEffect(() => {
+    getTeam();
+  }, [claim_id]);
 
   //Get Effectiveness
   function getEffectivness(){
@@ -82,7 +106,7 @@ export default function Effectiveness({haveAccess}) {
               <textarea rows={10} className='form-control ' value={description} onChange={(e)=>setDescription(e.target.value)}/>
             </div>
             <div  style={{textAlign:'center'}}>
-            <Button  disabled={!haveAccess} onClick={()=>{setAddB(false);setEditB(true);UpdateEffectiveness()}} variant='success'> Save</Button>
+            <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} onClick={()=>{setAddB(false);setEditB(true);UpdateEffectiveness()}} variant='success'> Save</Button>
             </div>
 
           </form>

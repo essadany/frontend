@@ -6,6 +6,7 @@ import { Add, Edit } from '@material-ui/icons'
 import { useParams } from 'react-router'
 import { useState, useEffect } from 'react'
 import moment from "moment";
+import { useAuth } from '../Login/AuthProvider'
 export default function Containement({haveAccess}) {
 
   const {claim_id} = useParams();
@@ -33,6 +34,29 @@ export default function Containement({haveAccess}) {
   const [scrap	,setScrap] = useState('');
 
 
+  const auth = useAuth();
+  const [team,setTeam] = useState('');
+
+//Get Team of the Claim selected
+  function getTeam(){
+    fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/team`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setTeam(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setError(error);
+        }
+      );
+      console.log(team);
+  }
+useEffect(() => {
+    getTeam();
+  }, [claim_id]);
   //Get containement
   function getContainement(){
     fetch(`http://127.0.0.1:8000/api/claim/${claim_id}/containement`)
@@ -203,7 +227,7 @@ export default function Containement({haveAccess}) {
         </div>
       </div>
       <div>
-            <Button disabled={haveAccess===true? false : true}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateContainement();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
+            <Button disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  variant='primary'onClick={()=>{setIsEditing(!isEditing);updateContainement();setEditB(false)}} >{isEditing ? 'Save' : 'Edit'}</Button>
       </div>
       
       <div>
@@ -228,14 +252,14 @@ export default function Containement({haveAccess}) {
                 <td>{item.qty_sorted}</td>
                 <td>{item.qty_NOK}</td>
                 <td>{item.scrap}</td>
-                <td><Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setModalTitle("Update Sorting");selectSorting(item);setAddB(true);setEditB(false)}}><Edit /></Button></td>
+                <td><Button disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  onClick={()=>{handleShow();setModalTitle("Update Sorting");selectSorting(item);setAddB(true);setEditB(false)}}><Edit /></Button></td>
               </tr>
             ))}
             </tbody>
           </table>
         </div>
         <div>
-        <Button disabled={haveAccess===true? false : true}  onClick={()=>{handleShow();setAddB(false);setEditB(true)}} variant='success'> <Add /></Button>
+        <Button disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)}  onClick={()=>{handleShow();setAddB(false);setEditB(true)}} variant='success'> <Add /></Button>
 
         <Modal
                 size='md'
