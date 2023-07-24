@@ -112,13 +112,13 @@ useEffect(() => {
     if (file) {
       reader.readAsDataURL(file);
     }
-    if (!image1){
+    //if (!image1){
       const formData = new FormData();
       formData.append('isGood', 1); // Example value
       formData.append('problem_id', id); // Example value
       formData.append('path', file);
 
-      fetch('http://127.0.0.1:8000/api/add_image', {
+      fetch('http://127.0.0.1:8000/api/add_good_part', {
         method: 'POST',
         body: formData,
       })
@@ -131,7 +131,9 @@ useEffect(() => {
           // Handle error
           console.error(error);
         });
-    }
+    //} else {
+      
+   // }
     
   };
   const handleImageChange2 = (event) => {
@@ -145,13 +147,13 @@ useEffect(() => {
     if (file) {
       reader.readAsDataURL(file);
     }
-    if (!image2){
+    //if (!image2){
       const formData = new FormData();
       formData.append('isGood', 0); // Example value
       formData.append('problem_id', id); // Example value
       formData.append('path', file);
 
-      fetch('http://127.0.0.1:8000/api/add_image', {
+      fetch('http://127.0.0.1:8000/api/add_bad_part', {
         method: 'POST',
         body: formData,
       })
@@ -164,7 +166,7 @@ useEffect(() => {
           // Handle error
           console.error(error);
         });
-    }
+    //}
     
   };
 
@@ -326,7 +328,7 @@ function updateProblem_desc(){
     .then(response => response.json())
     .then(data => {
       const images = data.filter(item => item.isGood === null);
-      setSelectedFiles(images.map(obj=>obj['path']));
+      setSelectedFiles(images);
       console.warn(data);
     })
     .catch(error => {
@@ -467,7 +469,7 @@ function updateProblem_desc(){
             <div className='row'>
             {selectedFiles.map((file, index) => (
               <div className='col-md-4'>
-                <img key={index} src={file} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
+                <img key={index} src={file.path} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
                 <div>
                 <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} variant='danger' onClick={() => handleDeleteClick(index, file.id)}><Delete /></Button>
                 </div>

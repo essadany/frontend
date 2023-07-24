@@ -68,12 +68,11 @@ useEffect(() => {
     if (file) {
       reader.readAsDataURL(file);
     }
-    if (!image1){
       const formData = new FormData();
       formData.append('label_checking_id', label_check_id); 
       formData.append('path', file);
 
-      fetch('http://127.0.0.1:8000/api/add_image', {
+      fetch('http://127.0.0.1:8000/api/add_lablel_image', {
         method: 'POST',
         body: formData,
       })
@@ -86,25 +85,6 @@ useEffect(() => {
           // Handle error
           console.error(error);
         });
-    }else{
-      const formData = new FormData();
-      formData.append('path', file);
-      
-      fetch(`http://127.0.0.1:8000/api/image/${image1_id}`, {
-        method: 'PUT',
-        body: formData,
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          // Perform any additional actions after successful update
-        })
-        .catch(error => {
-          // Handle error
-          console.error(error);
-        });
-
-    }
   };
   
   const handleEditClick1 = () => {
@@ -196,7 +176,7 @@ useEffect(() => {
             <form className='container' >
             <div >
                 <label  className="form-label">Customer Part Number :</label>
-                <input type="text" className="form-control" disabled value={label_check.customer_ref} required />
+                <input type="text" className="form-control" disabled value={label_check.customer_part_number} required />
             </div>
             <div >
                 <label  className="form-label">Customer Complaint n°:</label>

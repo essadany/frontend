@@ -195,7 +195,7 @@ useEffect(() => {
       .then(response => response.json())
       .then(data => {
         const images = data.filter(item => item.isGood === null);
-        setSelectedFiles(images.map(obj=>obj['path']));
+        setSelectedFiles(images);
         console.warn(data);
       })
       .catch(error => {
@@ -270,7 +270,18 @@ useEffect(() => {
     }
   };
 
-  const handleDeleteClick = (index) => {
+  const handleDeleteClick = (index, imageId) => {
+    fetch(`http://127.0.0.1:8000/api/image/${imageId}`, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Image deleted:', data);
+        // Refresh the image state by fetching the updated images from the database
+      })
+      .catch(error => {
+        console.error('Error deleting image:', error);
+      });
     const updatedFiles = [...selectedFiles];
     updatedFiles.splice(index, 1);
     setSelectedFiles(updatedFiles);
@@ -387,10 +398,10 @@ function updateReport(){
             <div className='row'>
             {selectedFiles.map((file, index) => (
               <div className='col-md-4'>
-                <img key={index} src={file} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
+                <img key={index} src={file.path} alt="Uploaded" style={{ width: '300px', height: '200px'}} />
                 <div>
                 {/*<Button style={{marginRight:5}} variant='secondary' onClick={() => handleReplaceClick(index)}><Edit /></Button>*/}
-                <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} variant='danger' onClick={() => handleDeleteClick(index)}><Delete /></Button>
+                <Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} variant='danger' onClick={() => handleDeleteClick(index,file.id)}><Delete /></Button>
                 </div>
                 
                 </div>
