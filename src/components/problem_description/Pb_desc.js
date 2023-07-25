@@ -352,7 +352,7 @@ function updateProblem_desc(){
             <form className='row container g-3'>
               <div className="">
                   <label className="col-form-label">Due date :</label>
-                  <input  type="date" class="form-control form-control-sm"  value={problem_desc.due_date}  />      
+                  <input  type="date" className="form-control form-control-sm"  value={problem_desc.due_date}  />      
               </div>
             </form>
           </div>
@@ -361,45 +361,45 @@ function updateProblem_desc(){
             <legend>Problem Description</legend>
             <div>
               <form className='row container form-group'>
-                <div class="col-md-6">
+                <div className="col-md-6">
                     <label  className=" form-label">What happened ? </label>
-                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={what} onChange={(e)=>setWhat(e.target.value)} required />
+                    <textarea  className="  form-control form-control-sm" disabled={!isEditing} value={what} onChange={(e)=>setWhat(e.target.value)} required />
                 </div>
                 <div className='col-md-4'></div>
                 <div className="form-check col-md-2">
                   <label  className="form-check-label">Is it recurrent :</label>
-                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={recurrence} onChange={(e)=>setRecurrence(!recurrence)} required />
+                  <input type="checkbox"  className="form-check-input" disabled={!isEditing} checked={recurrence} onChange={(e)=>setRecurrence(!recurrence)} required />
                 </div>
-                <div class="col-md-6">
+                <div className="col-md-6">
                     <label  className=" form-label">Who detected it (Name and function) ? </label>
-                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={who} onChange={(e)=>setWho(e.target.value)} required />
+                    <textarea  className="  form-control form-control-sm" disabled={!isEditing} value={who} onChange={(e)=>setWho(e.target.value)} required />
                 </div>
-                <div class="col-md-6">
+                <div className="col-md-6">
                     <label  className=" form-label">Where has it been detected (operation) ? </label>
-                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={where} onChange={(e)=>setWhere(e.target.value)} required />
+                    <textarea  className="  form-control form-control-sm" disabled={!isEditing} value={where} onChange={(e)=>setWhere(e.target.value)} required />
                 </div>
-                <div class="col-md-6">
+                <div className="col-md-6">
                     <label  className=" form-label">When has it been detected and manufactured ? </label>
-                    <input type='date'  class="col-md-3  form-control form-control-sm" disabled={!isEditing} value={when} onChange={(e)=>setWhen(e.target.value)} required />
+                    <input type='date'  className="col-md-3  form-control form-control-sm" disabled={!isEditing} value={when} onChange={(e)=>setWhen(e.target.value)} required />
                 </div>
-                <div class="col-md-6">
+                <div className="col-md-6">
                     <label  className=" form-label">Why is it a problem ? </label>
-                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={why} onChange={(e)=>setWhy(e.target.value)} required />
+                    <textarea  className="  form-control form-control-sm" disabled={!isEditing} value={why} onChange={(e)=>setWhy(e.target.value)} required />
                 </div>
-                <div class="col-md-4">
+                <div className="col-md-4">
                     <label  className=" form-label">How has it been detected ? </label>
-                    <textarea  class="  form-control form-control-sm" disabled={!isEditing} value={how} onChange={(e)=>setHow(e.target.value)} required />
+                    <textarea  className="  form-control form-control-sm" disabled={!isEditing} value={how} onChange={(e)=>setHow(e.target.value)} required />
                 </div>
-                <div class="col-md-2">
+                <div className="col-md-2">
                     <label  className=" form-label">How many parts ? </label>
                 </div>
-                <div class="col-md-3">
+                <div className="col-md-3">
                     <label  className=" form-label">before sorting ? </label>
-                    <input type='number'  class="  form-control form-control-sm" disabled={!isEditing} value={how_many_before} onChange={(e)=>setHow_many_before(e.target.value)} required />
+                    <input type='number'  className="  form-control form-control-sm" disabled={!isEditing} value={how_many_before} onChange={(e)=>setHow_many_before(e.target.value)} required />
                 </div>
-                <div class="col-md-3">
+                <div className="col-md-3">
                     <label  className=" form-label">after sorting ? </label>
-                    <input type='number'  class="  form-control form-control-sm" disabled={!isEditing} value={how_many_after} onChange={(e)=>setHow_many_after(e.target.value)} required />
+                    <input type='number'  className="  form-control form-control-sm" disabled={!isEditing} value={how_many_after} onChange={(e)=>setHow_many_after(e.target.value)} required />
                 </div>
               </form>
             </div>
@@ -453,16 +453,16 @@ function updateProblem_desc(){
 
               <div className="form-check col-md-4">
                   <label  className="form-check-label">Has Bontaz received the detective parts ?</label>
-                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={received} onChange={(e)=>setReceived(!received)} required />
+                  <input type="checkbox"  className="form-check-input" disabled={!isEditing} checked={received} onChange={(e)=>setReceived(!received)} required />
               </div>
               <div className='col-md-4'></div>
               <div className="col-md-3">
                   <label className=" col-form-label">Date of reception :</label>
-                  <input type="date" class="form-control form-control-sm" disabled={!isEditing} value={date_reception} onChange={(e)=>setDate_reception(e.target.value)} required />
+                  <input type="date" className="form-control form-control-sm" disabled={!isEditing} value={date_reception} onChange={(e)=>setDate_reception(e.target.value)} required />
               </div>
-              <div class="col-md-12">
+              <div className="col-md-12">
                   <label  className=" col-form-label">Analyse:</label>
-                  <textarea  class="form-control" value={description} disabled={!isEditing}  onChange={(e)=>setDescription(e.target.value)} required />
+                  <textarea  className="form-control" value={description} disabled={!isEditing}  onChange={(e)=>setDescription(e.target.value)} required />
               </div>
             </form>
             </div>
@@ -500,7 +500,7 @@ function updateProblem_desc(){
                 <div className='col-md-2'></div>
                 <div className="col-md-3">
                     <label   className=" col-form-label">Done date :</label>
-                    <input type="date"  class="form-control form-control-sm" disabled={!isEditing} value={date_done} onChange={(e)=>setDate_done(e.target.value)} required />
+                    <input type="date"  className="form-control form-control-sm" disabled={!isEditing} value={date_done} onChange={(e)=>setDate_done(e.target.value)} required />
                 </div> 
 
               </form>

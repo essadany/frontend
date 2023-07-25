@@ -48,6 +48,7 @@ export default function Customer({haveAccess}) {
         // Add Customer ------------------------------------------------------------------------------------------------
         const [name, setName] = useState("");
         const [info, setInfo] = useState("");
+        const [code, setCode] = useState("");
         const [deleted, setDeleted] = useState(false);
         const [message, setMessage] = useState("");
         const [editB,setEditB] = useState(true);
@@ -68,8 +69,7 @@ export default function Customer({haveAccess}) {
               let resJson = await res.json();
               
               if (res.status === 200) {
-                setName("");
-                setInfo("");
+                resetForm();
                 alert("Customer Added successfully");
                 handleClose();
                 getCustomers();
@@ -85,6 +85,7 @@ export default function Customer({haveAccess}) {
           function selectCustomer(customer){
                 setName(customer.name);
                 setInfo(customer.info);
+                setCode(customer.code);
                 setCustomer(customer)
           }
           function updateCustomer(){
@@ -102,8 +103,7 @@ export default function Customer({haveAccess}) {
                 if(result.ok){
                   getCustomers()
                   alert("Customer Updated successfully");
-                  setName("");
-                  setInfo("");
+                  resetForm();
                   setEditB(true);
                   handleClose();
                 }else{
@@ -158,7 +158,12 @@ export default function Customer({haveAccess}) {
               String(value).toLowerCase().includes(filter.toLowerCase())
             )
           );
-          
+         
+          const resetForm = ()=>{
+            setName("");
+              setInfo("");
+              setCode("");
+          }
 
   return (
     <div className='main Customer'>
@@ -170,7 +175,7 @@ export default function Customer({haveAccess}) {
         <Modal
                 size='md'
                 show={show}
-                onHide={handleClose}
+                onHide={()=>{handleClose();resetForm()}}               
                 backdrop="static"
                 keyboard={false}
                 >
@@ -184,12 +189,16 @@ export default function Customer({haveAccess}) {
                             <input type="text" className="form-control" id="validationCustom02" onChange={(e)=>setName(e.target.value)}   value={name} required />
                         </div>
                         <div className="col-md-6">
+                            <label className="form-label">Code * : </label>
+                            <input type="text" className="form-control"  onChange={(e)=>setCode(e.target.value)}   value={code} required />
+                        </div>
+                        <div className="col-md-6">
                             <label for="validationCustom02" className="form-label">About : </label>
                             <textarea type="text" className="form-control" id="validationCustom02" onChange={(e)=>setInfo(e.target.value)}   value={info}  />
                         </div>
                         <div className='col-md-6'></div>
                         <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
+                  <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
                       Annuler
                   </Button>
                   <Button type='submit' hidden={addB} variant='primary'>Save</Button>
@@ -198,7 +207,6 @@ export default function Customer({haveAccess}) {
                   </Modal.Footer>
                     </form>
                     </Modal.Body>
-                  
             </Modal>   
             </div>
             <div >
@@ -210,19 +218,19 @@ export default function Customer({haveAccess}) {
                     <input  className="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
                   </div>
                 </div>
-                <table className="table table-striped" >
+                <table className="table table-striped table-bordered" >
                     <thead>
                         <tr>
                             <th >Name</th>
+                            <th >Code</th>
                             <th>info</th>
                         </tr>                   
                     </thead>
                     <tbody>
                     {filteredData.map((item, i) => (
                             <tr key={i}>
-                                <td>{item.customer_ref}</td>
                                 <td>{item.name}</td>
-                                <td>{item.category}</td>
+                                <td>{item.code}</td>
                                 <td>{item.info}</td>
                                 <td><Button disabled={!haveAccess || auth.user.role!=='admin' } style={{marginRight:10}} onClick={()=>{setModalTitle('Update Customer');handleShow();selectCustomer(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
                                     <Button disabled={!haveAccess || auth.user.role!=='admin' } onClick={()=>deleteCustomer(item.id)} variant='danger' >Delete<i className="fa-solid fa-user-xmark"></i></Button></td>

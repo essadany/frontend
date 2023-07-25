@@ -22,7 +22,7 @@ export default function Team({haveAccess}) {
 
   //Get list of users in select options
   function getUsers(){
-    fetch("http://127.0.0.1:8000/api/users")
+    fetch("http://127.0.0.1:8000/api/users_activated")
       .then(res => res.json())
       .then(
         (result) => {
@@ -200,7 +200,6 @@ export default function Team({haveAccess}) {
         });
         console.log(res.status);
         if (res.status === 200) {
-            const leaderName = users.find(user => user.id === parseInt(user_id))?.name || '';
           
           // Update the leader name in the database
           fetch(`http://127.0.0.1:8000/api/team/${team_id}`, {
@@ -209,7 +208,7 @@ export default function Team({haveAccess}) {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ leader: leaderName })
+            body: JSON.stringify({ leader: users_of_team.find(user => user.id === parseInt(user_id)).name })
           })
             .then(() => {
               alert('Leader added successfuly');
@@ -228,7 +227,7 @@ export default function Team({haveAccess}) {
       }
     };
     // Set the leader name
-    const leaderEmail = users.find(user => user.name === team.leader)?.email || '';
+    const leaderEmail = users_of_team.find(user => user.name === team.leader)?.email || '';
     //setName(leaderName);
    
     
@@ -253,8 +252,8 @@ export default function Team({haveAccess}) {
             <div className='col-md-4 '> 
               <legend style={{borderRadius:20}}>Add a leader</legend>
               <form className='g-3  container' onSubmit={handleAddLeader}>
-                  <div class="">
-                      <label for="validationCustom02" class="form-label">Leader* :</label>
+                  <div className="">
+                      <label for="validationCustom02" className="form-label">Leader* :</label>
                       <select  className='form-select' onChange={(e)=>setUser_id(e.target.value)} required >
                       <option disabled selected>--- Select Leader ---</option>
                         {uapEngineers.map((item)=>(<option selected={item.name===team.leader} key={item.id}  value={item.id} >{item.name}</option>))}
@@ -265,7 +264,7 @@ export default function Team({haveAccess}) {
             </div>
             <div className='col-md-4 '>
               <legend style={{borderRadius:20}}>Add a member</legend>
-              <form class="g-3 container" onSubmit={handleAddUserToTeam}>
+              <form className="g-3 container" onSubmit={handleAddUserToTeam}>
                     <div className=' '>
                       <label className='form-label'>Member name* :</label> 
                       <select data-live-search="true"  className='selectpicker form-select' onChange={(e)=>{setUser_id(e.target.value)}} required >
@@ -293,7 +292,7 @@ export default function Team({haveAccess}) {
                 </div>
             </div>
               <div>
-                <table className="table table-striped" >
+                <table className="table table-striped table-bordered" >
                     <thead>
                         <tr>
                             <th >Name </th>

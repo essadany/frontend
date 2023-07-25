@@ -53,7 +53,7 @@ export default function Users() {
         }
 
         function getUsers(){
-          fetch("http://127.0.0.1:8000/api/users_activated")
+          fetch("http://127.0.0.1:8000/api/users")
             .then(res => res.json())
             .then(
               (result) => {
@@ -90,14 +90,7 @@ export default function Users() {
               let resJson = await res.json();
               
               if (res.status === 200) {
-                setName("");
-                setFonction("");
-                setEmail("");
-                setPassword("");
-                setPhone("");
-                setRole("user");
-                setIsAdmin(false);
-                setIsUapEngineer(false);
+                resetForm();
                 alert("User Added successfully");
                 handleClose();
                 getUsers();
@@ -133,15 +126,9 @@ export default function Users() {
               body:JSON.stringify({name ,fonction ,email ,password,phone,role })
             }).then((result) => {
                 if(result.ok){
+                  resetForm();
                   getUsers()
                   alert("User Updated successfully");
-                  setName("");
-                  setFonction("");
-                  setEmail("");
-                  setPassword("");
-                  setPhone("");
-                  setRole("user");
-                  setIsAdmin(false);
                   setEditB(true);
                   handleClose();
                   setIsAdmin(false);
@@ -157,6 +144,17 @@ export default function Users() {
               
 
             }
+
+            const resetForm = ()=>{
+              setName("");
+                setFonction("");
+                setEmail("");
+                setPassword("");
+                setPhone("");
+                setRole("user");
+                setIsAdmin(false);
+                setIsUapEngineer(false);
+            }
           // Delete User ------------------------------------------------------------------------------------------------------------------------
           function deleteUser(id){
             try{
@@ -170,7 +168,7 @@ export default function Users() {
                 }).then((result) => {
                     if (result.ok){
                       getUsers();
-                      alert("User Deleted successfully");
+                      alert("User Deactivated successfully");
                     }else{
                       result.json().then((resp) => {
                         console.warn(resp)
@@ -207,51 +205,50 @@ export default function Users() {
         <Modal
                 size='md'
                 show={show}
-                onHide={handleClose}
-                backdrop="static"
+                onHide={()=>{handleClose();resetForm()}}                backdrop="static"
                 keyboard={false}
                 >
                 <Modal.Header closeButton>
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row g-3  needs-validation" onSubmit={handleSubmit}>
-                        <div class="col-md-6">
-                            <label  class="form-label">Name* :</label>
-                            <input type="text" class="form-control"  required value={name} onChange={(e)=>setName(e.target.value)} />
+                <form className="row g-3  needs-validation" onSubmit={handleSubmit}>
+                        <div className="col-md-6">
+                            <label  className="form-label">Name* :</label>
+                            <input type="text" className="form-control"  required value={name} onChange={(e)=>setName(e.target.value)} />
                             
                         </div>
-                        <div class="col-md-6">
-                            <label  class="form-label">Function* : </label>
-                            <input type="text" class="form-control"  required value={fonction} onChange={(e)=>setFonction(e.target.value)} />
+                        <div className="col-md-6">
+                            <label  className="form-label">Function* : </label>
+                            <input type="text" className="form-control"  required value={fonction} onChange={(e)=>setFonction(e.target.value)} />
                         </div>
                         <div className="form-check col-md-6">
                           <label  className="form-check-label">Admin ?</label>
-                          <input type="radio"  name='role' checked={isAdmin} class="form-check-input"   onChange={(e)=>checkAdmin()}/>
+                          <input type="radio"  name='role' checked={isAdmin} className="form-check-input"   onChange={(e)=>checkAdmin()}/>
                         </div>
                         <div className="form-check col-md-6">
                           <label  className="form-check-label">Uap Engineer ?</label>
-                          <input type="radio" name='role' checked={isUapEngineer} class="form-check-input"   onChange={(e)=>checkUapEngineer()}/>
+                          <input type="radio" name='role' checked={isUapEngineer} className="form-check-input"   onChange={(e)=>checkUapEngineer()}/>
                         </div>
-                        <div class="col-md-6">
-                            <label  class="form-label">Phone :</label>
-                            <input type="text" class="form-control"  value={phone} onChange={(e)=>setPhone(e.target.value)} />
+                        <div className="col-md-6">
+                            <label  className="form-label">Phone :</label>
+                            <input type="text" className="form-control"  value={phone} onChange={(e)=>setPhone(e.target.value)} />
                         </div>
-                        <div class="col-md-6">
-                            <label  class="form-label">Email* :</label>
-                            <input type="email" class="form-control"  required value={email} onChange={(e)=>setEmail(e.target.value)} />
+                        <div className="col-md-6">
+                            <label  className="form-label">Email* :</label>
+                            <input type="email" className="form-control"  required value={email} onChange={(e)=>setEmail(e.target.value)} />
                         </div>
                         
-                        <div class="col-md-6">
-                            <label  class="form-label">Password* :</label>
-                            <input type="password" class="form-control"  required value={password} onChange={(e)=>setPassword(e.target.value)} />
+                        <div className="col-md-6">
+                            <label  className="form-label">Password* :</label>
+                            <input type="password" className="form-control"  required value={password} onChange={(e)=>setPassword(e.target.value)} />
                         </div>
                         <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
                             Annuler
                         </Button>
                         <Button   hidden={addB} type='submit' variant='primary'>Save</Button>
-                        <Button hidden={editB} variant='success' onClick={updateUser}>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                        <Button hidden={editB} variant='success' onClick={updateUser}>Update<i className="fa-solid fa-pen-to-square"></i></Button>
                         </Modal.Footer>
                     </form>
                     </Modal.Body>
@@ -267,7 +264,7 @@ export default function Users() {
                     <input  className="form-control " type="text" placeholder="Filter table" value={filter} onChange={handleChange} />
                   </div>
                 </div>
-                <table className="table table-striped" >
+                <table className="table table-striped table-bordered" >
                     <thead>
                         <tr>
                             <th >Name</th>
@@ -279,14 +276,14 @@ export default function Users() {
                     </thead>
                     <tbody>
                     {filteredData.map((item, i) => (
-                            <tr key={i}>
+                            <tr style={{backgroundColor: item.deleted?'#8d99ae':'none'}}  key={i}>
                                 <td>{item.name}</td>
                                 <td>{item.fonction}</td>
                                 <td>{item.email}</td>
                                 <td>{item.phone}</td>
                                 <td>{item.role}</td>
-                                <td><Button disabled={ auth.user.role!=='admin'} style={{marginRight:10}} onClick={()=>{handleShow();selectUser(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button>
-                                    <Button  disabled={ auth.user.role!=='admin'}  onClick={()=>deleteUser(item.id)} variant='danger' >Delete<i class="fa-solid fa-user-xmark"></i></Button></td>
+                                <td  ><Button disabled={ auth.user.role!=='admin' || item.deleted} style={{marginRight:10}} onClick={()=>{handleShow();selectUser(item);setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button>
+                                    <Button   disabled={ auth.user.role!=='admin' || item.deleted}  onClick={()=>deleteUser(item.id)} variant='danger' >Deactivate<i className="fa-solid fa-user-xmark"></i></Button></td>
 
                     </tr>
                     ))}

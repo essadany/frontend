@@ -27,6 +27,13 @@
 
 .ppm{
   margin: auto auto;
+ align-items: center;
+}
+.ppm form{
+  margin: auto auto;
+}
+.ppm div form{
+  margin: auto auto;
 }
 /*  login page -----------------------*/
 

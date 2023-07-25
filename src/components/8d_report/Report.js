@@ -351,24 +351,24 @@ function updateReport(){
             <form className='row container g-3'>
               <div className="col-4">
                   <label  className="col-form-label">opening date :</label>
-                  <input  type="date" class="form-control form-control-sm" value={report.opening_date}   required />     
+                  <input  type="date" className="form-control form-control-sm" value={report.opening_date}   required />     
               </div>
               <div className='col-4'><Button variant='success' onClick={downloadExcel}><Download /></Button></div>
-              <div class="col-4">
-                  <label  class="form-label">Reported by :</label>
-                  <textarea class="form-control form-control-sm" disabled={!isEditing} value={reported_by} onChange={(e)=>setReported_by(e.target.value)} required />
+              <div className="col-4">
+                  <label  className="form-label">Reported by :</label>
+                  <textarea className="form-control form-control-sm" disabled={!isEditing} value={reported_by} onChange={(e)=>setReported_by(e.target.value)} required />
               </div>
               <div className="col-4">
                   <label   className=" col-form-label">Update date :</label>
-                  <input type="date" class="form-control form-control-sm" disabled={!isEditing}  value={update_date} required />
+                  <input type="date" className="form-control form-control-sm" disabled={!isEditing}  value={update_date} required />
               </div>
           <div className="col-4">
                   <label   className=" col-form-label">Due date :</label>
-                  <input type="date" class="form-control form-control-sm" disabled={!isEditing} value={due_date} onChange={(e)=>setDue_date(e.target.value)} required />
+                  <input type="date" className="form-control form-control-sm" disabled={!isEditing} value={due_date} onChange={(e)=>setDue_date(e.target.value)} required />
               </div>
               <div className="col-4">
                   <label  className=" col-form-label">Closure date :</label>
-                  <input type="date" class="form-control form-control-sm" disabled={!isEditing} value={sub_date} onChange={(e)=>setSub_date(e.target.value)} required />
+                  <input type="date" className="form-control form-control-sm" disabled={!isEditing} value={sub_date} onChange={(e)=>setSub_date(e.target.value)} required />
               </div>
               </form>
           </div>
@@ -377,21 +377,21 @@ function updateReport(){
             <legend>Problem Description</legend>
             <div>
               <form className='row container'>
-                <div class="col-md-12">
-                    <textarea  class="form-control" value={report.what}   required />
+                <div className="col-md-12">
+                    <textarea disabled  className="form-control" value={report.what}   required />
                 </div>
                 <div className="col-md-3 ">
-                    <label  for='3' className=" col-form-label">Engraving :</label>
-                    <input type="text" id='3' class="form-control form-control-sm" value={report.engraving} required />
+                    <label   for='3' className=" col-form-label">Engraving :</label>
+                    <input disabled type="text" id='3' className="form-control form-control-sm" value={report.engraving} required />
                 </div>
                 <div className="col-md-3">
                     <label  for='4' className=" col-form-label">Production date :</label>
-                    <input type="date" id='4' class="form-control form-control-sm" value={report.production_date} required />
+                    <input type="date" id='4' className="form-control form-control-sm" value={report.production_date} required />
                 </div>
                 <div className='col-md-3'></div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">Recurrence :</label>
-                  <input type="checkbox"  class="form-check-input"  checked={report.recurrence} required />
+                  <input type="checkbox"  className="form-check-input"  checked={report.recurrence} required />
                 </div>
               </form>
             </div>
@@ -418,12 +418,12 @@ function updateReport(){
           <div>
             <legend>Containment Action(s)</legend>
             <form className='row container'>
-              <div class="col-md-12">
-                  <textarea  class="form-control" value={containement_actions} disabled={!isEditing} onChange={(e)=>setContainement_actions(e.target.value)}  required />
+              <div className="col-md-12">
+                  <textarea  className="form-control" value={containement_actions} disabled={!isEditing} onChange={(e)=>setContainement_actions(e.target.value)}  required />
               </div>
               <div className="col-md-2">
                   <label  for='4' className=" col-form-label">First Batch Certified :</label>
-                  <input type="text" id='4' class="form-control form-control-sm" disabled={!isEditing} value={first_batch3} onChange={(e)=>setFirst_batch3(e.target.value)} required />
+                  <input type="text" id='4' className="form-control form-control-sm" disabled={!isEditing} value={first_batch3} onChange={(e)=>setFirst_batch3(e.target.value)} required />
               </div>
             </form>
           </div>
@@ -431,22 +431,22 @@ function updateReport(){
           <div>
             <legend>Root Cause Or Escape Point</legend>
             <form className='row container'>
-              <div class="col-md-6">
-                  <label  className=" col-form-label">On Occurence:</label>
-                  <textarea  class="form-control" value={report.occurrence_root_cause} disabled={!isEditing} required />
+              <div className="col-md-6">
+                  <label disabled  className=" col-form-label">On Occurence:</label>
+                  <textarea disabled  className="form-control" value={report.occurrence_root_cause} required />
               </div>
-              <div class="col-md-6">
+              <div className="col-md-6">
               <label  className=" col-form-label">On No Detection:</label>
-                  <textarea  class="form-control"  value={report.detection_root_cause} disabled={!isEditing} required />
+                  <textarea   disabled className="form-control"  value={report.detection_root_cause} required />
               </div>
               <div className="form-check col-md-4">
                 <label  className="form-check-label">Is Bontaz Responsible for this issue </label>
-                <input type="checkbox" class="form-check-input" checked={report.bontaz_fault==="YES"}  />
+                <input type="checkbox" className="form-check-input" checked={report.bontaz_fault==="YES"}  />
               </div>
               <div className='col-md-4'></div>
               <div className="col-md-3">
                   <label  for='4' className=" col-form-label">Date of Roote Cause Definition :</label>
-                  <input type="date" id='4' class="form-control form-control-sm" disabled={!isEditing} value={date_cause_definition} onChange={(e)=>setDate_cause_definition(e.target.value)} required />
+                  <input type="date" id='4' className="form-control form-control-sm" disabled={!isEditing} value={date_cause_definition} onChange={(e)=>setDate_cause_definition(e.target.value)} required />
               </div>
 
             </form>
@@ -480,7 +480,7 @@ function updateReport(){
               <form className='row container'>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">DDM </label>
-                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={ddm} onChange={(e)=>setDdm(!ddm)} required />
+                  <input type="checkbox"  className="form-check-input" disabled={!isEditing} checked={ddm} onChange={(e)=>setDdm(!ddm)} required />
                 </div>
                 <div className="col-md-3">
                   <label  className=" col-form-label">Pilot :</label>
@@ -491,7 +491,7 @@ function updateReport(){
                 <div className='col-md-3'></div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">Approved </label>
-                  <input type="checkbox"  class="form-check-input" disabled={!isEditing} checked={approved} onChange={(e)=>setApproved(!approved)} required />
+                  <input type="checkbox"  className="form-check-input" disabled={!isEditing} checked={approved} onChange={(e)=>setApproved(!approved)} required />
                 </div>
               </form>
             </div>
@@ -525,7 +525,7 @@ function updateReport(){
               <form className='container'> 
               <div className="col-md-2">
                   <label  for='4' className=" col-form-label">First Batch Certified :</label>
-                  <input type="text" id='4' class="form-control form-control-sm" disabled={!isEditing} value={first_batch6} onChange={(e)=>setFirst_batch6(e.target.value)} required />
+                  <input type="text" id='4' className="form-control form-control-sm" disabled={!isEditing} value={first_batch6} onChange={(e)=>setFirst_batch6(e.target.value)} required />
               </div>
               </form>
             </div>
@@ -559,19 +559,19 @@ function updateReport(){
               <form className='row container'>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">DFMEA </label>
-                  <input type="checkbox"  class="form-check-input" checked={dfmea} disabled={!isEditing} onChange={(e)=>setDfmea(!dfmea)} required />
+                  <input type="checkbox"  className="form-check-input" checked={dfmea} disabled={!isEditing} onChange={(e)=>setDfmea(!dfmea)} required />
                 </div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">PFMEA </label>
-                  <input type="checkbox"  class="form-check-input" checked={pfmea} disabled={!isEditing} onChange={(e)=>setPfmea(!dfmea)} required />
+                  <input type="checkbox"  className="form-check-input" checked={pfmea} disabled={!isEditing} onChange={(e)=>setPfmea(!dfmea)} required />
                 </div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">Ctrl Plan </label>
-                  <input type="checkbox"  class="form-check-input" checked={ctrl_plan} disabled={!isEditing} onChange={(e)=>setCtrl_plan(!ctrl_plan)} required />
+                  <input type="checkbox"  className="form-check-input" checked={ctrl_plan} disabled={!isEditing} onChange={(e)=>setCtrl_plan(!ctrl_plan)} required />
                 </div>
                 <div className="form-check col-md-3">
                   <label  className="form-check-label">Others </label>
-                  <input type="checkbox"  class="form-check-input" checked={others} disabled={!isEditing} onChange={(e)=>setOthers(!others)} required />
+                  <input type="checkbox"  className="form-check-input" checked={others} disabled={!isEditing} onChange={(e)=>setOthers(!others)} required />
                 </div>
               </form>
             </div>

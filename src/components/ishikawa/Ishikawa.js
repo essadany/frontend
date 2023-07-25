@@ -113,12 +113,7 @@ export default function Ishikawa({haveAccess}) {
         },
         body: JSON.stringify({ishikawa_id,type, input, status, isPrincipale , influence, comment}), })      
       if (res.status === 200) {
-        setType("");
-        setInfluence("");
-        setInput("");
-        setComment("");
-        setStatus("");
-        setIsPrincipale(false);
+        resetForm();
         alert("Cause Added successfully");
         handleClose();
       } else {
@@ -150,13 +145,7 @@ export default function Ishikawa({haveAccess}) {
         if(result.ok){
           getCategories()
           alert("Cause Updated successfully");
-          setCategory_id("");
-          setType("");
-          setInfluence("");
-          setInput("");
-          setComment("");
-          setStatus("");
-          setIsPrincipale(false);
+          resetForm();
           setEditB(true);
           getCategories();
           handleClose();
@@ -167,8 +156,15 @@ export default function Ishikawa({haveAccess}) {
         }
         
       })
-      
-
+    }
+    const resetForm = ()=>{
+      setCategory_id("");
+          setType("");
+          setInfluence("");
+          setInput("");
+          setComment("");
+          setStatus("");
+          setIsPrincipale(false);
     }
   // Filter Categories --------------------------------------------------------------------------------------------------------------------------
   const [filter, setFilter] = useState("");
@@ -192,17 +188,16 @@ export default function Ishikawa({haveAccess}) {
         <Modal
                 size='md'
                 show={show}
-                onHide={handleClose}
-                backdrop="static"
+                onHide={()=>{handleClose();resetForm()}}                backdrop="static"
                 keyboard={false}
                 >
                 <Modal.Header closeButton>
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row g-3  needs-validation" >
+                <form className="row g-3  needs-validation" >
                         <div className="col-12">
-                            <label class="form-label">Type* :</label>
+                            <label className="form-label">Type* :</label>
                             <select className='form-select' required onChange={(e)=>setType(e.target.value)}>
                               <option  selected disabled >--- Select Category ---</option>
                               <option selected={type==='Person'} >Person</option>
@@ -216,11 +211,11 @@ export default function Ishikawa({haveAccess}) {
                             </select>
                         </div>
                         <div className="col-12">
-                            <label class="form-label">Parameter* :</label>
-                            <textarea  class="form-control"   required value={input}  onChange={(e)=>setInput(e.target.value)}/>
+                            <label className="form-label">Parameter* :</label>
+                            <textarea  className="form-control"   required value={input}  onChange={(e)=>setInput(e.target.value)}/>
                         </div>
                         <div className="col-12">
-                            <label class="form-label">Influence* :</label>
+                            <label className="form-label">Influence* :</label>
                             <select className='form-select' required onChange={(e)=>setInfluence(e.target.value)}>
                               <option  selected disabled >--- Select Influence ---</option>
                               <option selected={influence==='2'} >2</option>
@@ -231,11 +226,11 @@ export default function Ishikawa({haveAccess}) {
                             </select>
                         </div>
                         <div className="col-12">
-                            <label class="form-label">Comments* :</label>
-                            <textarea  class="form-control"   required value={comment}  onChange={(e)=>setComment(e.target.value)}/>
+                            <label className="form-label">Comments* :</label>
+                            <textarea  className="form-control"   required value={comment}  onChange={(e)=>setComment(e.target.value)}/>
                         </div>
                         <div className="col-12">
-                            <label class="form-label">Status :</label>
+                            <label className="form-label">Status :</label>
                             <select className='form-select' required onChange={(e)=>setStatus(e.target.value)}>
                               <option  selected disabled >--- Select Status ---</option>
                               <option selected={status==='on going'} >on going</option>
@@ -245,14 +240,14 @@ export default function Ishikawa({haveAccess}) {
                         </div>
                         <div className="form-check col-md-1">
                           <label  className="form-check-label">Is principale ?</label>
-                          <input type="checkbox"  class="form-check-input" checked={isPrincipale} onChange={(e)=>setIsPrincipale(!isPrincipale)} required />
+                          <input type="checkbox"  className="form-check-input" checked={isPrincipale} onChange={(e)=>setIsPrincipale(!isPrincipale)} required />
                         </div>
                         <div className='modal-footer'>
-                          <Button variant="secondary" onClick={handleClose}>
+                          <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
                               Annuler
                           </Button>
                           <Button   hidden={addB} onClick={handleSubmit} variant='primary'>Save</Button>
-                          <Button onClick={updateCategory} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                          <Button onClick={updateCategory} hidden={editB} variant='success'>Update<i className="fa-solid fa-pen-to-square"></i></Button>
                           </div>
                     </form>
                     </Modal.Body>
@@ -273,7 +268,7 @@ export default function Ishikawa({haveAccess}) {
                   
                 </div>
                 <div>
-                <table className="table table-striped" >
+                <table className="table table-striped table-bordered" >
                     <thead>
                         <tr>
                             <th className='text-center' >Category</th>

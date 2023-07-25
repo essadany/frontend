@@ -88,8 +88,7 @@ const SideNavBar = ({isAuthentificated}) => {
 				<div className="nav-heading">
 					{isExpanded && (
 						<div className="nav-brand">
-							<img src="../icons/bontaz.png" alt="" srcset="" />
-							<h1>ontaz</h1>
+							<img style={{width:250,height:100}} src="../icons/Bontaz1.png" alt="" srcset="" />
 						</div>
 					)}
 					<button

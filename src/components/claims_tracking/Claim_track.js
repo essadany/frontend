@@ -109,12 +109,7 @@ export default function Claim_track({haveAccess}) {
     }).then((result) => {
         if(result.ok){
          // alert("Claims Tracking Updated successfully");
-          setProgress_rate("");
-          setSub_date("");
-          setStatus('');
-          setDate_reception('');
-          setBontaz_fault("");
-          setClaim_details('');
+          resetForm();
           getClaims_tracking();
           handleClose();
         }else{
@@ -150,6 +145,15 @@ export default function Claim_track({haveAccess}) {
         monthNumber,
       };
     };
+
+    const resetForm = ()=>{
+      setProgress_rate("");
+      setSub_date("");
+      setStatus('');
+      setDate_reception('');
+      setBontaz_fault("");
+      setClaim_details('');
+    }
   return (
     <div className='main'>
         <h2 >Claim Trackings</h2>
@@ -158,7 +162,7 @@ export default function Claim_track({haveAccess}) {
             <Modal
                 size='md'
                 show={show}
-                onHide={handleClose}
+                onHide={()=>{handleClose();resetForm()}}
                 backdrop="static"
                 keyboard={false}
                 >
@@ -166,7 +170,7 @@ export default function Claim_track({haveAccess}) {
                 <Modal.Title>Update Tracking Claim</Modal.Title>
                   </Modal.Header>
                     <Modal.Body>
-                    <form class="row container g-3">
+                    <form className="row container g-3">
                     <div className="col-md-6 ">
                     <label  className="form-label">Progress rate :</label>
                     <select  data-live-search="true"  className='selectpicker form-select form-select-sm' onChange={(e)=>setProgress_rate(e.target.value)} required >
@@ -185,9 +189,9 @@ export default function Claim_track({haveAccess}) {
                           <option selected>NOT CONFIRMED</option>
                           </select>
                       </div>
-                      <div class="col-md-6 col-sm-12">
-                        <label for="inputAddress" class="form-label">Returned parts</label>
-                        <input type="date" class="form-control"  value={date_reception} onChange={(e)=>setDate_reception(e.target.value)} required/>
+                      <div className="col-md-6 col-sm-12">
+                        <label for="inputAddress" className="form-label">Returned parts</label>
+                        <input type="date" className="form-control"  value={date_reception} onChange={(e)=>setDate_reception(e.target.value)} required/>
                       </div>
                       <div className="col-md-6 col-sm-12">
                           <label  className="form-label">8D Status:</label>
@@ -197,19 +201,19 @@ export default function Claim_track({haveAccess}) {
                           <option selected={status==="No 8D Required"}>No 8D Required</option>
                           </select>
                       </div>
-                      <div class="col-md-6 col-sm-12">
-                        <label for="inputAddress" class="form-label">8D Submission Date</label>
-                        <input type="date" class="form-control"  value={sub_date} onChange={(e)=>setSub_date(e.target.value)}/>
+                      <div className="col-md-6 col-sm-12">
+                        <label for="inputAddress" className="form-label">8D Submission Date</label>
+                        <input type="date" className="form-control"  value={sub_date} onChange={(e)=>setSub_date(e.target.value)}/>
                       </div>
-                      <div class="col-12">
-                        <label class="form-label">Details</label>
-                        <textarea type="text" class="form-control" value={claim_details} onChange={(e)=>setClaim_details(e.target.value)}  />
+                      <div className="col-12">
+                        <label className="form-label">Details</label>
+                        <textarea type="text" className="form-control" value={claim_details} onChange={(e)=>setClaim_details(e.target.value)}  />
                       </div>
                       <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
+                  <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
                       Annuler
                   </Button>
-                  <Button onClick={()=>updateTracking()}  variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>
+                  <Button onClick={()=>updateTracking()}  variant='success'>Update<i className="fa-solid fa-pen-to-square"></i></Button>
                             
                   </Modal.Footer>
                     </form>
@@ -235,7 +239,7 @@ export default function Claim_track({haveAccess}) {
                   </div>
                 </div>
                 <div className='table-responsive'>
-                  <table className="table table-striped" >
+                  <table className="table table-striped table-bordered" >
                     <thead>
                         <tr>
                           <th>Opening date</th>  
@@ -307,7 +311,7 @@ export default function Claim_track({haveAccess}) {
                             <td>{item.report_sub_date}</td>
                             <td>{item.ishikawa_principale}</td>
                             <td>{item.claim_details}</td>
-                            <td><Button disabled={!haveAccess || auth.user.role!=='admin' }  style={{marginRight:10}} onClick={()=>{handleShow();selectClaim(item)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                            <td><Button disabled={!haveAccess || auth.user.role!=='admin' }  style={{marginRight:10}} onClick={()=>{handleShow();selectClaim(item)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button></td>
                         </tr>
                     ))}
                             

@@ -170,7 +170,7 @@ const handleClose1 = () =>  setShow1(false);
         },
         body: JSON.stringify({action_id : action_id ,comment : comment  , comment_date : formattedDate}), })      
       if (res.status === 200) {
-        setComment("");
+        resetForm();
         handleClose1();
         getComments();
       } else {
@@ -180,7 +180,9 @@ const handleClose1 = () =>  setShow1(false);
       console.log(err);
     }
   };
-  
+  const resetForm = ()=>{
+    setComment("");
+  }
   //Get User Claims ---------------------------------------------------------------------------
   // Step 1: Iterate over the objects in the JSON object
 const uniqueNames = new Set();
@@ -225,21 +227,20 @@ console.warn('claim_users',claims_user);
                 <Modal
                 size='md'
                 show={show}
-                onHide={handleClose}
-                backdrop="static"
+                onHide={()=>{handleClose();resetForm()}}                backdrop="static"
                 keyboard={false}
                 >
                 <Modal.Header closeButton>
                 <Modal.Title>Update Action</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <form class="container row g-3">
-                    <div class="col-12">
-                      <label class="form-label">Comment : </label>
-                      <textarea type="text" class="form-control"  />
+                  <form className="container row g-3">
+                    <div className="col-12">
+                      <label className="form-label">Comment : </label>
+                      <textarea type="text" className="form-control"  />
                     </div>
-                    <div class="col-12">
-                      <label className="form-label" class="form-label">Status : </label>
+                    <div className="col-12">
+                      <label className="form-label">Status : </label>
                       <select className='form-select selectpicker' >
                       <option  selected disabled >--- Select Status ---</option>
                       {actions_status.map((item)=>(<option value={item.label} >{item.label}</option>))}
@@ -248,7 +249,7 @@ console.warn('claim_users',claims_user);
                   </form>
                     </Modal.Body>
                   <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
+                  <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
                       Annuler
                   </Button>
                   <Button   variant='primary'>Save</Button>                            
@@ -272,7 +273,7 @@ console.warn('claim_users',claims_user);
                   
                 </div>
                 <div className='table-responsive'>
-                  <table className="table table-striped" >
+                  <table className="table table-striped table-bordered" >
                       <thead>
                           <tr>
                               <th >Clain reference</th>
@@ -350,7 +351,7 @@ console.warn('claim_users',claims_user);
                                       </Button>
                                     </>
                                   )}</td>
-                                  {/*<td><Button style={{marginRight:10}} onClick={()=>handleShow()} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>*/}                            
+                                  {/*<td><Button style={{marginRight:10}} onClick={()=>handleShow()} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button></td>*/}                            
                               </tr>
                       ))}
                               

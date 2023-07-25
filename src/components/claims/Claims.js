@@ -16,7 +16,7 @@ export default function Claims({haveAccess}) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [modalTitle,setModalTitle]= useState('Add new Claim');
+  const [modalTitle,setModalTitle]= useState('Update Claim');
   const [addB,setAddB] = useState('');
   const [editB,setEditB] = useState('');
  
@@ -123,18 +123,7 @@ export default function Claims({haveAccess}) {
                 }),
               })              
               if (res.status === 200) {
-                setInternal_ID('');
-                setRefRecClient('');
-                setProduct_ref("");
-                setEngraving('');
-                setProd_date('');
-                setCategory('');
-                setcustomer_part_number("");
-                setObject('');
-                setOpening_date('');
-                setDirect_customer('');
-                setDef_mode('');
-                setNbr_claimed_parts('');
+                resetForm();
                 alert("Claim Added successfully");
                 setShow(false);
                 handleClose();
@@ -199,18 +188,7 @@ export default function Claims({haveAccess}) {
             }).then((result) => {
                 if (result.ok){
                   getClaims()
-                  setInternal_ID('');
-                  setRefRecClient('');
-                  setEngraving('');
-                  setProduct_ref('');
-                  setCategory('');
-                  setcustomer_part_number('');
-                  setProd_date('');
-                  setObject('');
-                  setOpening_date('');
-                  setDirect_customer('');
-                  setDef_mode('');
-                  setNbr_claimed_parts('');
+                  resetForm();
                   alert("Claim Updated successfully");
                   setShow(false);
                   handleClose();
@@ -312,7 +290,20 @@ export default function Claims({haveAccess}) {
           String(value).toLowerCase().includes(filter.toLowerCase())
         )
       );
-
+  const resetForm = ()=>{
+    setInternal_ID('');
+    setRefRecClient('');
+    setEngraving('');
+    setProduct_ref('');
+    setCategory('');
+    setcustomer_part_number('');
+    setProd_date('');
+    setObject('');
+    setOpening_date('');
+    setDirect_customer('');
+    setDef_mode('');
+    setNbr_claimed_parts('');
+  }
   return (
     
     <div className='main'>
@@ -323,7 +314,7 @@ export default function Claims({haveAccess}) {
         <Modal
         size='md'
         show={show}
-        onHide={handleClose}
+        onHide={()=>{handleClose();resetForm()}}
         backdrop="static"
         keyboard={false}
         >
@@ -331,18 +322,18 @@ export default function Claims({haveAccess}) {
         <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <form class="row g-3 container needs-validation" onSubmit={handleSubmit}>
-                <div class="col-md-6">
-                    <label for="validationCustom01" class="form-label">Intern ID* :</label>
-                    <input type="text" class="form-control" id="validationCustom01" onChange={(e)=>setInternal_ID(e.target.value)} value={internal_ID} required />
+            <form className="row g-3 container needs-validation" onSubmit={handleSubmit}>
+                <div className="col-md-6">
+                    <label className="form-label">Intern ID* :</label>
+                    <input type="text" className="form-control"  onChange={(e)=>setInternal_ID(e.target.value)} value={internal_ID} required />
                 </div>
-                <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Customer Claim ref* :</label>
-                    <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setRefRecClient(e.target.value)}  value={refRecClient} required />
+                <div className="col-md-6">
+                    <label  className="form-label">Customer Claim ref* :</label>
+                    <input type="text" className="form-control"  onChange={(e)=>setRefRecClient(e.target.value)}  value={refRecClient} required />
 
                 </div>
-                <div class="col-md-6">
-                  <label  class="form-label">Category* :</label>
+                <div className="col-md-6">
+                  <label  className="form-label">Category* :</label>
                   <select data-live-search="true"   className='selectpicker form-select' onChange={(e)=>setCategory(e.target.value)} required >
                     <option disabled selected>--- Select Category ---</option>
                     <option selected={category==="AQI"}>AQI</option>
@@ -350,8 +341,8 @@ export default function Claims({haveAccess}) {
                     <option selected={category==="Field"}>Field</option>
                   </select>
                 </div>
-                { category==="AQI" && <div  class="col-md-6">
-                  <label  class="form-label">Customer* :</label>
+                { category==="AQI" && <div  className="col-md-6">
+                  <label  className="form-label">Customer* :</label>
                   <select data-live-search="true"   className='selectpicker form-select' onChange={(e)=>setDirect_customer(e.target.value)} required >
                     <option disabled selected>--- Select Customer ---</option>
                     <option selected={direct_customer==="BNF"}>BNF</option>
@@ -360,48 +351,48 @@ export default function Claims({haveAccess}) {
                     <option selected={direct_customer==="BNC"}>BNC</option>
                   </select>
                 </div>}
-                <div class="col-md-6">
-                  <label  class="form-label">Product reference* :</label>
-                  <input type="text" class="form-control"  onChange={(e)=>setProduct_ref(e.target.value)}   value={product_ref} required />
+                <div className="col-md-6">
+                  <label  className="form-label">Product reference* :</label>
+                  <input type="text" className="form-control"  onChange={(e)=>setProduct_ref(e.target.value)}   value={product_ref} required />
                 </div>
-                <div class="col-md-6">
-                  <label  class="form-label">Customer Part number* :</label>
-                  <input type="text" class="form-control"  onChange={(e)=>setcustomer_part_number(e.target.value)}   value={customer_part_number} required />
+                <div className="col-md-6">
+                  <label  className="form-label">Customer Part number* :</label>
+                  <input type="text" className="form-control"  onChange={(e)=>setcustomer_part_number(e.target.value)}   value={customer_part_number} required />
                 </div>
-                <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Product engraving* : </label>
-                    <input type="text" class="form-control" id="validationCustom02" onChange={(e)=>setEngraving(e.target.value)}   value={engraving} required />
+                <div className="col-md-6">
+                    <label for="validationCustom02" className="form-label">Product engraving* : </label>
+                    <input type="text" className="form-control" id="validationCustom02" onChange={(e)=>setEngraving(e.target.value)}   value={engraving} required />
                 </div>
-                <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Date of Production* : </label>
-                    <input type="date" class="form-control" id="validationCustom02" onChange={(e)=>setProd_date(e.target.value)}   value={prod_date} required />
-                    <div class="valid-feedback">
+                <div className="col-md-6">
+                    <label for="validationCustom02" className="form-label">Date of Production* : </label>
+                    <input type="date" className="form-control" id="validationCustom02" onChange={(e)=>setProd_date(e.target.value)}   value={prod_date} required />
+                    <div className="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Object* : </label>
-                    <textarea class="form-control" id="validationCustom02" onChange={(e)=>setObject(e.target.value)}   value={object} required />
-                    <div class="valid-feedback">
+                <div className="col-md-6">
+                    <label for="validationCustom02" className="form-label">Object* : </label>
+                    <textarea className="form-control" id="validationCustom02" onChange={(e)=>setObject(e.target.value)}   value={object} required />
+                    <div className="valid-feedback">
                     Looks good!
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Opening date* :</label>
-                    <input type="date" class="form-control" id="validationCustom02"  onChange={(e)=>setOpening_date(e.target.value)}  value={opening_date} required />
+                <div className="col-md-6">
+                    <label for="validationCustom02" className="form-label">Opening date* :</label>
+                    <input type="date" className="form-control" id="validationCustom02"  onChange={(e)=>setOpening_date(e.target.value)}  value={opening_date} required />
 
                 </div>
-                <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Defect claimed :</label>
-                    <textarea  class="form-control" id="validationCustom02"  onChange={(e)=>setDef_mode(e.target.value)}  value={def_mode}  />
+                <div className="col-md-6">
+                    <label for="validationCustom02" className="form-label">Defect claimed :</label>
+                    <textarea  className="form-control" id="validationCustom02"  onChange={(e)=>setDef_mode(e.target.value)}  value={def_mode}  />
                 </div>
-                <div class="col-md-6">
-                    <label for="validationCustom02" class="form-label">Number of Claimed parts* :</label>
-                    <input type='number'  class="form-control" id="validationCustom02"  onChange={(e)=>setNbr_claimed_parts(e.target.value)}  value={nbr_claimed_parts} required />
+                <div className="col-md-6">
+                    <label for="validationCustom02" className="form-label">Number of Claimed parts* :</label>
+                    <input type='number'  className="form-control" id="validationCustom02"  onChange={(e)=>setNbr_claimed_parts(e.target.value)}  value={nbr_claimed_parts} required />
 
                 </div>
                 <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
               Annuler
           </Button>
           <Button onClick={(e)=>updateClaim(e)} hidden={editB} variant="success" >Update</Button>
@@ -442,7 +433,7 @@ export default function Claims({haveAccess}) {
                   
                 </div>
                 <div className='table-responsive'>
-                <table className="table  table-striped " >
+                <table className="table  table-striped table-bordered" >
                     <thead>
                         <tr>
                             <th >internal ID</th>
@@ -477,7 +468,7 @@ export default function Claims({haveAccess}) {
                               <td>{item.nbr_claimed_parts}</td>
                               <td><Dot color={item.status==='on going'?'orange': 'done'?'green' : 'red'} size={60}/></td>
                               <td>{item.status==='done'?'':<Button disabled={!haveAccess || auth.user.role!=='admin'}  onClick={()=>updateStatus(item)} variant='success'>Finaliser</Button>}</td>
-                              <td><Button disabled={!haveAccess || auth.user.role!=='admin'}  onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                              <td><Button disabled={!haveAccess || auth.user.role!=='admin'}  onClick={()=>{selectClaim(item);handleShow();setModalTitle("Update Claim");setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button></td>
                               <td><Button disabled={!haveAccess || auth.user.role!=='admin'}  onClick={()=>deleteClaim(item.id)} variant="danger" >Delete<i ></i></Button></td>
                               <td><Button  variant='success'> <Link to={`/Report/${item.id}`} ><TicketDetailed color='orange'  size={25}/></Link></Button></td>
                             

@@ -305,8 +305,7 @@ useEffect(() => {
         },
         body: JSON.stringify({five_why_id : five_why_id,why : why,answer : answer, type : 'detection'}), })      
       if (res.status === 200) {
-        setWhy("");
-        setAnswer("");
+        resetForm();
         handleClose2();
         getFiveLignesDetection();
       } else {
@@ -327,8 +326,7 @@ useEffect(() => {
         },
         body: JSON.stringify({five_why_id : five_why_id,why : why,answer : answer, type : 'system'}), })      
       if (res.status === 200) {
-        setWhy("");
-        setAnswer("");
+        resetForm();
         handleClose3();
         getFiveLignesSystem();
       } else {
@@ -338,6 +336,11 @@ useEffect(() => {
       console.log(err);
     }
   };
+
+  const resetForm = ()=>{
+    setWhy("");
+    setAnswer("");
+  }
   return (
     <div className='main'>
         <Tab />

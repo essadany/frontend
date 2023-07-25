@@ -150,10 +150,7 @@ export default function Meetings({haveAccess}) {
       })
       
       if (res.status === 200) {
-        setType('');
-        setDate('');
-        setHour('');
-        setComment("");
+        resetForm();
         alert("Meeting Added successfully");
         setShow(false);
         handleClose();
@@ -190,10 +187,7 @@ export default function Meetings({haveAccess}) {
          }).then((result) => {
              if (result.ok){
                getMeetings();
-               setComment('');
-               setType('');
-               setDate('');
-               setHour('');
+               resetForm();
                alert("Meeting Updated successfully");
                handleClose();
                setEditB(true);
@@ -250,6 +244,12 @@ export default function Meetings({haveAccess}) {
     console.log(err);
   }
  }
+ const resetForm = ()=>{
+              setComment('');
+               setType('');
+               setDate('');
+               setHour('');
+ }
   return (
     <div className='main'>
         <Tab team_id={team_id}/>
@@ -261,17 +261,16 @@ export default function Meetings({haveAccess}) {
         <Modal
                 size='md'
                 show={show}
-                onHide={handleClose}
-                backdrop="static"
+                onHide={()=>{handleClose();resetForm()}}                backdrop="static"
                 keyboard={false}
                 >
                 <Modal.Header closeButton>
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row container g-3  needs-validation" onSubmit={handleSubmit}>
-                        <div class="col-md-6">
-                            <label  class="form-label">Type* :</label>
+                <form className="row container g-3  needs-validation" onSubmit={handleSubmit}>
+                        <div className="col-md-6">
+                            <label  className="form-label">Type* :</label>
                             <select className='form-select col-2'  onChange={(e)=>setType(e.target.value)}   required>
                               <option selected disabled>--- Select Type ---</option>
                               { meetings.length===0 ?(
@@ -286,24 +285,24 @@ export default function Meetings({haveAccess}) {
                             )}
                             </select>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Date* : </label>
-                            <input type="date" class="form-control"  value={date} onChange={(e)=>setDate(e.target.value)} required />
+                        <div className="col-md-6">
+                            <label className="form-label">Date* : </label>
+                            <input type="date" className="form-control"  value={date} onChange={(e)=>setDate(e.target.value)} required />
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Hour* : </label>
-                            <input type="time" class="form-control"  value={hour} onChange={(e)=>setHour(e.target.value)} required />
+                        <div className="col-md-6">
+                            <label className="form-label">Hour* : </label>
+                            <input type="time" className="form-control"  value={hour} onChange={(e)=>setHour(e.target.value)} required />
                         </div>
-                        <div class="col-md-12">
-                            <label class="form-label">Comment :</label>
+                        <div className="col-md-12">
+                            <label className="form-label">Comment :</label>
                             <textarea className="form-control"  value={comment} onChange={(e)=>setComment(e.target.value)}  />
                         </div>
                         <div className='modal-footer'>
-                          <Button variant="secondary" onClick={handleClose}>
+                          <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
                               Annuler
                           </Button>
                           <Button    type='submit'   hidden={addB} variant='primary'>Save</Button>
-                          <Button    onClick={updateMeeting} hidden={editB} variant='success'>Update<i class="fa-solid fa-pen-to-square"></i></Button>          
+                          <Button    onClick={updateMeeting} hidden={editB} variant='success'>Update<i className="fa-solid fa-pen-to-square"></i></Button>          
                         </div>
                         
                     </form>
@@ -339,7 +338,7 @@ export default function Meetings({haveAccess}) {
                   </div>
                 </div>
                 <div className=''>
-                  <table className="table table-striped" >
+                  <table className="table table-striped table-bordered" >
                       <thead>
                           <tr>
                               <th >Type</th>
@@ -364,7 +363,7 @@ export default function Meetings({haveAccess}) {
                               <div key={abs.id}>{abs.name}</div>
                             ))}
                         </td>
-                            <td><Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} style={{marginRight:10}} onClick={()=>{selectMeeting(item);setModalTitle("Update Meeting");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i class="fa-solid fa-pen-to-square"></i></Button></td>
+                            <td><Button  disabled={!haveAccess || (auth.user.role!=='admin' && auth.user.name !== team.leader)} style={{marginRight:10}} onClick={()=>{selectMeeting(item);setModalTitle("Update Meeting");handleShow();setAddB(true);setEditB(false)}} variant='primary'>Edit<i className="fa-solid fa-pen-to-square"></i></Button></td>
                         </tr>
                         ))}
                               

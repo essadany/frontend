@@ -173,10 +173,7 @@ export default function Actions({haveAccess}) {
         body: JSON.stringify({report_id, user_id, action, type , planned_date }),
       })      
       if (res.status === 200) {
-        setUser_id('');
-        setType('');
-        setAction('');
-        setPlanned_date('');
+        resetForm();
         alert("Action Added successfully");
         handleClose();
         getActions();
@@ -216,10 +213,7 @@ export default function Actions({haveAccess}) {
         }).then((result) => {
             if (result.ok){
               getActions();
-              setAction('');
-              setUser_id('');
-              setType('');
-              setPlanned_date('');
+              resetForm();
               alert("Action Updated successfully");
               handleClose();
               setEditB(true);
@@ -258,6 +252,12 @@ export default function Actions({haveAccess}) {
     )
   );
 
+  const resetForm = ()=>{
+    setAction('');
+    setUser_id('');
+    setType('');
+    setPlanned_date('');
+  }
   return (
     <div className='main'>
         <Tab />
@@ -269,8 +269,7 @@ export default function Actions({haveAccess}) {
         <Modal
                 size='md'
                 show={show}
-                onHide={handleClose}
-                backdrop="static"
+                onHide={()=>{handleClose();resetForm()}}                backdrop="static"
                 keyboard={false}
                 >
                 <Modal.Header closeButton>
@@ -307,7 +306,7 @@ export default function Actions({haveAccess}) {
                         </div>
                         
                         <ModalFooter>
-                          <Button variant="secondary" onClick={handleClose}>
+                          <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
                                 Annuler
                             </Button>
                             <Button   hidden={addB} type='submit' variant='primary'>Save</Button>
@@ -338,7 +337,7 @@ export default function Actions({haveAccess}) {
                   
                 </div>
                 <div>
-                <table className="table table-striped" >
+                <table className="table table-striped table-bordered" >
                     <thead>
                         <tr>
                             <th className='text-center' >Action</th>

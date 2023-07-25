@@ -11,7 +11,8 @@ import { useAuth } from '../Login/AuthProvider';
 export default function Dashboard({haveAccess}) {
   const auth=useAuth();
   const [data, setData] = useState(null);
-    
+  const [year, setYear] = useState(2023);
+
   //----------------------------------------------------------------------------------------------
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -36,7 +37,7 @@ export default function Dashboard({haveAccess}) {
   }*/
   useEffect(() => {
     // Fetch your JSON data
-    fetch('http://127.0.0.1:8000/api/most_products_claimed')
+    fetch(`http://127.0.0.1:8000/api/${year}/most_products_claimed`)
       .then((response) => response.json())
       .then((jsonData) => {
         // Process your JSON data to extract required information (e.g., salaries)
@@ -62,7 +63,7 @@ export default function Dashboard({haveAccess}) {
       .catch((error) => {
         console.error('Error fetching JSON data:', error);
       });
-  }, []);
+  }, [year]);
   const options = {
     scales: {
       x: {
@@ -264,7 +265,6 @@ export default function Dashboard({haveAccess}) {
   };
 
   //PPM-----------------------------------------------------------------------------------------------------------------------------------------
-  const [year, setYear] = useState(2023);
   const [month, setMonth] = useState(1);
   const [weeksInMonth, setWeeksInMonth] = useState(4); // Default to 4 weeks in January 2023
   const [selectedWeek, setSelectedWeek] = useState(1);
@@ -436,7 +436,7 @@ export default function Dashboard({haveAccess}) {
   
   // Show the selected histogram------------------------------------------------------------------------------------------------------
   const [histogram, setHistogram] = useState('1');
-  
+  const [by,setBy]=useState('Weeks');
 
   return (
     <>
@@ -464,6 +464,21 @@ export default function Dashboard({haveAccess}) {
           </div>
           {
             histogram==='1'&&<div>
+              <form>
+              <label>
+                Year:
+                <select
+                  className='selectpicker form-select form-select-sm'
+                  value={year}
+                  onChange={(e) => setYear(Number(e.target.value))}
+                >
+                  <option value={2023}>2023</option>
+                  <option value={2024}>2024</option>
+                  <option value={2025}>2025</option>
+                  <option value={2026}>2026</option>
+                </select>
+              </label>
+            </form>
             {data && <Bar width={500} height={200} data={data} options={options} />}
           </div>
           }
@@ -509,21 +524,22 @@ export default function Dashboard({haveAccess}) {
           }
           {
             histogram==='4' && <div>
+              
             <div className='ppm'>
               <form style={{ width: '500px' }} className='row container' onSubmit={handleSubmit}>
                 <div className='col-4'>
                 <label htmlFor="year">Year:</label>
-        <select className='selectpicker form-select form-select-sm'
-          id="year"
-          name="year"
-          value={year}
-          onChange={(e) => setYear(Number(e.target.value))}
-        >
-          <option value={2023}>2023</option>
-          <option value={2024}>2024</option>
-          <option value={2025}>2025</option>
-          <option value={2026}>2026</option>
-        </select>
+                <select className='selectpicker form-select form-select-sm'
+                  id="year"
+                  name="year"
+                  value={year}
+                  onChange={(e) => setYear(Number(e.target.value))}
+                >
+                  <option value={2023}>2023</option>
+                  <option value={2024}>2024</option>
+                  <option value={2025}>2025</option>
+                  <option value={2026}>2026</option>
+                </select>
                 </div>
                 <div className='col-4'>
                 <label htmlFor="month">Month:</label>
@@ -591,14 +607,11 @@ export default function Dashboard({haveAccess}) {
                   <Button  disabled={!haveAccess || auth.user.role!=='admin'} variant='success' className='btn btn-sm' type='submit'>
                     Add PPM
                   </Button>
-                </div>
-              </form>
-            </div>
-            <form>
-            <label>
+                </div><br/><br/><br/>
+                <div className='col-4'> <label>
               Year:
               <select
-                className='selectpicker form-select form-select-sm'
+                className=' selectpicker form-select form-select-sm'
                 value={year3}
                 onChange={(e) => setYear3(Number(e.target.value))}
               >
@@ -607,10 +620,22 @@ export default function Dashboard({haveAccess}) {
                 <option value={2025}>2025</option>
                 <option value={2026}>2026</option>
               </select>
-            </label>
-          </form>
-          <div>{data3 && <Bar width={500} height={200} data={data3}  />}</div>
-          <div>{data4 && <Bar width={500} height={200} data={data4}  />}</div>
+            </label></div>
+            <div className='col-4'><label>By :
+                <select className='col-2 selectpicker form-select form-select-sm'
+                  onChange={(e) => setBy(e.target.value)}
+                >
+                  <option >Weeks</option>
+                  <option >Months</option>
+                </select>
+            </label></div>
+              </form>
+            </div>
+
+          
+
+          <div>{by==="Weeks" && data3 && <Bar width={500} height={200} data={data3}  />}</div>
+          <div>{by==="Months" && data4 && <Bar width={500} height={200} data={data4}  />}</div>
           </div>
           }
           

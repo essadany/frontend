@@ -139,10 +139,7 @@ useEffect(() => {
       if (res.status === 200) {
        
         alert("Sorting Added successfully");
-        setLocation_company('');
-        setQty_to_sort('');
-        setQty_sorted('');
-        setQty_NOK('');
+        resetForm('');
         handleClose();
         getSortings();
       } else {
@@ -171,10 +168,7 @@ useEffect(() => {
             }).then((result) => {
                 if(result.ok){
                   alert("Sorting Updated successfully");
-                  setLocation_company('');
-                  setQty_to_sort('');
-                  setQty_sorted('');
-                  setQty_NOK('');
+                  resetForm();
                   handleClose();
                   getSortings();
                 }else{
@@ -184,6 +178,13 @@ useEffect(() => {
                 }
                 
               })
+  }
+
+  const resetForm = ()=>{
+    setLocation_company('');
+    setQty_to_sort('');
+    setQty_sorted('');
+    setQty_NOK('');
   }
   return (
     <div className='main'>
@@ -264,7 +265,7 @@ useEffect(() => {
         <Modal
                 size='md'
                 show={show}
-                onHide={handleClose}
+                onHide={()=>{handleClose();resetForm()}}
                 backdrop="static"
                 keyboard={false}
                 >
@@ -272,32 +273,32 @@ useEffect(() => {
                 <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form class="row g-3 container needs-validation" onSubmit={handleSubmit}>
-                        <div class="col-md-6">
-                            <label  class="form-label">Location and company* :</label>
-                            <input type="text" class="form-control"  required value={location_company} onChange={(e)=>setLocation_company(e.target.value)} />
+                <form className="row g-3 container needs-validation" onSubmit={handleSubmit}>
+                        <div className="col-md-6">
+                            <label  className="form-label">Location and company* :</label>
+                            <input type="text" className="form-control"  required value={location_company} onChange={(e)=>setLocation_company(e.target.value)} />
                             
                         </div>
-                        <div class="col-md-6">
-                            <label  class="form-label">Qty to sort* : </label>
-                            <input type="number" class="form-control"  required value={qty_to_sort} onChange={(e)=>setQty_to_sort(e.target.value)} />
+                        <div className="col-md-6">
+                            <label  className="form-label">Qty to sort* : </label>
+                            <input type="number" className="form-control"  required value={qty_to_sort} onChange={(e)=>setQty_to_sort(e.target.value)} />
                         </div>
                         
-                        <div class="col-md-6">
-                            <label  class="form-label">Qty sorted* :</label>
-                            <input type="number" class="form-control"  required value={qty_sorted} onChange={(e)=>setQty_sorted(e.target.value)} />
+                        <div className="col-md-6">
+                            <label  className="form-label">Qty sorted* :</label>
+                            <input type="number" className="form-control"  required value={qty_sorted} onChange={(e)=>setQty_sorted(e.target.value)} />
                         </div>
-                        <div class="col-md-6">
-                            <label  class="form-label">Qty NOK* :</label>
-                            <input type="number" class="form-control"  required value={qty_NOK} onChange={(e)=>setQty_NOK(e.target.value)} />
+                        <div className="col-md-6">
+                            <label  className="form-label">Qty NOK* :</label>
+                            <input type="number" className="form-control"  required value={qty_NOK} onChange={(e)=>setQty_NOK(e.target.value)} />
                         </div>
                         <div className='col-md-6'></div>
                           <ModalFooter>
-                          <Button variant="secondary" onClick={handleClose}>
+                          <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
                             Annuler
                         </Button>
                         <Button type='submit'   hidden={addB} variant='primary'>Save</Button>
-                        <Button  hidden={editB} variant='success' onClick={updateSorting}>Update<i class="fa-solid fa-pen-to-square"></i></Button> 
+                        <Button  hidden={editB} variant='success' onClick={updateSorting}>Update<i className="fa-solid fa-pen-to-square"></i></Button> 
                           </ModalFooter>
                     </form>
                     </Modal.Body>

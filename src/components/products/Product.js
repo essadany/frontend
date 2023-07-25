@@ -115,10 +115,7 @@ export default function Product({haveAccess}) {
               let resJson = await res.json();
               console.log(res.status);
               if (res.status === 200) {
-                setProduct_ref("");
-                setcustomer_code("");
-                setZone("");
-                setName("");
+                resetForm();
                 alert("Product Added successfully");
                 handleClose();
                 getProducts_customers();
@@ -155,12 +152,7 @@ export default function Product({haveAccess}) {
                 }).then((result) => {
                     if (result.ok){
                       getProducts_customers();
-                      setProduct_ref("");
-                      setcustomer_code("");
-                      setCustomer_id("");
-                      setCustomer_name("");
-                      setZone("");
-                      setName("");
+                      resetForm();
                       alert("Product Updated successfully");
                       handleClose();
                       setEditB(true);
@@ -179,6 +171,14 @@ export default function Product({haveAccess}) {
             }
           }
             
+          const resetForm = ()=>{
+            setProduct_ref("");
+            setcustomer_code("");
+            setCustomer_id("");
+            setCustomer_name("");
+            setZone("");
+            setName("");
+          }
           // Delete Product ------------------------------------------------------------------------------------------------------------------------
           function deleteProduct(product){
             try{
@@ -232,8 +232,7 @@ export default function Product({haveAccess}) {
         <Modal
                 size='md'
                 show={show}
-                onHide={handleClose}
-                backdrop="static"
+                onHide={()=>{handleClose();resetForm()}}                backdrop="static"
                 keyboard={false}
                 >
                 <Modal.Header closeButton>
@@ -270,7 +269,7 @@ export default function Product({haveAccess}) {
                             </select>
                         </div>
                         <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
+                  <Button variant="secondary" onClick={()=>{handleClose();resetForm()}}>
                       Annuler
                   </Button>
                   <Button type='submit'  hidden={addB} variant='primary'>Save</Button>
@@ -300,7 +299,7 @@ export default function Product({haveAccess}) {
                   </form>
                   
                 </div>
-                <table className="table table-striped" >
+                <table className="table table-striped table-bordered" >
                     <thead>
                         <tr>
                             <th >Interne ref</th>
